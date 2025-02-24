@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <script>
+            
+            function add(x, y) {
+                return x + y;
+            }
+
+            function printResult(fun) {
+                document.write(fun);
+            }
+
+            printResult(add(10, 20))
+
+            document.write('<hr>');
+            
+            /* 콜백함수 = 함수의 매개변수로 함수를 넘겨주는 것*/
+            
+            function addCallback(x, y, callback) {
+                callback(x + y);
+            }
+            
+            function sayResult(value) {
+                document.write(value);
+            }
+            
+            addCallback(10, 20, sayResult);
+            
+            document.write('<hr>');
+
+            /* 예제 : progress bar */
+
+            function funName(funCBF, funCBP, num){
+                
+                for(var i=1; i<=10; i++) {
+                    console.log(num + " * " + i + " = " + (num * i));
+                    if(i < 10) funCBP(i);
+                }
+                funCBF();
+                
+            }
+            
+            function funCallBackProgress(n){
+                console.log((n * 10) + "% 진행 완료!");
+            };
+            
+            function funCallBackFinish(){
+                console.log("서버 작업 종료!");
+            };
+
+            funName(funCallBackFinish, funCallBackProgress, 7);
+
+        </script>
+    </head>
+    <body></body>
+</html>

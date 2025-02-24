@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        // 함수 생성(선언)
+        // 명시적 함수 = 함수 이름이 있는 함수
+        function add(num1, num2) {
+            return num1 + num2
+        };
+        // 함수 호출
+        document.write(add(10, 20) + '<br>');
+        document.write(add(100, 200) + '<br>');
+
+        let add2 = function (num1, num2) {
+            return num1 + num2;
+        };
+
+        document.write(add2(10, 20) + '<br>');
+        document.write(add2(100, 200) + '<br>');
+
+        document.write('<hr>')
+
+        // 파이썬
+        // func = lambda x : x+1
+
+        /*
+        매개변수와 리턴값
+        */
+
+        function funXYZ(x,y,z){
+            document.write(x + "<br>");
+            document.write(y + "<br>");
+            document.write(z + "<br>");
+
+            let result = x * y * z;
+            return result;
+        }
+        
+        let result = funXYZ(10, 20 , 30);
+        document.write(result + '<br>');
+
+        result = funXYZ(1, 2, 3, 4);
+        document.write(result + '<br>');
+
+        result = funXYZ(1, 2);
+        document.write(result + '<br>');
+
+        document.write('<hr>');
+
+        // 자바스크립트 함수에서는, 모든 매개변수를 배열(arguements)로 받는다.
+        function funExample(){
+
+            let sum = 0;
+            for(let i = 0; i < arguments.length; i++) {
+                sum = sum + 1;
+                document.write(arguments[i] + '<br>');
+            }
+            return sum;
+        }
+
+        let varArr = funExample(1, 2, 3, 4, 5);
+
+        console.log(varArr);
+        console.log(varArr.length);
+        console.log(varArr[0]);
+
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

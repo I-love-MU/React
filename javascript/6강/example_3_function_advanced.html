@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        // function fun1() {
+
+        //     return function (dan) {
+        //         for (let i = 1; i < 10; i++) {
+        //             console.log(dan + ' * ' + i + ' = ' + dan * i);
+        //         }
+        //     };
+
+        // }
+        // let returnFun = fun1();
+        // returnFun(4)
+
+        /*
+            클로저(closure)
+            : free variable(자유변수)에 의해서 함수가 닫혀(closed)있다.
+        */
+
+        // function funName(x) {
+        //     var varName = ':: 요청한 ' + x + '에 대한 구구단::';
+
+        //     return function () {
+        //         console.log(varName);
+        //         for (var i = 1; i < 10; i++) {
+        //             document.write(x + ' * ' + i + ' = ' + x * i + '<br>');
+        //         }
+        //     };
+        // }
+
+        //지역변수에 접근할 수 없다.(에러 발생)
+        //console.log("varName : " + varName);
+
+        // returnFun = funName(5);
+        // returnFun();
+
+        /*
+            내부함수
+            : 함수 안에 또다른 함수
+        */
+        
+        // function outFun(width, height) {
+            
+        //     console.log("triangle : " + triangle());
+        //     console.log("quadrangle : " + quadrangle());
+            
+        //     //삼각형 면적 계산
+        //     function triangle() {
+            
+        //         return (width * height) / 2;
+            
+        //     }
+            
+        //     //사각형 면적 계산
+        //     function quadrangle() {
+            
+        //         return width * height;
+            
+        //     }
+            
+        // }
+        
+        // outFun(3, 5);
+
+        function test(kor, eng, math) {
+
+            function total() {
+                return kor + eng + math;
+            }
+            function avg() {
+                return total() / 3; 
+            }
+
+            document.write("총점:" + total());
+            document.write("평균:" + avg());
+        }
+
+        test(90,70,80);
+
+        // 출력
+        // 총점:270
+        // 평균:90
+       
+        //triangle();
+    </script>
+</head>
+<body>
+</body>
+</html>

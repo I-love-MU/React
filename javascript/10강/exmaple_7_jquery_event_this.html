@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        $(function () {
+            
+            function enventHandler() {
+                console.log('클릭 이벤트가 발생했습니다.');
+                console.log(this)                    
+            }
+
+            $('#objDiv').click(enventHandler);
+            $('#objPar').click(enventHandler);                
+
+        });
+    </script>
+</head>
+<body>
+    <div id="objDiv"> 안녕하세요 </div>
+    <p id="objPar"> 피 태그입니다. </p>
+</body>
+</html>

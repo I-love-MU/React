@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function grade(kor, eng, math) {
+            function getTotal(){
+                return (kor + eng + math);
+            }
+            function getAvg(){
+                return getTotal() / 3;
+            }
+            function getGrade() {
+                let result = '';
+
+                if (getAvg() >= 90) {
+                    result = '수';
+                } else if (getAvg() >= 80) {
+                    result = '우';
+                } else if (getAvg() >= 70) {
+                    result = '미';
+                } else if (getAvg() >= 60) {
+                    result = '양';
+                } else {
+                    result = '가';
+                }
+                return result + '입니다. ';
+            };
+
+        }
+
+        document.write(grade.getGrade(90,90,90));
+
+        
+
+    </script>
+    
+</head>
+<body>
+    
+</body>
+</html>

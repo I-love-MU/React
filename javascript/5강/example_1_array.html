@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        // 배열 생성과 데이터 저장을 동시에
+        // let arr = [1, 2, 3, 4, 5];
+
+        // console.log(arr)
+        // console.log(arr[0])
+        // console.log(arr[1])
+
+        // for(let i = 0; i < arr.length; i++){
+        //     document.write(arr[i])
+        // }
+
+        // arr = [123, 'ABC', true, function fun() {}, {}, undefined];
+        //     for (let i = 0; i < arr.length; i++) {
+        //         document.write(arr[i] + '<br>');
+        // }
+
+        // 배열 객체를 활용해서 생성
+        // let arr2 = new Array(1, 2, 3, 4, 5);
+   
+        // console.log(arr2)
+        // console.log(arr2[0])
+        // console.log(arr2[1])
+
+        // for(let i = 0; i < arr2.length; i++){
+        //     document.write(arr2[i])
+        // }
+
+        // 배열 객체 메서드
+        // shift(), pop()
+        arr = new Array("가", "나", "다", "라", "마");
+        console.log(arr.pop());
+        console.log(arr);
+
+        console.log(arr.shift());
+        console.log(arr);
+
+        // push()
+        arr.push('바');
+        console.log(arr);
+
+        // unshift()
+        arr.unshift('A');
+        console.log(arr);
+
+        // sort()
+        arr = new Array("E", "B", "A", "C", "D");
+        console.log(arr.sort());
+        console.log(arr);
+
+        // a = [1,2]
+        // b = [2,4]
+        // c = a + b
+
+        // concat()
+        arr = new Array("ABC", "DEF", "GHI", "JKL");
+        let arr3 = new Array("가나다", "라마바", "사아자", "차카파");
+        console.log(arr.concat(arr3));
+        console.log(arr);
+
+        // join()
+        console.log(arr.join());
+        // console.log(arr.join('-'));
+
+        // forEach(), for
+        // map, filter
+
+        arr.forEach( function (item, index) {
+            console.log(item,index);
+        });
+
+        let arrNums = [1,2,3];
+
+        sums = arrNums.map(function(item, index) {
+            return item * 2;
+        });
+        console.log(sums);
+
+        let evenNums = arrNums.filter(function (item) {
+            return item % 2 == 0;
+        });
+        console.log(evenNums);
+
+        // of 배열, in 객체
+        arr = ['사과', '참외'];
+        for (let str of arr) {
+            console.log(str);
+        }
+
+
+</script>
+</head>
+<body>
+</body>
+</html>
