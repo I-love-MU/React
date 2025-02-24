@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* 내가 원래 있을 자리 기준(부모 기준 = static, relative) */
+        #red {
+            width: 100px;
+            height: 100px;
+            background-color: red;
+        }
+        #yellow {
+            width: 400px;
+            height: 400px;
+            position: relative;
+            top: 100px;
+            left: 100px;
+            background-color: yellow;
+        }
+        
+        #green {
+            width: 100px;
+            height: 100px;
+            position: relative;
+            top: 0;
+            left: 100px;
+            background-color: green;
+        }
+        #blue {
+            width: 100px;
+            height: 100px;
+            position: relative;
+            top: 100px;
+            left: 100px;
+            background-color: blue;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="red"></div>
+    <div id="yellow">
+        <div id="green"></div>
+        <div id="blue"></div>
+    </div>
+</body>
+</html>

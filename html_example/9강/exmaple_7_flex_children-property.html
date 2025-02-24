@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  /* order */
+.flex-container {
+  display: flex;
+  background-color: #f1f1f1;
+}
+
+.flex-container > div {
+  background-color: dodgerblue;
+  color: white;
+  width: 100px;
+  margin: 10px;
+  text-align: center;
+  line-height: 75px;
+  font-size: 30px;
+}
+
+#div-5 {
+  order: 5;
+}
+
+/* flex-grow */
+.container {
+  display: flex;
+}
+
+.box {
+  width: 100px;
+  height: 100px;
+  text-align: center;
+  border: 1px solid black;
+}
+
+.one {
+  flex-grow: 1;
+}
+
+.two {
+  flex-grow: 2;
+}
+
+.three {
+  flex-grow: 1;
+}
+
+</style>
+</head>
+<body>
+
+  <h1>Flex Items</h1>
+
+  <p>All direct children of a flex container becomes flex items:</p>
+
+  <!-- <div class="flex-container">
+    <div style="order:3">1</div>
+    <div style="order:2">2</div>
+    <div style="order:4">3</div> 
+    <div style="order:1">4</div> 
+    <div id="div-5">5</div>
+    <hr />
+  </div> -->
+  <div class="container">
+    <div class="box one">1</div>
+    <div class="box two">2</div>
+    <div class="box three">3</div>
+  </div>
+</body>
+</html>
