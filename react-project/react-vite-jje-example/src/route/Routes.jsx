@@ -6,6 +6,8 @@ import JSXPage from '../pages/JSXPage'
 import ConditionalPage from '../pages/ConditionalPage'
 import BootStrapPage from '../pages/BootStrapPage'
 import PropsPage from '../pages/PropsPage'
+import CounterPage from '../pages/CounterPage'
+import UseEffectPage from '../pages/UseEffectPage'
 
 const routes = [
   {
@@ -47,6 +49,16 @@ const routes = [
     path: '/props',
     element: <PropsPage />,
     title: '프롭스',
+  },
+  {
+    path: '/usestate',
+    element: <CounterPage />,
+    title: 'useState-연습',
+  },
+  {
+    path: '/useeffect',
+    element: <UseEffectPage />,
+    title: 'useEffect-연습',
   },
 ]
 
