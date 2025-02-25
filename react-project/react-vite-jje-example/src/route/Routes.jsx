@@ -4,6 +4,7 @@ import HomePage from '../pages/HomePage'
 import ProfilePage from '../pages/ProfilePage'
 import JSXPage from '../pages/JSXPage'
 import ConditionalPage from '../pages/ConditionalPage'
+import BootStrapPage from '../pages/BootStrapPage'
 
 const routes = [
   {
@@ -35,6 +36,11 @@ const routes = [
     path: '/conditional',
     element: <ConditionalPage />,
     title: '조건부랜더링',
+  },
+  {
+    path: '/bootstrap',
+    element: <BootStrapPage />,
+    title: '부트스트랩적용',
   },
 ]
 

@@ -1,8 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import routes from './route/Routes'
 import Header from './components/Header'
-import Hello from './components/Hello'
-import JSXPage from './pages/JSXPage'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 function App() {
   return (
