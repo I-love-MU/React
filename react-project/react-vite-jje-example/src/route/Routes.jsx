@@ -5,6 +5,7 @@ import ProfilePage from '../pages/ProfilePage'
 import JSXPage from '../pages/JSXPage'
 import ConditionalPage from '../pages/ConditionalPage'
 import BootStrapPage from '../pages/BootStrapPage'
+import PropsPage from '../pages/PropsPage'
 
 const routes = [
   {
@@ -41,6 +42,11 @@ const routes = [
     path: '/bootstrap',
     element: <BootStrapPage />,
     title: '부트스트랩적용',
+  },
+  {
+    path: '/props',
+    element: <PropsPage />,
+    title: '프롭스',
   },
 ]
 
