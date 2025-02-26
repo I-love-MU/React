@@ -8,6 +8,8 @@ import BootStrapPage from '../pages/BootStrapPage'
 import PropsPage from '../pages/PropsPage'
 import CounterPage from '../pages/CounterPage'
 import UseEffectPage from '../pages/UseEffectPage'
+import UseRef1Page from '../pages/UseRef1Page'
+import UseRef2Page from '../pages/UseRef2Page'
 
 const routes = [
   {
@@ -60,6 +62,16 @@ const routes = [
     element: <UseEffectPage />,
     title: 'useEffect-연습',
   },
-]
+  {
+    path: '/useRef1',
+    element: <UseRef1Page />,
+    title: 'useRef-1',
+  },
+  {
+    path: '/useRef2',
+    element: <UseRef2Page />,
+    title: 'useRef-2',
+  },
+];
 
 export default routes
