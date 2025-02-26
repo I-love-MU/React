@@ -10,6 +10,9 @@ import CounterPage from '../pages/CounterPage'
 import UseEffectPage from '../pages/UseEffectPage'
 import UseRef1Page from '../pages/UseRef1Page'
 import UseRef2Page from '../pages/UseRef2Page'
+import AxioGetPage from '../pages/AxiosGetPage'
+import AxiosPostPage from '../pages/AxiosGetPage'
+import AxiosClient from '../pages/AxiosClient'
 
 const routes = [
   {
@@ -71,6 +74,16 @@ const routes = [
     path: '/useRef2',
     element: <UseRef2Page />,
     title: 'useRef-2',
+  },
+  {
+    path: '/axiosget',
+    element: <AxiosPostPage />,
+    title: 'axios-get',
+  },
+  {
+    path: '/axiosclient',
+    element: <AxiosClient />,
+    title: 'axios-client',
   },
 ];
 
