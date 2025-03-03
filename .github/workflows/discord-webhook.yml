@@ -1,62 +1,74 @@
 name: GitHub All Events to Discord
 
 on:
-    # 모든 이벤트 감지
-    push:
-    pull_request:
-    issues:
-    issue_comment:
-    delete:
-    release:
-    workflow_run:
-        workflows: ["*"]
-        types:
-            - completed
+  # 모든 이벤트 감지
+  push:
+  pull_request:
+  issues:
+  issue_comment:
+  delete:
+  release:
+  workflow_run:
+    workflows: ["*"]
+    types:
+      - completed
 
 jobs:
-    discordNotification:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Send message to Discord
-              env:
-                  DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-              run: |
-                  EVENT_TYPE="${{ github.event_name }}"
-                  REPO_NAME="${{ github.repository }}"
-                  ACTOR="${{ github.actor }}"
+  discordNotification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send message to Discord
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          EVENT_TYPE="${{ github.event_name }}"
+          REPO_NAME="${{ github.repository }}"
+          ACTOR="${{ github.actor }}"
 
-                  # 기본 메시지
-                  MESSAGE="📢 **GitHub 이벤트 발생**\n🔔 이벤트 타입: ${EVENT_TYPE}\n📌 레포지토리: ${REPO_NAME}\n👤 실행자: ${ACTOR}\n"
+          # 기본 메시지 (여러 줄을 위해 Here Document 사용)
+          MESSAGE=$(cat <<EOF
+📢 **GitHub 이벤트 발생**
+🔔 이벤트 타입: ${EVENT_TYPE}
+📌 레포지토리: ${REPO_NAME}
+👤 실행자: ${ACTOR}
+EOF
+          )
 
-                  # 특정 이벤트별 추가 정보
-                  if [[ "$EVENT_TYPE" == "push" ]]; then
-                    COMMIT_LIST=""
-                    for commit in $(jq -c '.commits[]' <<< '${{ toJson(github.event.commits) }}'); do
-                      COMMIT_MESSAGE=$(echo "$commit" | jq -r '.message')
-                      COMMIT_URL=$(echo "$commit" | jq -r '.url')
-                      COMMIT_AUTHOR=$(echo "$commit" | jq -r '.author.name')
-                      COMMIT_LIST="$COMMIT_LIST\n📝 $COMMIT_MESSAGE - 👤 $COMMIT_AUTHOR\n🔗 [커밋 보기]($COMMIT_URL)"
-                    done
-                    MESSAGE="$MESSAGE\n🔄 푸시된 커밋 목록:$COMMIT_LIST"
-                  fi
+          # Push 이벤트에서 모든 커밋 포함
+          if [[ "$EVENT_TYPE" == "push" ]]; then
+            COMMIT_LIST=""
+            echo '${{ toJson(github.event.commits) }}' | jq -c '.[]' | while read commit; do
+              COMMIT_MESSAGE=$(echo "$commit" | jq -r '.message')
+              COMMIT_URL=$(echo "$commit" | jq -r '.url')
+              COMMIT_AUTHOR=$(echo "$commit" | jq -r '.author.name')
+              COMMIT_LIST="$COMMIT_LIST\n📝 $COMMIT_MESSAGE - 👤 $COMMIT_AUTHOR\n🔗 [커밋 보기]($COMMIT_URL)"
+            done
 
-                  if [[ "$EVENT_TYPE" == "pull_request" ]]; then
-                    PR_TITLE="${{ github.event.pull_request.title }}"
-                    PR_URL="${{ github.event.pull_request.html_url }}"
-                    PR_STATE="${{ github.event.pull_request.state }}"
-                    MESSAGE="$MESSAGE\n🔀 PR 제목: $PR_TITLE\n📌 상태: $PR_STATE\n🔗 [PR 보기]($PR_URL)"
-                  fi
+            # 커밋 목록이 있을 경우만 추가
+            if [[ -n "$COMMIT_LIST" ]]; then
+              MESSAGE="$MESSAGE\n\n🔄 **푸시된 커밋 목록:**$COMMIT_LIST"
+            else
+              MESSAGE="$MESSAGE\n\n🔄 **푸시된 커밋이 없습니다.**"
+            fi
+          fi
 
-                  # JSON 데이터 생성
-                  PAYLOAD=$(jq -n \
-                    --arg username "GitHub Webhook" \
-                    --arg content "$MESSAGE" \
-                    '{username: $username, content: $content}')
+          if [[ "$EVENT_TYPE" == "pull_request" ]]; then
+            PR_TITLE="${{ github.event.pull_request.title }}"
+            PR_URL="${{ github.event.pull_request.html_url }}"
+            PR_STATE="${{ github.event.pull_request.state }}"
+            MESSAGE="$MESSAGE\n\n🔀 **PR 제목:** $PR_TITLE\n📌 **상태:** $PR_STATE\n🔗 [PR 보기]($PR_URL)"
+          fi
 
-                  echo "Payload: $PAYLOAD" # 디버깅용 출력
+          # JSON 데이터 생성 (Here Document 사용)
+          PAYLOAD=$(jq -n \
+            --arg username "GitHub Webhook" \
+            --arg content "$MESSAGE" \
+            '{username: $username, content: $content}')
 
-                  # Discord 웹훅 요청 보내기
-                  curl -H "Content-Type: application/json" \
-                       -X POST \
-                       -d "$PAYLOAD" \
-                       "$DISCORD_WEBHOOK_URL"
+          echo "Payload: $PAYLOAD"  # 디버깅용 출력
+
+          # Discord 웹훅 요청 보내기
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d "$PAYLOAD" \
+               "$DISCORD_WEBHOOK_URL"
