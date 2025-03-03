@@ -1,0 +1,39 @@
+name: GitHub All Events to Discord
+
+on:
+  # 모든 이벤트 감지
+  push:
+  pull_request:
+  issues:
+  issue_comment:
+  delete:
+  release:
+  workflow_run:
+    workflows: ["*"]
+    types:
+      - completed
+
+jobs:
+  discordNotification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send message to Discord
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          EVENT_TYPE="${{ github.event_name }}"
+          REPO_NAME="${{ github.repository }}"
+          ACTOR="${{ github.actor }}"
+          EVENT_URL="https://github.com/${{ github.repository }}/actions"
+
+          # JSON 데이터 생성
+          PAYLOAD=$(jq -n \
+            --arg username "GitHub Webhook" \
+            --arg content "📢 **GitHub 이벤트 발생!**\n🔔 이벤트 타입: ${EVENT_TYPE}\n📌 레포지토리: ${REPO_NAME}\n👤 실행자: ${ACTOR}\n🔗 [이벤트 보기](${EVENT_URL})" \
+            '{username: $username, content: $content}')
+
+          # Discord 웹훅 요청 보내기
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d "$PAYLOAD" \
+               "$DISCORD_WEBHOOK_URL"
