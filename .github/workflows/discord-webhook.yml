@@ -38,12 +38,14 @@ jobs:
                     COMMIT_LIST=""
                     COMMITS_JSON='${{ toJson(github.event.commits) }}'
 
-                    for commit in $(echo "$COMMITS_JSON" | jq -c '.[]'); do
-                      COMMIT_MESSAGE=$(echo "$commit" | jq -r '.message')
-                      COMMIT_URL=$(echo "$commit" | jq -r '.url')
-                      COMMIT_AUTHOR=$(echo "$commit" | jq -r '.author.name')
-                      COMMIT_LIST="$COMMIT_LIST\n📝 $COMMIT_MESSAGE - 👤 $COMMIT_AUTHOR\n🔗 [커밋 보기]($COMMIT_URL)"
-                    done
+                    if [[ "$COMMITS_JSON" != "[]" ]]; then
+                      echo "$COMMITS_JSON" | jq -c '.[]' | while IFS= read -r commit; do
+                        COMMIT_MESSAGE=$(echo "$commit" | jq -r '.message')
+                        COMMIT_URL=$(echo "$commit" | jq -r '.url')
+                        COMMIT_AUTHOR=$(echo "$commit" | jq -r '.author.name')
+                        COMMIT_LIST="$COMMIT_LIST\n📝 $COMMIT_MESSAGE - 👤 $COMMIT_AUTHOR\n🔗 [커밋 보기]($COMMIT_URL)"
+                      done
+                    fi
 
                     if [[ -n "$COMMIT_LIST" ]]; then
                       MESSAGE="$MESSAGE\n\n🔄 **푸시된 커밋 목록:**$COMMIT_LIST"
