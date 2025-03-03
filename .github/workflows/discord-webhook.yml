@@ -49,6 +49,7 @@ jobs:
                       echo "DEBUG: COMMIT_MESSAGE = $COMMIT_MESSAGE"
                       echo "DEBUG: COMMIT_URL = $COMMIT_URL"
                       echo "DEBUG: COMMIT_AUTHOR = $COMMIT_AUTHOR"
+                      echo "DEBUG: COMMIT_LIST = $COMMIT_LIST"
 
                       COMMIT_LIST="${COMMIT_LIST}\n📝 $COMMIT_MESSAGE - 👤 $COMMIT_AUTHOR\n🔗 [커밋 보기]($COMMIT_URL)"
                     done
