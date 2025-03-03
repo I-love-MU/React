@@ -36,7 +36,7 @@ jobs:
 
                   if [[ "$EVENT_TYPE" == "push" ]]; then
                     COMMIT_LIST=""
-                    COMMITS_JSON='${{ toJson(github.event.commits) }}'
+                    COMMITS_JSON=$(echo '${{ toJson(github.event.commits) }}' | jq -c '.')
 
                     for commit in $(echo "$COMMITS_JSON" | jq -c '.[]'); do
                       COMMIT_MESSAGE=$(echo "$commit" | jq -r '.message')
