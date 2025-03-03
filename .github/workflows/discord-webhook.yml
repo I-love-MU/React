@@ -34,12 +34,11 @@ jobs:
                   EOF
                   )
 
-
-                  # Push 이벤트에서 모든 커밋 포함
                   if [[ "$EVENT_TYPE" == "push" ]]; then
                     COMMIT_LIST=""
-                    COMMITS_JSON=$(jq -c '.commits' <<< '${{ toJson(github.event) }}')
-                    echo "$COMMITS_JSON" | jq -c '.[]' | while read commit; do
+                    COMMITS_JSON='${{ toJson(github.event.commits) }}'
+
+                    for commit in $(echo "$COMMITS_JSON" | jq -c '.[]'); do
                       COMMIT_MESSAGE=$(echo "$commit" | jq -r '.message')
                       COMMIT_URL=$(echo "$commit" | jq -r '.url')
                       COMMIT_AUTHOR=$(echo "$commit" | jq -r '.author.name')
@@ -51,6 +50,19 @@ jobs:
                     else
                       MESSAGE="$MESSAGE\n\n🔄 **푸시된 커밋이 없습니다.**"
                     fi
+                  fi
+
+                  if [[ "$EVENT_TYPE" == "pull_request" ]]; then
+                    PR_TITLE="${{ github.event.pull_request.title }}"
+                    PR_URL="${{ github.event.pull_request.html_url }}"
+                    PR_STATE="${{ github.event.pull_request.state }}"
+                    PR_AUTHOR="${{ github.event.pull_request.user.login }}"
+
+                    MESSAGE="$MESSAGE\n\n🔀 **Pull Request 이벤트 발생**"
+                    MESSAGE="$MESSAGE\n📌 **PR 제목:** $PR_TITLE"
+                    MESSAGE="$MESSAGE\n👤 **작성자:** $PR_AUTHOR"
+                    MESSAGE="$MESSAGE\n📌 **상태:** $PR_STATE"
+                    MESSAGE="$MESSAGE\n🔗 [PR 보기]($PR_URL)"
                   fi
 
                   # JSON 데이터 생성 (Here Document 사용)
