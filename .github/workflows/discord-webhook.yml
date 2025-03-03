@@ -38,7 +38,7 @@ jobs:
                     COMMIT_LIST=""
                     COMMITS_JSON=$(echo '${{ toJson(github.event.commits) }}' | jq -c '.')
 
-                    for commit in $(echo "$COMMITS_JSON" | jq -c '.[]'); do
+                    echo "$COMMITS_JSON" | jq -c '.[]' | while IFS= read -r commit; do
                       COMMIT_MESSAGE=$(echo "$commit" | jq -r '.message')
                       COMMIT_URL=$(echo "$commit" | jq -r '.url')
                       COMMIT_AUTHOR=$(echo "$commit" | jq -r '.author.name')
