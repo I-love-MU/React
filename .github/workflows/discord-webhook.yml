@@ -38,14 +38,14 @@ jobs:
                   # Push 이벤트에서 모든 커밋 포함
                   if [[ "$EVENT_TYPE" == "push" ]]; then
                     COMMIT_LIST=""
-                    echo '${{ toJson(github.event.commits) }}' | jq -c '.[]' | while read commit; do
+                    COMMITS_JSON=$(jq -c '.commits' <<< '${{ toJson(github.event) }}')
+                    echo "$COMMITS_JSON" | jq -c '.[]' | while read commit; do
                       COMMIT_MESSAGE=$(echo "$commit" | jq -r '.message')
                       COMMIT_URL=$(echo "$commit" | jq -r '.url')
                       COMMIT_AUTHOR=$(echo "$commit" | jq -r '.author.name')
                       COMMIT_LIST="$COMMIT_LIST\n📝 $COMMIT_MESSAGE - 👤 $COMMIT_AUTHOR\n🔗 [커밋 보기]($COMMIT_URL)"
                     done
 
-                    # 커밋 목록이 있을 경우만 추가
                     if [[ -n "$COMMIT_LIST" ]]; then
                       MESSAGE="$MESSAGE\n\n🔄 **푸시된 커밋 목록:**$COMMIT_LIST"
                     else
@@ -53,20 +53,11 @@ jobs:
                     fi
                   fi
 
-                  if [[ "$EVENT_TYPE" == "pull_request" ]]; then
-                    PR_TITLE="${{ github.event.pull_request.title }}"
-                    PR_URL="${{ github.event.pull_request.html_url }}"
-                    PR_STATE="${{ github.event.pull_request.state }}"
-                    MESSAGE="$MESSAGE\n\n🔀 **PR 제목:** $PR_TITLE\n📌 **상태:** $PR_STATE\n🔗 [PR 보기]($PR_URL)"
-                  fi
-
                   # JSON 데이터 생성 (Here Document 사용)
                   PAYLOAD=$(jq -n \
                     --arg username "GitHub Webhook" \
-                    --arg content "$MESSAGE" \
+                    --arg content "$(echo -e "$MESSAGE")" \
                     '{username: $username, content: $content}')
-
-                  echo "Payload: $PAYLOAD"  # 디버깅용 출력
 
                   # Discord 웹훅 요청 보내기
                   curl -H "Content-Type: application/json" \
