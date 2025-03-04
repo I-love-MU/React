@@ -8,10 +8,10 @@ const AxiosClient = () => {
     const fetchContacts = async () => {
       try {
         const response = await axios.get('https://sample.bmaster.kro.kr/contacts?pageno=3&pagesize=10');
-        console.log('✅ 데이터 가져오기 성공:', response.data.contacts);
+        console.log('데이터 가져오기 성공:', response.data.contacts);
         setContacts(response.data.contacts);
       } catch (error) {
-        console.error('❌ 데이터 가져오기 실패:', error);
+        console.error('데이터 가져오기 실패:', error);
       } finally {
         console.log('에러 여부와 관계없이 실행됩니다.');
       }

@@ -10,9 +10,16 @@ import CounterPage from '../pages/CounterPage'
 import UseEffectPage from '../pages/UseEffectPage'
 import UseRef1Page from '../pages/UseRef1Page'
 import UseRef2Page from '../pages/UseRef2Page'
-import AxioGetPage from '../pages/AxiosGetPage'
-import AxiosPostPage from '../pages/AxiosGetPage'
+import AxiosGetPage from '../pages/AxiosGetPage'
+import AxiosPostPage from '../pages/AxiosPostPage' // ✅ 올바르게 변경
 import AxiosClient from '../pages/AxiosClient'
+import InputPage from '../pages/InputPage'
+import GradeInputPage from '../pages/GradeInputPage'
+import GradeInputPage2 from '../pages/GradeInputPage2'
+import InlineStylePage from '../pages/cssPage/InlineStylePage'
+import StyledComponentPage from '../pages/cssPage/StyledComponentPage'
+import CounterContextPage from '../pages/CounterContextPage'
+import { CounterProvider } from '../contexts/CounterContext'
 
 const routes = [
   {
@@ -77,13 +84,49 @@ const routes = [
   },
   {
     path: '/axiosget',
-    element: <AxiosPostPage />,
+    element: <AxiosGetPage />,
     title: 'axios-get',
   },
   {
     path: '/axiosclient',
     element: <AxiosClient />,
     title: 'axios-client',
+  },
+  {
+    path: '/input',
+    element: <InputPage />,
+    title: '기본-input',
+  },
+  {
+    path: '/grade',
+    element: <GradeInputPage />,
+    title: 'grade-input',
+  },
+  {
+    path: '/grade2',
+    element: <GradeInputPage2 />,
+    title: 'grade-input(다중입력)',
+  },
+  {
+    path: '/styled-css',
+    element: <InlineStylePage />,
+    title: 'inline-style',
+  },
+  {
+    path: '/styled-component',
+    element: <StyledComponentPage />,
+    title: 'styled-component',
+  },
+  {
+    path: '/context-apply',
+    element: (
+      <CounterProvider>
+        <div>머리말</div>
+        <CounterContextPage />
+        <div>꼬리말</div>
+      </CounterProvider>
+    ),
+    title: 'contextAPI-활용-counter',
   },
 ];
 

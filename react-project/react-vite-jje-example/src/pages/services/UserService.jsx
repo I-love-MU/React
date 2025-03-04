@@ -13,4 +13,4 @@ const getUsers = async () => {
   }
 }
 
-export default { getUsers, getUsers2 }
+export default getUsers

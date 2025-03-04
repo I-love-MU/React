@@ -5,6 +5,7 @@ const BoardPage = () => {
   const params = useParams()
 
   console.log(params)
+  // params = {id:1}
 
   return <h1 className='text-center mt-5'>보드페이지 입니다. {params}번 글입니다.</h1>
 }
