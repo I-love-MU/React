@@ -128,6 +128,17 @@ const routes = [
     ),
     title: 'contextAPI-활용-counter',
   },
+  {
+    path: '/contextapi-3',
+    element: (
+      <CounterProvider>
+        <CounterContextPage />
+      </CounterProvider>
+    ),
+    title: 'contextAPI-활용-counter',
+  },
+
+
 ];
 
 export default routes
