@@ -9,7 +9,7 @@ const router = createBrowserRouter([
     loader: () =>'메인',
     children:  [
       {
-        path:'1',
+        path:'',
         element:<DetailPage />,
         loader:()=>'상세페이지',
       },
