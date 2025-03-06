@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { jsonContext } from '../context/JsonDataContext'
+import { jsonContext } from '../contexts/JsonDataContext'
 
 const SearchPage = () => {
 

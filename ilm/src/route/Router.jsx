@@ -1,7 +1,8 @@
 import { createBrowserRouter } from "react-router-dom"
-import MainLayout from "../ui/layouts/MainLayout"
-import { JsonDataProvider } from "../ui/context/JsonDataContext"
-import SearchPage from "../ui/pages/SearchPage"
+import MainLayout from "../layouts/MainLayout"
+import SearchPage from "../pages/SearchPage"
+import { JsonDataProvider } from "../contexts/JsonDataContext"
+
 
 const routes = [
     {
