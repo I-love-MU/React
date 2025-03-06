@@ -5,7 +5,7 @@
     font-family: Arial, sans-serif;
 }
 #contain{
-    width: 70%;
+    max-width: 850px;
     height: 100vh;
     margin: auto;
 }
@@ -17,7 +17,7 @@
     background-position: center;
 
 
-    height: 160px;
+    height: 150px;
     width: 90%;
     text-align: center;
     padding: 20px;
@@ -27,20 +27,22 @@
 #header h1 {
     font-size: 2.5rem;
     font-weight: bold;
-    line-height: 120px;
+    line-height: 110px;
 }
 
 /* 메인 콘텐츠 */
 #mainContent {
-    margin-top: 40px;
+    margin-top: 20px;
     border-bottom: 1px solid #cccccc;
     padding-bottom: 100px;
 }
 
+
+
 #contentTitle {
     text-align: center;
     font-size: 1.8rem;
-    margin: 40px;
+    margin-bottom: 40px;
 }
 
 .contentWrapper {
@@ -50,7 +52,7 @@
 
 /* 이미지 섹션 */
 #contentImg img {
-    width: 90%;
+    width: 85%;
     max-width: 600px;
     max-height: 620px;
     object-fit: scale-down;
@@ -60,8 +62,13 @@
 
 /* 상세정보 섹션 */
 #contentDetail {
-    width: 45%;
-    padding-top: 20px;
+    width: 50%;
+    padding-top: 15px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content:space-between;
+    height: 100%;
 }
 
 #contentText {
@@ -79,6 +86,10 @@
     margin: 5px;
     padding: 5px;
     border-bottom: 1px solid #cccccc;
+
+    display: flex;
+    justify-content:space-between;
+    width: 100%;
 }
 
 #contentDetail strong {
