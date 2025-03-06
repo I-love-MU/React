@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+  //"exclude": ["node_modules"] //프로젝트 규모가 크다면 성능(intellisense)이 낮아질 수 있는데 이 때 내가 실질적으로 사용하지 않는 파일들을 제외해줄 수 있다.
+}
