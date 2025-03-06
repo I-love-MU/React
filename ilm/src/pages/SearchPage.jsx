@@ -1,29 +1,24 @@
-import { useState, useRef, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { getLocation } from '../services/Geolocation'
 import { getAddressFromCoordinates } from '../services/GoogleMapsAddress'
-import { InputGroup, Form, Button } from 'react-bootstrap'
+import { InputGroup, Form } from 'react-bootstrap'
 
 function LocationFetcher() {
-  // 필터 상태를 useState로 관리 (체크박스 UI 반영을 위해)
-  const [useCurrentLocationFilter, setUseCurrentLocationFilter] = useState(false)
-  const [useAddressFilter, setUseAddressFilter] = useState(false)
+  // 필터 상태 관리 (라디오 버튼으로 변경)
+  const [locationFilter, setLocationFilter] = useState('')
 
-  // 위치 정보 및 주소 데이터를 useRef로 관리
+  // 위치 정보 및 주소 상태 관리
   const [currentLocation, setCurrentLocation] = useState(null)
   const [currentAddress, setCurrentAddress] = useState(null)
-  const inputAddress = useRef('')
+  const [inputAddress, setInputAddress] = useState('')
 
-  // 체크박스 상태 변경 핸들러
-  const handleCurrentLocationFilterChange = (event) => {
-    setUseCurrentLocationFilter(event.target.checked)
-  }
-
-  const handleAddressFilterChange = (event) => {
-    setUseAddressFilter(event.target.checked)
+  // 라디오 버튼 상태 변경 핸들러
+  const handleLocationFilterChange = (event) => {
+    setLocationFilter(event.target.value)
   }
 
   const handleAddressChange = (event) => {
-    inputAddress.current = event.target.value
+    setInputAddress(event.target.value)
   }
 
   // 위치 정보 및 주소 가져오기
@@ -40,12 +35,12 @@ function LocationFetcher() {
     }
   }, [])
 
-  // 체크박스가 체크될 때마다 현재 위치 조회
+  // 라디오 버튼 값이 'current'일 때 위치 조회
   useEffect(() => {
-    if (useCurrentLocationFilter) {
+    if (locationFilter === 'current') {
       fetchCurrentLocationAndAddress()
     }
-  }, [useCurrentLocationFilter, fetchCurrentLocationAndAddress])
+  }, [locationFilter, fetchCurrentLocationAndAddress])
 
   return (
     <div>
@@ -55,25 +50,37 @@ function LocationFetcher() {
           위도: {currentLocation.latitude}, 경도: {currentLocation.longitude}, 정확도: {currentLocation.accuracy}m
         </p>
       ) : (
-        <p>위치 정보를 가져오려면 버튼을 클릭하거나 체크박스를 선택하세요.</p>
+        <p>위치 정보를 가져오려면 옵션을 선택하세요.</p>
       )}
 
       <h2>현재 위치 주소</h2>
       <p>{currentAddress ? currentAddress : '주소 정보 없음'}</p>
 
       <InputGroup className='mb-3'>
-        <InputGroup.Checkbox checked={useCurrentLocationFilter} onChange={handleCurrentLocationFilterChange} />
-        <Form.Label className='ms-2'>현재 위치로 탐색</Form.Label>
-        <InputGroup.Checkbox checked={useAddressFilter} onChange={handleAddressFilterChange} />
-        <Form.Label className='ms-2'>주소로 탐색</Form.Label>
+        <Form.Check
+          type='radio'
+          label='현재 위치로 탐색'
+          name='locationFilter'
+          value='current'
+          checked={locationFilter === 'current'}
+          onChange={handleLocationFilterChange}
+        />
+        <Form.Check
+          type='radio'
+          label='주소로 탐색'
+          name='locationFilter'
+          value='address'
+          checked={locationFilter === 'address'}
+          onChange={handleLocationFilterChange}
+        />
       </InputGroup>
 
       <Form.Control
         type='text'
         placeholder='탐색할 주소를 입력하세요'
-        defaultValue={inputAddress.current}
+        value={inputAddress}
         onChange={handleAddressChange}
-        disabled={!useAddressFilter} // 체크 여부에 따라 활성화/비활성화
+        disabled={locationFilter !== 'address'} // 체크 여부에 따라 활성화/비활성화
         className='mb-3'
       />
     </div>
