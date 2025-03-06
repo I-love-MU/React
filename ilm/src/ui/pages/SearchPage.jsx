@@ -1,33 +1,50 @@
-import React, { useContext } from 'react'
-import { jsonContext } from '../contexts/JsonDataContext'
+import React, { useContext, useState } from 'react';
+import { jsonContext } from '../contexts/JsonDataContext';
+import { Form, Button } from 'react-bootstrap';
+import SearchResults from '../components/SearchResults';
 
 const SearchPage = () => {
+  const { datas } = useContext(jsonContext); // Context에서 데이터를 가져옴
+  const [searchTerm, setSearchTerm] = useState(''); // 입력된 검색어 상태
+  const [filteredData, setFilteredData] = useState([]); // 필터링된 데이터 상태
+  const [isSearched, setIsSearched] = useState(false); // 검색 버튼 클릭 여부 상태
 
-    const {datas} = useContext(jsonContext)
+  // 검색 버튼 클릭 시 실행되는 함수
+  const handleSearch = () => {
+    setIsSearched(true); // 검색 버튼이 눌렸음을 기록
+    if (datas && datas.length > 0) {
+      const lowerCaseSearchTerm = searchTerm.toLowerCase();
+      const results = datas.filter((data) =>
+        data.title && data.title.toLowerCase().includes(lowerCaseSearchTerm)
+      );
+      setFilteredData(results);
+    } else {
+      setFilteredData([]); // 데이터가 없으면 빈 배열로 설정
+    }
+  };
 
-    return (
-        <div className='text-center mt-5'>
-            <h2>공공데이터 api 받아오기.</h2>
-            <hr />
-            {   datas && datas.length > 0 ? (
-                    datas.map((data, index) => (
-                        <div key={index}>
-                            <li>
-                                <h3>제목: {data.title}</h3>
-                                <p>장소: {data.place}</p>
-                                <p>기간: {data.startDate} ~ {data.endDate}</p>
-                                <p>분류이름: {data.realmName}</p>
-                                <p>장소: {data.place}</p>
-                                <p>분류목록: {data.serviceName}</p>
-                            </li>
-                        </div>
-                    ))
-                ) : (
-                    <p>데이터를 불러오는 중이거나 데이터가 없습니다.</p>
-                )
-            }
-        </div>
-    )
-}
+  return (
+    <div className="text-center mt-5">
+      <h2>공공데이터 API 검색 기능</h2>
+      <hr />
+      {/* 검색 입력 폼 */}
+      <Form className="d-flex justify-content-center mb-4">
+        <Form.Control
+          type="text"
+          placeholder="콘텐츠 제목을 입력하세요"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)} // 입력값 업데이트
+          style={{ width: '300px', marginRight: '10px' }}
+        />
+        <Button variant="primary" onClick={handleSearch}>
+          검색
+        </Button>
+      </Form>
 
-export default SearchPage
+      {/* 검색 결과 표시 */}
+      {isSearched && <SearchResults filteredData={filteredData} />}
+    </div>
+  );
+};
+
+export default SearchPage;
