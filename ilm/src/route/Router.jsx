@@ -1,12 +1,27 @@
-import { createBrowserRouter } from 'react-router-dom'
-import App from '../App'
+import { createBrowserRouter } from "react-router-dom"
+import MainLayout from "../ui/layouts/MainLayout"
+import { JsonDataProvider } from "../ui/context/JsonDataContext"
+import SearchPage from "../ui/pages/SearchPage"
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <App />,
-    children: [],
-  },
-])
+const routes = [
+    {
+        path: '/',
+        element: <MainLayout/>,
+        loader: () => 'I love mu',
+        children: [
+            {
+                path:'search',
+                element:( 
+                <JsonDataProvider>
+                    <SearchPage/>
+                </JsonDataProvider>    
+            ),
+                loader: () => 'SEARCH'
+            },
+        ]
+    },
+]
 
-export default router
+const router = createBrowserRouter(routes)
+
+export {router, routes}
