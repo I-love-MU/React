@@ -1,6 +1,0 @@
-telegram API:
-7153124936:AAF1JXT_vudH5F1Gg_VYLBmN3PymuKkbmxM
-OpenWeather API:
-7659f73cb21c8be5d03fcb44ed552d52
-group_chat_id:
--4601050259
