@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import '../css/detailcss.css';
 import axios from 'axios';
 import xml2js from 'xml-js';
 
@@ -62,8 +63,8 @@ const DetailPage = (contentIdnum = 282960) => {
                 <p><strong>주소 |</strong>  {data.placeAddr}</p>
                 <p><strong>관람료 |</strong>  {data.price}</p>
                 <p><strong>전화번호 |</strong>  {data.phone}</p>
-                <p><strong>사이트 |</strong>  <a href={getUrl(data)}>홈페이지 바로가기</a></p>
-                <p><a href={data.placeUrl}>이동</a></p>
+                <p><strong>사이트 |</strong>  <a href={getUrl(data)} target="_blank" >홈페이지 바로가기</a></p>
+
             </div>
         </div>
     </section>
