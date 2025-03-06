@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        // 1. 동기, 비동기의 이해
+
+        // 동기 (순차적으로 실행)
+        function fun1(){
+            document.write("1번입니다." + '</br>');
+            fun2()
+        }
+        function fun2(){
+            document.write("2번입니다." + '</br>');
+            fun3()
+        }
+        function fun3(){
+            document.write("3번입니다." + '</br>');
+        }
+
+        fun1();
+
+        document.write('<hr>');
+
+        // 비동기
+        // 1.callback
+        // 2.promise
+        // 3.async/await
+
+        // 그래서 콜백지옥이 생김
+        function fun4(callback){
+            setTimeout(()=>{
+                console.log("4번입니다." + '</br>');
+                callback(); // 여기서 실행을 시켜버림
+            }, 3000);
+
+            // fun5();
+        }
+        
+        function fun5(){
+            console.log("5번입니다." + '</br>');
+        }
+
+        fun4(fun5);
+
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

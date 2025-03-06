@@ -1,6 +1,5 @@
-// src/router/Router.jsx
-
 import MainLayout from "@/ui/layouts/MainLayout";
+import BoardPage from "@/ui/pages/BoardPage";
 import RspPage from "@/ui/pages/RspPage";
 import { createBrowserRouter } from "react-router-dom";
 import LottoPage from "../ui/pages/LottoPage"; // LottoPage를 default로 import
@@ -9,17 +8,22 @@ const routes = [
   {
     path: "/",
     element: <MainLayout />,
-    loader: () => "로또",  // MainLayout 렌더링
+    loader: () => '로또',
     children: [
       {
-        path: "/",  // "" (빈 문자열)로 수정하여 `/` 경로와 일치
-        element: <LottoPage />,  // LottoPage를 자식 컴포넌트로 설정
-        loader: () => "로또",
+        path: "/",  // "/"를 명시적으로 지정
+        element: <LottoPage />,
+        label: "로또",
       },
       {
-        path: "/rsp",  
-        element: <RspPage />,  // RspPage 자식 컴포넌트로 설정
-        loader: () => "가위바위보",
+        path: "rsp",  // 부모 경로("/")가 있어서 상대경로로 설정
+        element: <RspPage />,
+        label: "가위바위보",
+      },
+      {
+        path: "boards",  // 부모 경로("/")가 있어서 상대경로로 설정
+        element: <BoardPage />,
+        label: "게시판",
       },
     ],
   },
