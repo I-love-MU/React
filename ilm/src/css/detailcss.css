@@ -1,0 +1,155 @@
+/* 전체 컨테이너 */
+#main {
+    height: 100vh;
+    margin: auto;
+    font-family: Arial, sans-serif;
+}
+#contain{
+    max-width: 850px;
+    height: 100vh;
+    margin: auto;
+}
+
+/* 헤더 */
+#header {
+    background-image: url('../imgs/bener.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+
+
+    height: 150px;
+    width: 90%;
+    text-align: center;
+    padding: 20px;
+    margin: auto;
+}
+
+#header h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    line-height: 110px;
+}
+
+/* 메인 콘텐츠 */
+#mainContent {
+    margin-top: 20px;
+    border-bottom: 1px solid #cccccc;
+    padding-bottom: 100px;
+}
+#mainContent span {
+    color: gray;
+}
+
+
+
+#contentTitle {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 40px;
+}
+
+.contentWrapper {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+/* 이미지 섹션 */
+#contentImg img {
+    width: 85%;
+    max-width: 600px;
+    max-height: 620px;
+    object-fit: scale-down;
+    margin-right: 10px;
+}
+
+
+/* 상세정보 섹션 */
+#contentDetail {
+    width: 50%;
+    padding-top: 15px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content:space-between;
+    height: 100%;
+}
+
+#contentText {
+    text-align: center
+}
+
+#contentDetail h4 {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+#contentDetail p {
+    color: gray;
+    margin: 5px;
+    padding: 5px;
+    border-bottom: 1px solid #cccccc;
+
+    width: 100%;
+}
+
+#contentDetail strong {
+    text-align: left;
+    color: black;
+
+    border-right: 2px solid black;
+    padding-right: 5px;
+    margin-right: 5px;
+}
+
+
+#contentDetail a {
+    color: gray;
+    text-decoration: none;
+}
+
+#contentDetail a:hover {
+    text-decoration: underline;
+}
+
+#contentText{
+    margin-top: 40px;
+    font-weight: bolder;
+}
+
+/* 전시 정보 섹션 */
+#contentInfo {
+    background-color: #cccccc;
+    padding: 40px;
+    margin-top: 40px;
+}
+
+.infoWrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+#infoText {
+    text-align: left;
+}
+
+#infoText h4 {
+    font-size: 1.5rem;
+}
+
+#infoText p {
+    margin-bottom: 20px;
+}
+
+#infoText button {
+    background-color: #ebeff5;
+    color: gray;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+#infoText button:hover {
+    background-color: #0056b3;
+}
