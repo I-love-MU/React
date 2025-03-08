@@ -21,7 +21,7 @@ const SearchPage = () => {
         console.error('API 호출 중 오류: ', error)
       } 
     }
-    fetchData();
+    fetchData()
   }, [])
 
 
