@@ -9,5 +9,7 @@ function ExhibitionItem({ title, date, location, image }) {
     );
   }
   
+
+
   export default ExhibitionItem;
   
