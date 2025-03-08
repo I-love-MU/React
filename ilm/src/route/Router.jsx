@@ -1,10 +1,13 @@
 import { createBrowserRouter } from 'react-router-dom'
-import App from '../App'
+import Exhibition from '../Exhibition'
+import ExhibitionItem from '../Exhibitionitem'
+import '../Exhibition.css';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
+    element: <Exhibition />,
+    
     children: [],
   },
 ])
