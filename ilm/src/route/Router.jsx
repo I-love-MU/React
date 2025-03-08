@@ -1,9 +1,6 @@
 import { createBrowserRouter } from "react-router-dom"
 import MainLayout from "../ui/layouts/MainLayout"
 import SearchPage from "../ui/pages/SearchPage"
-import { JsonDataProvider } from "../ui/contexts/JsonDataContext"
-
-
 
 const routes = [
     {
@@ -13,16 +10,12 @@ const routes = [
         children: [
             {
                 path:'search',
-                element:( 
-                <JsonDataProvider>
-                    <SearchPage/>
-                </JsonDataProvider>    
-            ),
+                element: <SearchPage/>,
                 loader: () => 'SEARCH'
             },
         ]
     },
-]
+];
 
 const router = createBrowserRouter(routes)
 
