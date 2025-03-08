@@ -1,48 +1,53 @@
-import React, { useContext, useState } from 'react';
-import { jsonContext } from '../contexts/JsonDataContext';
-import { Form, Button } from 'react-bootstrap';
-import SearchResults from '../components/SearchResults';
+import React, { useState, useEffect } from 'react'
+import { getFilteredData } from '../../services/ApiService'
+import SearchResults from '../components/SearchResults'
+import SearchForm from '../components/SearchForm'
 
 const SearchPage = () => {
-  const { datas } = useContext(jsonContext); // Context에서 데이터를 가져옴
-  const [searchTerm, setSearchTerm] = useState(''); // 입력된 검색어 상태
-  const [filteredData, setFilteredData] = useState([]); // 필터링된 데이터 상태
+  const [datas, setData] = useState(null) // api 데이터 상태
   const [isSearched, setIsSearched] = useState(false); // 검색 버튼 클릭 여부 상태
+  const [filteredData, setFilteredData] = useState([]); // 필터링된 데이터 상태
 
-  // 검색 버튼 클릭 시 실행되는 함수
-  const handleSearch = () => {
-    setIsSearched(true); // 검색 버튼이 눌렸음을 기록
+
+  // api 데이터 호출
+  useEffect(() => {
+    const apiKey = import.meta.env.VITE_API_KEY
+    const fetchData = async () => {
+      try {
+        const responseData = await getFilteredData(apiKey, 1, 10, 'D000', 'A')
+        console.log('API 응답 데이터', responseData)
+        setData(responseData)
+      } catch (error) {
+        console.error('API 호출 중 오류: ', error)
+      } 
+    }
+    fetchData();
+  }, [])
+
+
+  // 검색 처리 함수
+  const handleSearch = (searchTerm) => {
+    setIsSearched(true);
     if (datas && datas.length > 0) {
       const lowerCaseSearchTerm = searchTerm.toLowerCase();
-      const results = datas.filter((data) =>
-        data.title && data.title.toLowerCase().includes(lowerCaseSearchTerm)
+      const results = datas.filter(
+        (data) => data.title && data.title.toLowerCase().includes(lowerCaseSearchTerm)
       );
-      setFilteredData(results);
+      setFilteredData(results)
     } else {
-      setFilteredData([]); // 데이터가 없으면 빈 배열로 설정
+      setFilteredData([]) // 데이터가 없으면 빈 배열로 설정
     }
   };
 
   return (
-    <div className="text-center mt-5">
-      <h2>공공데이터 API 검색 기능</h2>
-      <hr />
-      {/* 검색 입력 폼 */}
-      <Form className="d-flex justify-content-center mb-4">
-        <Form.Control
-          type="text"
-          placeholder="콘텐츠 제목을 입력하세요"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)} // 입력값 업데이트
-          style={{ width: '300px', marginRight: '10px' }}
-        />
-        <Button variant="primary" onClick={handleSearch}>
-          검색
-        </Button>
-      </Form>
+    <div className='text-center mt-5'>
+        <h2>공공데이터 API 검색 기능</h2>
+        <hr />
+        {/* 검색 입력 폼*/}
+        <SearchForm onSearch={handleSearch} />
 
-      {/* 검색 결과 표시 */}
-      {isSearched && <SearchResults filteredData={filteredData} />}
+        {/*검색 결과 표시*/}
+        {isSearched && <SearchResults filteredData={filteredData} />}
     </div>
   );
 };
