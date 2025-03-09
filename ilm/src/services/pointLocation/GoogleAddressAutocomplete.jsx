@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import axios from 'axios'
+import { Form, ListGroup, Card, Container } from 'react-bootstrap'
 
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 
@@ -40,24 +41,32 @@ export default function GoogleAddressAutocomplete({ onSelect }) {
   }
 
   return (
-    <div>
-      <input
-        type='text'
-        value={input}
-        onChange={(e) => {
-          setInput(e.target.value)
-          fetchPlaces(e.target.value)
-        }}
-        placeholder='Search places...'
-        className='location-search-input'
-      />
-      <div className='autocomplete-dropdown-container'>
-        {suggestions.map((suggestion, index) => (
-          <div key={index} className='suggestion-item' onClick={() => handleSelect(suggestion.placePrediction)}>
-            {suggestion.placePrediction.text.text}
-          </div>
-        ))}
-      </div>
-    </div>
+    <>
+      <Container className='mt-3'>
+        <Form.Group>
+          <Form.Control
+            type='text'
+            value={input}
+            onChange={(e) => {
+              setInput(e.target.value)
+              fetchPlaces(e.target.value)
+            }}
+            placeholder='Search places...'
+            className='location-search-input'
+          />
+        </Form.Group>
+        {suggestions.length > 0 && (
+          <Card className='mt-2'>
+            <ListGroup variant='flush'>
+              {suggestions.map((suggestion, index) => (
+                <ListGroup.Item key={index} action onClick={() => handleSelect(suggestion.placePrediction)}>
+                  {suggestion.placePrediction.text.text}
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+          </Card>
+        )}
+      </Container>
+    </>
   )
 }
