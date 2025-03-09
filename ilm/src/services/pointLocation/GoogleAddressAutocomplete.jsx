@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import axios from 'axios'
 
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 
@@ -12,20 +13,23 @@ export default function GoogleAddressAutocomplete({ onSelect }) {
       return
     }
 
-    const response = await fetch('https://places.googleapis.com/v1/places:autocomplete', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Goog-Api-Key': GOOGLE_MAPS_API_KEY,
-      },
-      body: JSON.stringify({
-        input: query,
-      }),
-    })
+    try {
+      const response = await axios.post(
+        'https://places.googleapis.com/v1/places:autocomplete',
+        { input: query },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Goog-Api-Key': GOOGLE_MAPS_API_KEY,
+          },
+        },
+      )
 
-    const data = await response.json()
-    if (data.suggestions) {
-      setSuggestions(data.suggestions)
+      if (response.data.suggestions) {
+        setSuggestions(response.data.suggestions)
+      }
+    } catch (error) {
+      console.error('Error fetching places:', error)
     }
   }
 
