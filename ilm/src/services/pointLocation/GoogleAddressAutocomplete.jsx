@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import axios from 'axios'
+import { GoogleAddresstoCoordinates } from './GoogleAddresstoCoordinates'
 import { Form, ListGroup, Card, Container } from 'react-bootstrap'
 
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
@@ -34,9 +35,10 @@ export default function GoogleAddressAutocomplete({ onSelect }) {
     }
   }
 
-  const handleSelect = (place) => {
+  const handleSelect = async (place) => {
+    const coordinates = await GoogleAddresstoCoordinates(place.placeId)
     setInput(place.text.text)
-    onSelect(place)
+    onSelect(coordinates)
     setSuggestions([])
   }
 
