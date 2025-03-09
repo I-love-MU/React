@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react'
 import { getLocation } from './Geolocation'
 import { getAddressFromCoordinates } from './GoogleMapsAddress'
 
-function CurrentLocationInfo({ locationFilter }) {
+function CurrentLocationInfo({ locationFilter, onLocationUpdate }) {
   const [currentLocation, setCurrentLocation] = useState(null)
   const [currentAddress, setCurrentAddress] = useState(null)
 
@@ -12,13 +12,14 @@ function CurrentLocationInfo({ locationFilter }) {
       const loc = await getLocation()
       if (loc) {
         setCurrentLocation(loc)
+        onLocationUpdate({ latitude: loc.latitude, longitude: loc.longitude })
         const fetchedAddress = await getAddressFromCoordinates(loc.latitude, loc.longitude)
         setCurrentAddress(fetchedAddress)
       }
     } catch (error) {
       console.error('위치 정보를 가져오는 중 오류 발생:', error)
     }
-  }, [])
+  }, [onLocationUpdate])
 
   // locationFilter가 'current'일 때만 위치 조회 실행
   useEffect(() => {
