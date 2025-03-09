@@ -19,15 +19,10 @@ function LocationFetcher() {
   // 위치 정보 및 주소 상태 관리
   const [currentLocation, setCurrentLocation] = useState(null)
   const [currentAddress, setCurrentAddress] = useState(null)
-  const [inputAddress, setInputAddress] = useState('')
 
   // 라디오 버튼 상태 변경 핸들러
   const handleLocationFilterChange = (event) => {
     setLocationFilter(event.target.value)
-  }
-
-  const handleAddressChange = (event) => {
-    setInputAddress(event.target.value)
   }
 
   // 위치 정보 및 주소 가져오기
@@ -53,18 +48,6 @@ function LocationFetcher() {
 
   return (
     <div>
-      <h2>현재 위치 정보</h2>
-      {currentLocation ? (
-        <p>
-          위도: {currentLocation.latitude}, 경도: {currentLocation.longitude}, 정확도: {currentLocation.accuracy}m
-        </p>
-      ) : (
-        <p>위치 정보를 가져오려면 옵션을 선택하세요.</p>
-      )}
-
-      <h2>현재 위치 주소</h2>
-      <p>{currentAddress ? currentAddress : '주소 정보 없음'}</p>
-
       <InputGroup className='mb-3'>
         <Form.Check
           type='radio'
@@ -83,19 +66,28 @@ function LocationFetcher() {
           onChange={handleLocationFilterChange}
         />
       </InputGroup>
+      {locationFilter === 'current' && (
+        <>
+          <h2>현재 위치 정보</h2>
+          {currentLocation ? (
+            <p>
+              위도: {currentLocation.latitude}, 경도: {currentLocation.longitude}, 정확도: {currentLocation.accuracy}m
+            </p>
+          ) : (
+            <p>위치 정보를 가져오려면 옵션을 선택하세요.</p>
+          )}
 
-      <Form.Control
-        type='text'
-        placeholder='탐색할 주소를 입력하세요'
-        value={inputAddress}
-        onChange={handleAddressChange}
-        disabled={locationFilter !== 'address'} // 체크 여부에 따라 활성화/비활성화
-        className='mb-3'
-      />
-      <div>
-        <h2>Google Places Autocomplete</h2>
-        <GoogleAddressAutocomplete onSelect={handleLocationSelect} />
-      </div>
+          <h2>현재 위치 주소</h2>
+          <p>{currentAddress ? currentAddress : '주소 정보 없음'}</p>
+        </>
+      )}
+
+      {locationFilter === 'address' && (
+        <>
+          <h2>Google Places Autocomplete</h2>
+          <GoogleAddressAutocomplete onSelect={handleLocationSelect} />
+        </>
+      )}
     </div>
   )
 }
