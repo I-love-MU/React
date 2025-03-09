@@ -1,19 +1,30 @@
-import { useRef, useState } from 'react'
-import { Form } from 'react-bootstrap'
+import { useState } from 'react'
+import { Form, Card } from 'react-bootstrap'
 import GoogleAddressAutocomplete from '../services/pointLocation/GoogleAddressAutocomplete'
 import CurrentLocationInfo from '../services/currentLocation/CurrentLocationInfo'
 
 function SearchPage() {
-  // 필터 상태 관리 (라디오 버튼으로 변경)
+  // 위치 지정 방식
   const [locationFilter, setLocationFilter] = useState('')
-  const handleLocationFilterChange = (event) => {
-    setLocationFilter(event.target.value)
+
+  const defaultLocation = {
+    selectedCoordinates: { latitude: 37.5720865, longitude: 126.9854332 },
+    selectedAddress: '대한민국 서울',
   }
 
-  // GoogleAddressAutocomplete 에서 전달받은 주소(location)를 위경도로 변환
-  const coordinates = useRef({ latitude: 37.5720865, longitude: 126.9854332 })
-  const handleLocationSelect = ({ latitude, longitude }) => {
-    coordinates.current = { latitude, longitude }
+  // 검색할 위치
+  const [searchLocation, setSearchLocation] = useState(defaultLocation)
+
+  const handleLocationFilterChange = (event) => {
+    setLocationFilter(event.target.value)
+    setSearchLocation(defaultLocation)
+  }
+
+  const handleLocationSelect = ({ latitude, longitude, address }) => {
+    setSearchLocation({
+      selectedCoordinates: { latitude, longitude },
+      selectedAddress: address,
+    })
   }
 
   return (
@@ -36,13 +47,15 @@ function SearchPage() {
           onChange={handleLocationFilterChange}
         />
       </Form>
-      <CurrentLocationInfo locationFilter={locationFilter} onLocationUpdate={handleLocationSelect} />
 
-      {locationFilter === 'address' && (
-        <>
-          <h2>Google Places Autocomplete</h2>
-          <GoogleAddressAutocomplete onSelect={handleLocationSelect} />
-        </>
+      {locationFilter === 'current' && <CurrentLocationInfo onLocationUpdate={handleLocationSelect} />}
+      {locationFilter === 'address' && <GoogleAddressAutocomplete onSelect={handleLocationSelect} />}
+
+      {searchLocation.selectedAddress && (
+        <Card className='mt-3 p-3'>
+          <h4>선택된 주소</h4>
+          <p>{searchLocation.selectedAddress}</p>
+        </Card>
       )}
     </>
   )
