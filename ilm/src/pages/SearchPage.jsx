@@ -1,9 +1,9 @@
 import { useRef, useState } from 'react'
-import { InputGroup, Form } from 'react-bootstrap'
+import { Form } from 'react-bootstrap'
 import GoogleAddressAutocomplete from '../services/pointLocation/GoogleAddressAutocomplete'
 import CurrentLocationInfo from '../services/currentLocation/CurrentLocationInfo'
 
-function LocationFetcher() {
+function SearchPage() {
   // 필터 상태 관리 (라디오 버튼으로 변경)
   const [locationFilter, setLocationFilter] = useState('')
   const handleLocationFilterChange = (event) => {
@@ -17,8 +17,8 @@ function LocationFetcher() {
   }
 
   return (
-    <div>
-      <InputGroup className='mb-3'>
+    <>
+      <Form>
         <Form.Check
           type='radio'
           label='현재 위치로 탐색'
@@ -35,8 +35,7 @@ function LocationFetcher() {
           checked={locationFilter === 'address'}
           onChange={handleLocationFilterChange}
         />
-      </InputGroup>
-
+      </Form>
       <CurrentLocationInfo locationFilter={locationFilter} onLocationUpdate={handleLocationSelect} />
 
       {locationFilter === 'address' && (
@@ -45,8 +44,8 @@ function LocationFetcher() {
           <GoogleAddressAutocomplete onSelect={handleLocationSelect} />
         </>
       )}
-    </div>
+    </>
   )
 }
 
-export default LocationFetcher
+export default SearchPage
