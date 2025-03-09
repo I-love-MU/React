@@ -11,9 +11,9 @@ function LocationFetcher() {
   }
 
   // GoogleAddressAutocomplete 에서 전달받은 주소(location)를 위경도로 변환
-  const coordinates = useRef({ latitude: 126.734086, longitude: 127.269311 })
-  const handleLocationSelect = (location) => {
-    console.log(location, coordinates)
+  const coordinates = useRef({ latitude: 37.5720865, longitude: 126.9854332 })
+  const handleLocationSelect = ({ latitude, longitude }) => {
+    coordinates.current = { latitude, longitude }
   }
 
   return (
@@ -37,7 +37,7 @@ function LocationFetcher() {
         />
       </InputGroup>
 
-      <CurrentLocationInfo locationFilter={locationFilter} />
+      <CurrentLocationInfo locationFilter={locationFilter} onLocationUpdate={handleLocationSelect} />
 
       {locationFilter === 'address' && (
         <>
