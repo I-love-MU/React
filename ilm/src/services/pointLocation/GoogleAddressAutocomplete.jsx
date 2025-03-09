@@ -38,7 +38,7 @@ export default function GoogleAddressAutocomplete({ onSelect }) {
   const handleSelect = async (place) => {
     const coordinates = await GoogleAddresstoCoordinates(place.placeId)
     setInput(place.text.text)
-    onSelect(coordinates)
+    onSelect({ latitude: coordinates.latitude, longitude: coordinates.longitude, address: place.text.text })
     setSuggestions([])
   }
 
