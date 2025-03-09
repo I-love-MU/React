@@ -1,59 +1,64 @@
 import { useState } from 'react'
-import { getLocation } from '../services/Geolocation'
-import { getAddressFromCoordinates } from '../services/GoogleMapsAddress'
-import InputGroup from 'react-bootstrap/InputGroup'
-import Form from 'react-bootstrap/Form'
-import Button from 'react-bootstrap/Button'
+import { Form, Card } from 'react-bootstrap'
+import GoogleAddressAutocomplete from '../services/pointLocation/GoogleAddressAutocomplete'
+import CurrentLocationInfo from '../services/currentLocation/CurrentLocationInfo'
 
-function LocationFetcher() {
-  const [location, setLocation] = useState(null)
-  const [address, setAddress] = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [isChecked, setIsChecked] = useState(false)
+function SearchPage() {
+  // 위치 지정 방식
+  const [locationFilter, setLocationFilter] = useState('')
 
-  const fetchLocationAndAddress = async () => {
-    if (!isChecked) return
-    setLoading(true)
-    try {
-      const loc = await getLocation()
-      if (loc) {
-        setLocation(loc)
-        const fetchedAddress = await getAddressFromCoordinates(loc.latitude, loc.longitude)
-        setAddress(fetchedAddress)
-      }
-    } catch (error) {
-      console.error('위치 정보를 가져오는 중 오류 발생:', error)
-    } finally {
-      setLoading(false)
-    }
+  const defaultLocation = {
+    selectedCoordinates: { latitude: 37.5720865, longitude: 126.9854332 },
+    selectedAddress: '대한민국 서울',
+  }
+
+  // 검색할 위치
+  const [searchLocation, setSearchLocation] = useState(defaultLocation)
+
+  const handleLocationFilterChange = (event) => {
+    setLocationFilter(event.target.value)
+    setSearchLocation(defaultLocation)
+  }
+
+  const handleLocationSelect = ({ latitude, longitude, address }) => {
+    setSearchLocation({
+      selectedCoordinates: { latitude, longitude },
+      selectedAddress: address,
+    })
   }
 
   return (
-    <div>
-      <h2>현재 위치 정보</h2>
-      {location ? (
-        <p>
-          위도: {location.latitude}, 경도: {location.longitude}, 정확도: {location.accuracy}m
-        </p>
-      ) : (
-        <p>위치 정보를 가져오려면 버튼을 클릭하세요.</p>
-      )}
-
-      <h2>현재 위치 주소</h2>
-      <p>{address ? address : '주소 정보 없음'}</p>
-
-      <InputGroup className='mb-3'>
-        <InputGroup.Checkbox
-          aria-label='Checkbox for following text input'
-          checked={isChecked}
-          onChange={(e) => setIsChecked(e.target.checked)}
+    <>
+      <Form>
+        <Form.Check
+          type='radio'
+          label='현재 위치로 탐색'
+          name='locationFilter'
+          value='current'
+          checked={locationFilter === 'current'}
+          onChange={handleLocationFilterChange}
         />
-        <Form.Label className='ms-2'>현재 위치 탐색</Form.Label>
-      </InputGroup>
+        <Form.Check
+          type='radio'
+          label='주소로 탐색'
+          name='locationFilter'
+          value='address'
+          checked={locationFilter === 'address'}
+          onChange={handleLocationFilterChange}
+        />
+      </Form>
 
-      <Button onClick={fetchLocationAndAddress}>{loading ? '위치 가져오는 중...' : '위치 정보 가져오기'}</Button>
-    </div>
+      {locationFilter === 'current' && <CurrentLocationInfo onLocationUpdate={handleLocationSelect} />}
+      {locationFilter === 'address' && <GoogleAddressAutocomplete onSelect={handleLocationSelect} />}
+
+      {searchLocation.selectedAddress && (
+        <Card className='mt-3 p-3'>
+          <h4>선택된 주소</h4>
+          <p>{searchLocation.selectedAddress}</p>
+        </Card>
+      )}
+    </>
   )
 }
 
-export default LocationFetcher
+export default SearchPage
