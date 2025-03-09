@@ -1,9 +1,18 @@
 import { useState, useCallback, useEffect } from 'react'
-import { getLocation } from '../services/Geolocation'
-import { getAddressFromCoordinates } from '../services/GoogleMapsAddress'
+import { getLocation } from '../services/currentLocation/Geolocation'
+import { getAddressFromCoordinates } from '../services/currentLocation/GoogleMapsAddress'
 import { InputGroup, Form } from 'react-bootstrap'
+import GoogleAddressAutocomplete from '../services/pointLocation/GoogleAddressAutocomplete'
 
 function LocationFetcher() {
+  const [selectedLocation, setSelectedLocation] = useState('')
+  const [coordinates, setCoordinates] = useState({ latitude: 0, longitude: 0 })
+
+  const handleLocationSelect = (location, latLng) => {
+    setSelectedLocation(location)
+    setCoordinates(latLng)
+  }
+
   // 필터 상태 관리 (라디오 버튼으로 변경)
   const [locationFilter, setLocationFilter] = useState('')
 
@@ -83,6 +92,10 @@ function LocationFetcher() {
         disabled={locationFilter !== 'address'} // 체크 여부에 따라 활성화/비활성화
         className='mb-3'
       />
+      <div>
+        <h2>Google Places Autocomplete</h2>
+        <GoogleAddressAutocomplete onSelect={handleLocationSelect} />
+      </div>
     </div>
   )
 }
