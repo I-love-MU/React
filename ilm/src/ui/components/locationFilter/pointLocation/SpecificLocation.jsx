@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import { GooglePlacesAutocomplete } from '../../../services/pointLocation/GooglePlacesAutocomplete'
-import { GoogleAddresstoCoordinates } from '../../../services/pointLocation/GoogleAddresstoCoordinates'
+import { useState } from 'react'
 import { Form, ListGroup, Card, Container } from 'react-bootstrap'
+import { GoogleAddresstoCoordinates } from '../../../../services/pointLocation/GoogleAddresstoCoordinates'
+import { GooglePlacesAutocomplete } from '../../../../services/pointLocation/GooglePlacesAutocomplete'
 
 export default function SpecificLocation({ onSelect }) {
   const [input, setInput] = useState('')

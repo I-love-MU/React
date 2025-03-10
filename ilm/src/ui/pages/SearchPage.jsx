@@ -2,8 +2,9 @@ import { useRef, useState } from 'react'
 import { Form, Card, InputGroup, Button } from 'react-bootstrap'
 import SpecificLocation from '../components/locationFilter/pointLocation/SpecificLocation'
 import CurrentLocationInfo from '../components/locationFilter/currentLocation/CurrentLocationInfo'
-import CoordinatesArea from '../services/CoordinatesArea'
+import CoordinatesArea from '../../services/CoordinatesArea'
 
+// 진짜 searchpage 에 컴포넌트로 삽입될 위치 기반 탐색 기능
 function SearchPage() {
   // 위치 지정 방식
   const [locationFilter, setLocationFilter] = useState('')
@@ -33,9 +34,8 @@ function SearchPage() {
     const coordinatesArea = CoordinatesArea({
       latitude: searchLocation.selectedCoordinates.latitude,
       longitude: searchLocation.selectedCoordinates.longitude,
-      radius: radiusRef,
+      radius: radiusRef.current.value,
     })
-
     // 위경도 범위를 통해 API 요청을 보내는 함수가 사용될 자리입니다
   }
 
