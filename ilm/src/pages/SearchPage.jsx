@@ -1,7 +1,8 @@
-import { useState } from 'react'
-import { Form, Card, InputGroup } from 'react-bootstrap'
+import { useRef, useState } from 'react'
+import { Form, Card, InputGroup, Button } from 'react-bootstrap'
 import SpecificLocation from '../components/locationFilter/pointLocation/SpecificLocation'
 import CurrentLocationInfo from '../components/locationFilter/currentLocation/CurrentLocationInfo'
+import CoordinatesArea from '../services/CoordinatesArea'
 
 function SearchPage() {
   // 위치 지정 방식
@@ -14,6 +15,7 @@ function SearchPage() {
 
   // 검색할 위치
   const [searchLocation, setSearchLocation] = useState(defaultLocation)
+  const radiusRef = useRef(null)
 
   const handleLocationFilterChange = (event) => {
     setLocationFilter(event.target.value)
@@ -25,6 +27,16 @@ function SearchPage() {
       selectedCoordinates: { latitude, longitude },
       selectedAddress: address,
     })
+  }
+
+  const handleSearchbyLocation = () => {
+    const coordinatesArea = CoordinatesArea({
+      latitude: searchLocation.selectedCoordinates.latitude,
+      longitude: searchLocation.selectedCoordinates.longitude,
+      radius: radiusRef,
+    })
+
+    // 위경도 범위를 통해 API 요청을 보내는 함수가 사용될 자리입니다
   }
 
   return (
@@ -65,8 +77,11 @@ function SearchPage() {
 
       <InputGroup className='mb-3'>
         <InputGroup.Text>반경</InputGroup.Text>
-        <Form.Control type='number' aria-label='radius' className='text-end' />
+        <Form.Control type='number' aria-label='radius' className='text-end' ref={radiusRef} />
         <InputGroup.Text>km</InputGroup.Text>
+        <Button variant='outline-secondary' id='button-addon2' onClick={handleSearchbyLocation}>
+          탐색
+        </Button>
       </InputGroup>
     </>
   )
