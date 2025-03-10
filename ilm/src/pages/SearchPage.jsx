@@ -1,7 +1,8 @@
-import { useState } from 'react'
-import { Form, Card } from 'react-bootstrap'
-import GoogleAddressAutocomplete from '../services/pointLocation/GoogleAddressAutocomplete'
-import CurrentLocationInfo from '../services/currentLocation/CurrentLocationInfo'
+import { useRef, useState } from 'react'
+import { Form, Card, InputGroup, Button } from 'react-bootstrap'
+import SpecificLocation from '../components/locationFilter/pointLocation/SpecificLocation'
+import CurrentLocationInfo from '../components/locationFilter/currentLocation/CurrentLocationInfo'
+import CoordinatesArea from '../services/CoordinatesArea'
 
 function SearchPage() {
   // 위치 지정 방식
@@ -9,11 +10,12 @@ function SearchPage() {
 
   const defaultLocation = {
     selectedCoordinates: { latitude: 37.5720865, longitude: 126.9854332 },
-    selectedAddress: '대한민국 서울',
+    selectedAddress: null,
   }
 
   // 검색할 위치
   const [searchLocation, setSearchLocation] = useState(defaultLocation)
+  const radiusRef = useRef(null)
 
   const handleLocationFilterChange = (event) => {
     setLocationFilter(event.target.value)
@@ -27,29 +29,44 @@ function SearchPage() {
     })
   }
 
+  const handleSearchbyLocation = () => {
+    const coordinatesArea = CoordinatesArea({
+      latitude: searchLocation.selectedCoordinates.latitude,
+      longitude: searchLocation.selectedCoordinates.longitude,
+      radius: radiusRef,
+    })
+
+    // 위경도 범위를 통해 API 요청을 보내는 함수가 사용될 자리입니다
+  }
+
   return (
     <>
       <Form>
-        <Form.Check
-          type='radio'
-          label='현재 위치로 탐색'
-          name='locationFilter'
-          value='current'
-          checked={locationFilter === 'current'}
-          onChange={handleLocationFilterChange}
-        />
-        <Form.Check
-          type='radio'
-          label='주소로 탐색'
-          name='locationFilter'
-          value='address'
-          checked={locationFilter === 'address'}
-          onChange={handleLocationFilterChange}
-        />
+        <InputGroup>
+          <Form.Check
+            type='radio'
+            name='locationFilter'
+            value='current'
+            id='current'
+            checked={locationFilter === 'current'}
+            onChange={handleLocationFilterChange}
+          />
+          <Form.Label htmlFor='current'>현재 위치로 탐색</Form.Label>
+
+          <Form.Check
+            type='radio'
+            name='locationFilter'
+            value='address'
+            id='address'
+            checked={locationFilter === 'address'}
+            onChange={handleLocationFilterChange}
+          />
+          <Form.Label htmlFor='address'>주소로 탐색</Form.Label>
+        </InputGroup>
       </Form>
 
       {locationFilter === 'current' && <CurrentLocationInfo onLocationUpdate={handleLocationSelect} />}
-      {locationFilter === 'address' && <GoogleAddressAutocomplete onSelect={handleLocationSelect} />}
+      {locationFilter === 'address' && <SpecificLocation onSelect={handleLocationSelect} />}
 
       {searchLocation.selectedAddress && (
         <Card className='mt-3 p-3'>
@@ -57,6 +74,15 @@ function SearchPage() {
           <p>{searchLocation.selectedAddress}</p>
         </Card>
       )}
+
+      <InputGroup className='mb-3'>
+        <InputGroup.Text>반경</InputGroup.Text>
+        <Form.Control type='number' aria-label='radius' className='text-end' ref={radiusRef} />
+        <InputGroup.Text>km</InputGroup.Text>
+        <Button variant='outline-secondary' id='button-addon2' onClick={handleSearchbyLocation}>
+          탐색
+        </Button>
+      </InputGroup>
     </>
   )
 }

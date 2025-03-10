@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react'
-import { getLocation } from './Geolocation'
-import { getAddressFromCoordinates } from './GoogleMapsAddress'
+import { getLocation } from '../../../services/currentLocation/Geolocation'
+import { getAddressFromCoordinates } from '../../../services/currentLocation/GoogleMapsAddress'
 
 function CurrentLocationInfo({ onLocationUpdate }) {
   // 현재 위경도와 주소를 반환
