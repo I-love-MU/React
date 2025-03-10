@@ -1,5 +1,5 @@
 import React from 'react';
-import ExhibitionItem from '../ExhibitionItem';
+import ExhibitionItem from './ExhibitionItem';
 
 function Exhibition() {
   const exhibitions = [
