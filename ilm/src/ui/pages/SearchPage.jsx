@@ -1,103 +1,144 @@
 import React, { useState, useEffect } from 'react'
 import { getFilteredData } from '../../services/ApiService'
+import SearchForm from '../components/SearchForm'
 import SearchResults from '../components/SearchResults'
-import Form from 'react-bootstrap/Form';
+import CategoryFilter from '../components/CategoryFilter'
 
 const SearchPage = () => {
-  const [datas, setData] = useState(null) // api 데이터 상태
-  const [selectedCategory, setSelectedCategory] = useState(null); // 체크박스 조건 선택 여부 상태
-  const [checkedBox, setCheckedBox] = useState(null); // 현재 체크된 박스 이름
+  const [displayData, setDisplayData] = useState([]) // 화면에 표시할 데이터 상태
+  const [searchStatus, setSearchStatus] = useState({
+    isInitiated: false, // 검색이 시작되었는지 여부
+    isPending: false,   // 검색이 진행 중인지 여부
+  })
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState(null)
+  const [checkedBox, setCheckedBox] = useState(null)
+  const [error, setError] = useState({
+    isError: false,
+    message: '',
+    type: ''
+  })
 
-  const realmCode = {  // 카테고리 분류 코드
+  const realmCode = {
     theatrical: 'A000',
     concerts: 'B000',
     exhibitions: 'D000',
-  };
+    default: 'D000'
+  }
 
-  // api 데이터 호출
+  // API 데이터 호출
   useEffect(() => {
-    if (setSelectedCategory) {
+    if (selectedCategory && searchStatus.isPending) {
       const apiKey = import.meta.env.VITE_API_KEY
       const fetchData = async () => {
+        // 에러 상태 초기화
+        setError({ isError: false, message: '', type: '' })
+        
         try {
           const responseData = await getFilteredData(apiKey, 1, 10, selectedCategory, 'A')
-          console.log('API 응답 데이터', responseData)
-          setData(responseData)
-        } catch (error) {
-          console.error('API 호출 중 오류: API_KEY 값을 입력해 주세요. ', error)
-          if (error.response) {
-            console.log('응답 오류:', error.response.status, error.response.data)
-          } else if (error.request) {
-            console.log('요청 오류:', error.request)
+          
+          // 검색어가 있으면 검색어로 필터링, 없으면 전체 데이터 표시
+          if (searchTerm) {
+            const lowerCaseSearchTerm = searchTerm.toLowerCase()
+            const filteredResults = responseData.filter(
+              (data) => data.title && data.title.toLowerCase().includes(lowerCaseSearchTerm)
+            )
+            setDisplayData(filteredResults)
           } else {
-            console.log('기타 오류:', error.message)
+            setDisplayData(responseData)
           }
-        } 
+          
+          // 검색 상태 업데이트
+          setSearchStatus({ isInitiated: true, isPending: false })
+        } catch (error) {
+          // 에러 처리
+          const errorState = {
+            isError: true,
+            type: 'unknown',
+            message: "오류가 발생했습니다"
+          }
+          
+          if (error.response) {
+            errorState.type = 'server'
+            errorState.message = `서버에서 오류가 발생했습니다 (${error.response.status})`
+          } else if (error.request) {
+            errorState.type = 'network'
+            errorState.message = "서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요."
+          } else {
+            errorState.type = 'request'
+            errorState.message = "요청 설정 중 오류가 발생했습니다"
+          }
+          
+          setError(errorState)
+          setSearchStatus(prev => ({ ...prev, isPending: false }))
+        }
       }
+      
       fetchData()
     }
-  }, [selectedCategory])
+  }, [selectedCategory, searchStatus.isPending, searchTerm])
 
-
-    // 카테고리 변경 핸들러
-  const handleCategoryFilter = (e) => {
-    const name = e.target.name;
-    const isChecked = e.target.checked;
+  // 검색 처리 함수
+  const handleSearch = (term) => {
+    setSearchTerm(term)
     
-    if (isChecked) {
-      // 체크된 경우 해당 박스만 선택
-      setCheckedBox(name);
-      setSelectedCategory(realmCode[name]);
-    } else {
-      // 체크 해제된 경우 선택 초기화
-      setCheckedBox(null);
-      setSelectedCategory(null);
+    // 카테고리가 선택되지 않았으면 기본값 설정
+    if (!selectedCategory) {
+      setSelectedCategory(realmCode.default)
     }
-  };
+    
+    // 검색 상태 업데이트
+    setSearchStatus({ isInitiated: true, isPending: true })
+  }
+
+  // 카테고리 변경 핸들러
+  const handleCategoryChange = (name, isChecked) => {
+    // 체크박스 상태 업데이트
+    setCheckedBox(isChecked ? name : null)
+    setSelectedCategory(isChecked ? realmCode[name] : null)
+    
+    // 이미 검색이 시작된 상태면 결과 초기화
+    if (searchStatus.isInitiated) {
+      setDisplayData([])
+      setSearchStatus(prev => ({ ...prev, isInitiated: false }))
+    }
+  }
+
+  const renderContent = () => {
+
+    // 에러가 있는 경우
+    if (error.isError) {
+      return <div className="error-message">{error.message}</div>
+    }
+    
+    // 검색 중인 경우
+    if (searchStatus.isPending) {
+      return <p>검색 중입니다...</p>
+    }
+    
+    // 검색 결과가 있는 경우
+    if (displayData.length > 0) {
+      return <SearchResults filteredData={displayData} />
+    }
+    
+    // 검색 결과가 없는 경우
+    return <p>검색 결과가 없습니다.</p>
+  }
 
   return (
     <div className="search-page">
-      <div className="filter-section text-center mt-5">
-        <h2>카테고리 필터</h2>
-        <hr />
-        <Form className="d-flex justify-content-center align-items-center">
-          <Form.Check
-            type="checkbox"
-            id="theatrical"
-            name="theatrical"
-            label="연극"
-            onChange={handleCategoryFilter}
-            checked={checkedBox === 'theatrical'}
-            className="mx-2"
-          />
-          <Form.Check
-            type="checkbox"
-            id="concerts"
-            name="concerts"
-            label="음악/콘서트"
-            onChange={handleCategoryFilter}
-            checked={checkedBox === 'concerts'}
-            className="mx-2"
-          />
-          <Form.Check
-            type="checkbox"
-            id="exhibitions"
-            name="exhibitions"
-            label="전시"
-            onChange={handleCategoryFilter}
-            checked={checkedBox === 'exhibitions'}
-            className="mx-2"
-          />
-        </Form>
+      <CategoryFilter 
+        checkedBox={checkedBox} 
+        onCategoryChange={handleCategoryChange} 
+      />
+      
+      <SearchForm onSearch={handleSearch} />
+      
+      <div className='text-center'>
+        {renderContent()}
       </div>
-
-      <div className='results-section text-center mt-4'>
-        {/* 검색 결과 표시 */}
-        <SearchResults filteredData={datas}/>
-      </div>
-  </div>
+    </div>
   )
-
 }
 
-export default SearchPage;
+export default SearchPage
