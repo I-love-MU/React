@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { Form, Card } from 'react-bootstrap'
-import GoogleAddressAutocomplete from '../components/locationFilter/pointLocation/SpecificLocation'
+import { Form, Card, InputGroup } from 'react-bootstrap'
+import SpecificLocation from '../components/locationFilter/pointLocation/SpecificLocation'
 import CurrentLocationInfo from '../components/locationFilter/currentLocation/CurrentLocationInfo'
 
 function SearchPage() {
@@ -30,26 +30,31 @@ function SearchPage() {
   return (
     <>
       <Form>
-        <Form.Check
-          type='radio'
-          label='현재 위치로 탐색'
-          name='locationFilter'
-          value='current'
-          checked={locationFilter === 'current'}
-          onChange={handleLocationFilterChange}
-        />
-        <Form.Check
-          type='radio'
-          label='주소로 탐색'
-          name='locationFilter'
-          value='address'
-          checked={locationFilter === 'address'}
-          onChange={handleLocationFilterChange}
-        />
+        <InputGroup>
+          <Form.Check
+            type='radio'
+            name='locationFilter'
+            value='current'
+            id='current'
+            checked={locationFilter === 'current'}
+            onChange={handleLocationFilterChange}
+          />
+          <Form.Label htmlFor='current'>현재 위치로 탐색</Form.Label>
+
+          <Form.Check
+            type='radio'
+            name='locationFilter'
+            value='address'
+            id='address'
+            checked={locationFilter === 'address'}
+            onChange={handleLocationFilterChange}
+          />
+          <Form.Label htmlFor='address'>주소로 탐색</Form.Label>
+        </InputGroup>
       </Form>
 
       {locationFilter === 'current' && <CurrentLocationInfo onLocationUpdate={handleLocationSelect} />}
-      {locationFilter === 'address' && <GoogleAddressAutocomplete onSelect={handleLocationSelect} />}
+      {locationFilter === 'address' && <SpecificLocation onSelect={handleLocationSelect} />}
 
       {searchLocation.selectedAddress && (
         <Card className='mt-3 p-3'>
@@ -57,6 +62,12 @@ function SearchPage() {
           <p>{searchLocation.selectedAddress}</p>
         </Card>
       )}
+
+      <InputGroup className='mb-3'>
+        <InputGroup.Text>반경</InputGroup.Text>
+        <Form.Control type='number' aria-label='radius' className='text-end' />
+        <InputGroup.Text>km</InputGroup.Text>
+      </InputGroup>
     </>
   )
 }
