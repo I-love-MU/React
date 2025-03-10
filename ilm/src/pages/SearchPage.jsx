@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Form, Card } from 'react-bootstrap'
-import GoogleAddressAutocomplete from '../services/pointLocation/GoogleAddressAutocomplete'
-import CurrentLocationInfo from '../services/currentLocation/CurrentLocationInfo'
+import GoogleAddressAutocomplete from '../components/locationFilter/pointLocation/SpecificLocation'
+import CurrentLocationInfo from '../components/locationFilter/currentLocation/CurrentLocationInfo'
 
 function SearchPage() {
   // 위치 지정 방식
@@ -9,7 +9,7 @@ function SearchPage() {
 
   const defaultLocation = {
     selectedCoordinates: { latitude: 37.5720865, longitude: 126.9854332 },
-    selectedAddress: '대한민국 서울',
+    selectedAddress: null,
   }
 
   // 검색할 위치
