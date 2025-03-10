@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { getFilteredData } from '../../services/ApiService'
+import SearchResults from '../components/SearchResults'
 import Form from 'react-bootstrap/Form';
 
 const SearchPage = () => {
@@ -11,7 +12,6 @@ const SearchPage = () => {
     theatrical: 'A000',
     concerts: 'B000',
     exhibitions: 'D000',
-    default: 'L000'
   };
 
   // api 데이터 호출
@@ -24,7 +24,14 @@ const SearchPage = () => {
           console.log('API 응답 데이터', responseData)
           setData(responseData)
         } catch (error) {
-          console.error('API 호출 중 오류: ', error)
+          console.error('API 호출 중 오류: API_KEY 값을 입력해 주세요. ', error)
+          if (error.response) {
+            console.log('응답 오류:', error.response.status, error.response.data)
+          } else if (error.request) {
+            console.log('요청 오류:', error.request)
+          } else {
+            console.log('기타 오류:', error.message)
+          }
         } 
       }
       fetchData()
@@ -76,12 +83,17 @@ const SearchPage = () => {
             type="checkbox"
             id="exhibitions"
             name="exhibitions"
-            label="전시회"
+            label="전시"
             onChange={handleCategoryFilter}
             checked={checkedBox === 'exhibitions'}
             className="mx-2"
           />
         </Form>
+      </div>
+
+      <div className='results-section text-center mt-4'>
+        {/* 검색 결과 표시 */}
+        <SearchResults filteredData={datas}/>
       </div>
   </div>
   )
