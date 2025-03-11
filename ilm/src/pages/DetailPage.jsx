@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import xml2js from 'xml-js';
-
-import '../css/detailcss.css';
+import '../css/detailcss.css'; // CSS 파일 경로 확인
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const DetailPage = () => {
@@ -19,7 +18,7 @@ const DetailPage = () => {
     console.log(contentNum)
 
     // api key
-    const apiKey = 'GdRq2wNf3V%2B2XaFCdCiLBhB7feMP3tA7no5CvoII9Mo2QkabR0cQCFR5fGsCxsphvnXhAhy8XnLX1Ep9EYT4HQ%3D%3D';
+    const apiKey = 'key';
 
     // api 데이터 호출.
     useEffect(() => {
@@ -70,47 +69,44 @@ const DetailPage = () => {
     <header id="header">
         <h1>EXHIBITION</h1>
     </header>
-    <div id='contain'>
+    <div id="addpading">
+        <div id='contain'>
+        <section id="mainContent">
 
-    
-    <section id="mainContent">
+        <span onClick={back}>뒤로가기</span>
+            <h3 id="contentTitle">{data.title}</h3>
+            <div class="contentWrapper">
+                
+                <div id="contentImg">
+                    <img src={data.imgUrl} alt="이미지 없음" />
+                </div>
+                
+                <div id="contentDetail">
+                    <h4>상세정보</h4>
+                    <p><strong>기간 </strong>  {datDate(data.startDate)} ~ {datDate(data.endDate)}</p>
+                    <p><strong>장소 </strong>  {data.place}/{data.area}</p>
+                    <p><strong>주소 </strong>  {data.placeAddr}</p>
+                    <p><strong>관람료 </strong>  {data.price}</p>
+                    <p><strong>전화번호 </strong>  {data.phone}</p>
+                    <p><strong>사이트 </strong>  <a href={getUrl(data)} target="_blank">홈페이지 바로가기</a></p>
+                </div>
+            </div>
+        </section>
 
-      <span onClick={back}>뒤로가기</span>
-        <h3 id="contentTitle">{data.title}</h3>
-        <div class="contentWrapper">
-            
-            <div id="contentImg">
-                <img src={data.imgUrl} alt="이미지 없음" />
-            </div>
-             
-            <div id="contentDetail">
-                <h4>상세정보</h4>
-                <p><strong>기간 </strong>  {datDate(data.startDate)} ~ {datDate(data.endDate)}</p>
-                <p><strong>장소 </strong>  {data.place}/{data.area}</p>
-                <p><strong>주소 </strong>  {data.placeAddr}</p>
-                <p><strong>관람료 </strong>  {data.price}</p>
-                <p><strong>전화번호 </strong>  {data.phone}</p>
-                <p><strong>사이트 </strong>  <a href={getUrl(data)} target="_blank">홈페이지 바로가기</a></p>
-            </div>
+        <div id="contentText">
+            <p>전시 정보</p>
         </div>
-    </section>
 
-    <div id="contentText">
-        <p>전시 정보</p>
-    </div>
-
-    <section id="contentInfo">
-        <div class="infoWrapper">
-            
-        
-            
-            <div id="infoText">
-                <h4>About</h4>
-                <p>{getContents(data.contents1)}</p>
-                { data.contents1 === "string" &&<button>READ MORE →</button>}
+        <section id="contentInfo">
+            <div class="infoWrapper">
+                <div id="infoText">
+                    <h4>About</h4>
+                    <p>{getContents(data.contents1)}</p>
+                    { data.contents1 === "string" &&<button href={data.placeUrl} target="_blank">READ MORE →</button>}
+                </div>
             </div>
+        </section>
         </div>
-    </section>
     </div>
 </div>
     );
