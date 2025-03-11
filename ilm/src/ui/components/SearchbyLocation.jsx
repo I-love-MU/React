@@ -1,10 +1,12 @@
 import { useRef, useState } from 'react'
 import { Form, Card, InputGroup, Button } from 'react-bootstrap'
-import SpecificLocation from '../components/locationFilter/pointLocation/SpecificLocation'
-import CurrentLocationInfo from '../components/locationFilter/currentLocation/CurrentLocationInfo'
-import CoordinatesArea from '../services/CoordinatesArea'
+import SpecificLocation from './locationFilter/pointLocation/SpecificLocation'
+import CurrentLocationInfo from './locationFilter/currentLocation/CurrentLocationInfo'
+import CoordinatesArea from '../../services/CoordinatesArea'
+import { OpenApiRealm } from '../../services/OpenApiRealm'
 
-function SearchPage() {
+// 진짜 searchpage 에 컴포넌트로 삽입될 위치 기반 탐색 기능
+function SearchbyLocation({ apiFilter, setSearchResult }) {
   // 위치 지정 방식
   const [locationFilter, setLocationFilter] = useState('')
 
@@ -29,14 +31,25 @@ function SearchPage() {
     })
   }
 
-  const handleSearchbyLocation = () => {
+  const handleSearchbyLocation = async () => {
     const coordinatesArea = CoordinatesArea({
       latitude: searchLocation.selectedCoordinates.latitude,
       longitude: searchLocation.selectedCoordinates.longitude,
-      radius: radiusRef,
+      radius: radiusRef.current.value,
     })
 
-    // 위경도 범위를 통해 API 요청을 보내는 함수가 사용될 자리입니다
+    const newApiFilter = {
+      ...apiFilter,
+      ...coordinatesArea,
+    }
+
+    try {
+      const searchResult = await OpenApiRealm(newApiFilter)
+      setSearchResult(searchResult)
+    } catch (error) {
+      console.error('API 요청 실패:', error)
+      setSearchResult(null)
+    }
   }
 
   return (
@@ -87,4 +100,4 @@ function SearchPage() {
   )
 }
 
-export default SearchPage
+export default SearchbyLocation
