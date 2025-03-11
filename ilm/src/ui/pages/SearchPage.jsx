@@ -1,24 +1,8 @@
 import { useRef, useState } from 'react'
-import { Form, Card, InputGroup, Button } from 'react-bootstrap'
-import SpecificLocation from '../components/locationFilter/pointLocation/SpecificLocation'
-import CurrentLocationInfo from '../components/locationFilter/currentLocation/CurrentLocationInfo'
-import CoordinatesArea from '../../services/CoordinatesArea'
-import { OpenApiRealm } from '../../services/OpenApiRealm'
+import SearchbyLocation from '../components/SearchbyLocation'
 
 // 진짜 searchpage 에 컴포넌트로 삽입될 위치 기반 탐색 기능
 function SearchPage() {
-  // 위치 지정 방식
-  const [locationFilter, setLocationFilter] = useState('')
-
-  const defaultLocation = {
-    selectedCoordinates: { latitude: 37.5720865, longitude: 126.9854332 },
-    selectedAddress: null,
-  }
-
-  // 검색할 위치
-  const [searchLocation, setSearchLocation] = useState(defaultLocation)
-  const radiusRef = useRef(null)
-
   const apiFilter = useRef({
     serviceKey: import.meta.env.VITE_OPENAPI_API_KEY,
     pageNum: '1',
@@ -31,77 +15,19 @@ function SearchPage() {
     serviceTp: '', // (A:공연/전시, B:행사/축제, C:교육/체험)
   })
 
-  const handleLocationFilterChange = (event) => {
-    setLocationFilter(event.target.value)
-    setSearchLocation(defaultLocation)
-  }
-
-  const handleLocationSelect = ({ latitude, longitude, address }) => {
-    setSearchLocation({
-      selectedCoordinates: { latitude, longitude },
-      selectedAddress: address,
-    })
-  }
-
-  const handleSearchbyLocation = async () => {
-    const coordinatesArea = CoordinatesArea({
-      latitude: searchLocation.selectedCoordinates.latitude,
-      longitude: searchLocation.selectedCoordinates.longitude,
-      radius: radiusRef.current.value,
-    })
-
-    apiFilter.current = {
-      ...apiFilter.current,
-      ...coordinatesArea,
-    }
-
-    const searchResult = await OpenApiRealm(apiFilter.current)
-  }
+  const [searchResult, setSearchResult] = useState(null)
 
   return (
     <>
-      <Form>
-        <InputGroup>
-          <Form.Check
-            type='radio'
-            name='locationFilter'
-            value='current'
-            id='current'
-            checked={locationFilter === 'current'}
-            onChange={handleLocationFilterChange}
-          />
-          <Form.Label htmlFor='current'>현재 위치로 탐색</Form.Label>
+      <SearchbyLocation apiFilter={apiFilter.current} setSearchResult={setSearchResult} />
 
-          <Form.Check
-            type='radio'
-            name='locationFilter'
-            value='address'
-            id='address'
-            checked={locationFilter === 'address'}
-            onChange={handleLocationFilterChange}
-          />
-          <Form.Label htmlFor='address'>주소로 탐색</Form.Label>
-        </InputGroup>
-      </Form>
-
-      {locationFilter === 'current' && <CurrentLocationInfo onLocationUpdate={handleLocationSelect} />}
-      {locationFilter === 'address' && <SpecificLocation onSelect={handleLocationSelect} />}
-
-      {searchLocation.selectedAddress && (
-        <Card className='mt-3 p-3'>
-          <h4>선택된 주소</h4>
-          <p>{searchLocation.selectedAddress}</p>
-        </Card>
+      {/* 🔹 검색 결과 출력 */}
+      {searchResult && (
+        <div className='mt-4'>
+          <h3>검색 결과:</h3>
+          <pre>{JSON.stringify(searchResult, null, 2)}</pre>
+        </div>
       )}
-
-      <InputGroup className='mb-3'>
-        <InputGroup.Text>반경</InputGroup.Text>
-        <Form.Control type='number' aria-label='radius' className='text-end' ref={radiusRef} />
-        <InputGroup.Text>km</InputGroup.Text>
-        <Button variant='outline-secondary' id='button-addon2' onClick={handleSearchbyLocation}>
-          탐색
-        </Button>
-      </InputGroup>
     </>
   )
 }
