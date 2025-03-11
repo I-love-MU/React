@@ -4,6 +4,7 @@ import SpecificLocation from './locationFilter/pointLocation/SpecificLocation'
 import CurrentLocationInfo from './locationFilter/currentLocation/CurrentLocationInfo'
 import CoordinatesArea from '../../services/CoordinatesArea'
 import { OpenApiRealm } from '../../services/OpenApiRealm'
+import { getDistanceFromPoint } from '../../services/getDistanceFromPoint'
 
 // 진짜 searchpage 에 컴포넌트로 삽입될 위치 기반 탐색 기능
 function SearchbyLocation({ apiFilter, setSearchResult }) {
@@ -45,7 +46,16 @@ function SearchbyLocation({ apiFilter, setSearchResult }) {
 
     try {
       const searchResult = await OpenApiRealm(newApiFilter)
-      setSearchResult(searchResult)
+      const filteredResults = searchResult.filter((item) => {
+        const distance = getDistanceFromPoint(
+          searchLocation.selectedCoordinates.latitude,
+          searchLocation.selectedCoordinates.longitude,
+          item.gpsY,
+          item.gpsX,
+        )
+        return distance <= radiusRef.current.value
+      })
+      setSearchResult(filteredResults)
     } catch (error) {
       console.error('API 요청 실패:', error)
       setSearchResult(null)
