@@ -2,7 +2,7 @@ import React from 'react'
 
 const SearchResults = ({ filteredData }) => {
   return (
-    <div>
+    <div className='text-center'>
         {filteredData && filteredData.length > 0 ? (
             filteredData.map((data, index) => (
                 <div key={index} className='mb-3'>
