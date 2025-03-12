@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { Form, Row, Col, Button, Container, Card } from 'react-bootstrap'
+import { Form, Row, Col, Container} from 'react-bootstrap'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
@@ -12,76 +12,66 @@ const DateFilter = ({onDateFilterApply}) => {
     setStartDate(date)
     if (endDate && date > endDate) {
       setEndDate(null)
-    }
+    } 
+    updateParent(date, endDate)
   }
 
   const handleEndDateChange = (date) => {
     setEndDate(date)
+    updateParent(startDate, date)
   }
 
   // 날짜를 'YYYYMMDD' 형식으로 변환하는 함수
   const formatDateForApi = (date) => {
-    if (!date) return null
+    if (!date) return ''
     const year = date.getFullYear()
     const month = String(date.getMonth() + 1).padStart(2, '0')
     const day = String(date.getDate()).padStart(2, '0')
     return `${year}${month}${day}`
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    const formattedStartDate = formatDateForApi(startDate)
-    const formattedEndDate = formatDateForApi(endDate) || formatDateForApi(new Date())
-    // 부모 컴포넌트로 날짜 정보 전달
+  // 부모 컴포넌트에 날짜 정보 전달
+  const updateParent = (start, end) => {
+    const formattedStartDate = formatDateForApi(start)
+    const formattedEndDate = formatDateForApi(end) || ''
     onDateFilterApply(formattedStartDate, formattedEndDate)
-    console.log(`선택된 기간: ${startDate.toLocaleDateString()} - ${endDate ? endDate.toLocaleDateString() : '지정되지 않음'}`);
-    console.log(`API 요청 형식: ${formattedStartDate} - ${formattedEndDate}`)
   }
 
   return (
-    <Container className="mt-3">
-      <Card>
-        <Card.Body>
-          <Form onSubmit={handleSubmit}>
-            <Row className="align-items-center">
-              <Col md={4}>
-                <Form.Group>
-                  <Form.Label>시작일</Form.Label>
-                  <DatePicker
-                    selected={startDate}
-                    onChange={handleStartDateChange}
-                    selectsStart
-                    startDate={startDate}
-                    endDate={endDate}
-                    dateFormat="yyyy-MM-dd"
-                    className="form-control"
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={4}>
-                <Form.Group>
-                  <Form.Label>종료일</Form.Label>
-                  <DatePicker
-                    selected={endDate}
-                    onChange={handleEndDateChange}
-                    selectsEnd
-                    startDate={startDate}
-                    endDate={endDate}
-                    minDate={startDate}
-                    dateFormat="yyyy-MM-dd"
-                    className="form-control"
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={4} className="d-flex align-items-end">
-                <Button type="submit" variant="primary" className="mt-3">
-                  적용
-                </Button>
-              </Col>
-            </Row>
-          </Form>
-        </Card.Body>
-      </Card>
+    <Container>
+      <Form>
+        <Row className="text-center mb-3">
+          <Col>
+            <Form.Group>
+              <Form.Label>시작일</Form.Label>
+              <DatePicker
+                selected={startDate}
+                onChange={handleStartDateChange}
+                selectsStart
+                startDate={startDate}
+                endDate={endDate}
+                className="form-control"
+                dateFormat="yyyy-MM-dd"
+              />
+            </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group>
+              <Form.Label>종료일</Form.Label>
+              <DatePicker
+                selected={endDate}
+                onChange={handleEndDateChange}
+                selectsEnd
+                startDate={startDate}
+                endDate={endDate}
+                minDate={startDate}
+                className="form-control"
+                dateFormat="yyyy-MM-dd"
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+      </Form>
     </Container>
   )
 }
