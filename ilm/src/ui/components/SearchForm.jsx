@@ -7,7 +7,7 @@ const SearchForm = ({ onSearch }) => {
   const handleSubmit = (e) => {
     e.preventDefault() // Form 태그 페이지 새로고침 방지
     onSearch(searchTerm)
-  };
+  }
 
   return (
     <Form onSubmit={handleSubmit} className="d-flex justify-content-center mb-5">
@@ -27,4 +27,4 @@ const SearchForm = ({ onSearch }) => {
   );
 };
 
-export default SearchForm;
+export default SearchForm
