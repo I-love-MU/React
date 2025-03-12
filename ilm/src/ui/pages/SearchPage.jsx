@@ -125,7 +125,7 @@ const SearchPage = () => {
   const handleSearch = (term) => {
     setSearchTerm(term)
     
-    // 검색 시작 - 이 때 API 호출 트리거
+    // 검색 시작 API 호출 트리거
     setSearchStatus({
       isInitiated: true,
       isPending: true   
@@ -142,6 +142,7 @@ const SearchPage = () => {
 
   // 카테고리 변경 임시 저장 핸들러
   const handleCategoryChange = (name, isChecked) => {
+
     // 체크박스 상태 업데이트
     setCheckedBox(isChecked ? name : null)
     setTempCategory(isChecked ? realmCode[name] : null)
@@ -154,7 +155,6 @@ const SearchPage = () => {
     setSelectedCategory(tempCategory)
     setFiltersApplied(true)
     
-    // 검색 버튼을 누를 때만 API 호출
     console.log('필터가 적용되었습니다. 검색 버튼을 눌러 결과를 확인하세요.')
   }
 
