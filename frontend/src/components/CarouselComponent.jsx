@@ -1,28 +1,40 @@
-import React from "react";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import React, { useEffect, useState } from "react";
+import { Carousel } from "react-bootstrap";
+import { fetchPerformanceData } from "../api/publicApi";  // ✅ API 파일명 변경
 
-const CarouselComponent = ({ contents }) => {
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 5000,
-  };
+const CarouselComponent = () => {
+  const [performances, setPerformances] = useState([]);
+
+  useEffect(() => {
+    fetchPerformanceData(10).then((data) => {
+      if (data && data.length > 0) {
+        setPerformances(data);
+      } else {
+        console.warn("⚠️ 공연 데이터를 불러올 수 없습니다.");
+      }
+    });
+  }, []);
 
   return (
-    <Slider {...settings}>
-      {contents.map((content, index) => (
-        <div key={index}>
-          <img src={content.poster} alt={content.prfnm} style={{ width: "100%", height: "250px" }} />
-          <h3>{content.prfnm}</h3>
-        </div>
-      ))}
-    </Slider>
+    <Carousel>
+      {performances.length > 0 ? (
+        performances.map((performance, index) => (
+          <Carousel.Item key={index}>
+            <img
+              className="d-block w-100"
+              src={performance.poster || "/default.jpg"}  // 포스터 URL
+              alt={performance.prfnm}  // 공연명
+            />
+            <Carousel.Caption>
+              <h3>{performance.prfnm}</h3>
+              <p>공연 기간: {performance.prfpdfrom} ~ {performance.prfpdto}</p>
+            </Carousel.Caption>
+          </Carousel.Item>
+        ))
+      ) : (
+        <p>🎭 공연 정보를 불러오는 중...</p>
+      )}
+    </Carousel>
   );
 };
 
