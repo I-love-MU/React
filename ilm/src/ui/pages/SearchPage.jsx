@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { getFilteredData } from '../../services/ApiService'
 import SearchResults from '../components/SearchResults'
 import DateFilter from '../components/DateFilter'
@@ -9,7 +9,9 @@ const SearchPage = () => {
     isInitiated: false,
     isPending: false,
   })
-  const [error, setError] = useState({
+
+  // useState 대신 useRef 사용
+  const errorRef = useRef({
     isError: false,
     message: '',
     type: ''
@@ -28,7 +30,13 @@ const SearchPage = () => {
     if (searchStatus.isPending) {
       const apiKey = import.meta.env.VITE_API_KEY
       const fetchData = async () => {
-        setError({ isError: false, message: '', type: '' })
+        // 에러 초기화
+        errorRef.current = {
+          isError: false,
+          message: '',
+          type: ''
+        }
+
         try {
           const responseData = await getFilteredData(
             apiKey, 
@@ -40,7 +48,6 @@ const SearchPage = () => {
             dateFilter.endDate
           )
           console.log('API 응답 데이터:', responseData)
-          
           setDisplayData(responseData)
           
           // 검색 상태 업데이트
@@ -50,47 +57,44 @@ const SearchPage = () => {
           })
         } catch (error) {
           // 에러 처리
-          const errorState = {
-            isError: true,
-            type: 'unknown',
-            message: "오류가 발생했습니다"
-          }
           if (error.response) {
-            errorState.type = 'server'
-            errorState.message = `서버에서 오류가 발생했습니다 (${error.response.status})`
+            errorRef.type = 'server'
+            errorRef.message = `서버에서 오류가 발생했습니다 (${error.response.status})`
           } else if (error.request) {
-            errorState.type = 'network'
-            errorState.message = "서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요."
+            errorRef.type = 'network'
+            errorRef.message = "서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요."
           } else {
-            errorState.type = 'request'
-            errorState.message = "요청 설정 중 오류가 발생했습니다"
+            errorRef.type = 'request'
+            errorRef.message = "요청 설정 중 오류가 발생했습니다"
           }
-          setError(errorState)
-          setSearchStatus(prev => ({ ...prev, isPending: false }))
+
+          // 검색 상태만 업데이트하며 재랜더링
+          setSearchStatus(prev => ({ 
+            ...prev, 
+            isPending: false 
+          }))
         }
       }
       fetchData()
     }
   }, [searchStatus.isPending, dateFilter])
 
+
   // 날짜 필터 적용 핸들러
   const handleDateFilterApply = (startDate, endDate) => {
-    setDateFilter({
-      startDate,
-      endDate
-    })
-    
+    setDateFilter({ startDate, endDate })
     // 검색 시작
     setSearchStatus({
       isInitiated: true,
       isPending: true
     })
   }
+    
 
   const renderContent = () => {
     // 에러가 있는 경우
-    if (error.isError) {
-      return <div className="alert alert-danger">{error.message}</div>
+    if (errorRef.isError) {
+      return <div className="alert alert-danger">{errorRef.message}</div>
     }
     
     // 검색 중인 경우
