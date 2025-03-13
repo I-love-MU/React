@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 const testPage = () => {
   const navigate = useNavigate();
 
-  const dtil = (e) =>{
+  const move_detail = (e) =>{
     navigate('/detail',{
       state:{
         contentNum:e.target.value,
@@ -14,7 +14,7 @@ const testPage = () => {
 
   return (
     <div>testPage
-      <button onClick={dtil} value={309407}> 컨탠트 </button>
+      <button onClick={move_detail} value={309407}> 컨탠트 </button>
     </div>
   )
 }

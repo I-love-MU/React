@@ -1,26 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import xml2js from 'xml-js';
-import '../css/detailcss.css'; // CSS 파일 경로 확인
 import { useLocation, useNavigate } from 'react-router-dom';
+import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import bener from '../imgs/bener.jpg'
+
 
 const DetailPage = () => {
-    // 공연 상세 데이터
     const [data, setData] = useState(null);
-    
-    // 뒤로가기 버튼
     const navigate = useNavigate();
-
-
-    // 넘어오는 sep 데이터 처리.
     const location = useLocation();
-    const {contentNum} = location.state || {};
-    console.log(contentNum)
+    const { contentNum } = location.state || {};
 
-    // api key
-    const apiKey = 'key';
+    const apiKey = 'lzgmtTF9lPk%2B5FJ5jD4qzj%2Bbfjj6wyuQ7Rr%2BvFdLwijsyLvV5Q%2FbIQoztARcFLDBZ%2BmVggw0ZKo5gfU%2B2cBQuA%3D%3D';
 
-    // api 데이터 호출.
     useEffect(() => {
         axios
             .get(`https://apis.data.go.kr/B553457/nopenapi/rest/publicperformancedisplays/detail?serviceKey=${apiKey}&seq=${contentNum}`, {
@@ -34,83 +28,62 @@ const DetailPage = () => {
                     return acc;
                 }, {});
                 setData(parsedData);
-                console.log(parsedData);
             })
-            .catch((error) => {
-                console.error(error);
-            });
+            .catch((error) => console.error(error));
     }, []);
 
-    // 공연 상세데이터가 넘어오지 않을경우 처리.
     if (!data) return <div>Loading...</div>;
 
-    // 예매 사이트 url이 없을경우(무료 공연) 장소url 로 대체
-    function getUrl(data) {
-      return data.url && typeof data.url === "string" ? data.url : data.placeUrl;
-    }
-
-    // 공연의 내용이 없을경우 대신할 text
-    function getContents(data) {
-        return data.contents1 && typeof data.contents1 === "string" ? data.contents1 : "해당 공연의 정보가 없습니다.";
-    }
-
-    // 날짜 데이터 변환 (YYYYMMDD) => (YYYY.MM.DD)
-    const datDate = (date) =>{
-      return `${date.substring(0,4)}.${date.substring(4,6)}.${date.substring(6,8)}`;
-    }
-
-    const back = () =>{
-      navigate(-1);
-    }
-
+    const getUrl = (data) => data.url && typeof data.url === "string" ? data.url : data.placeUrl;
+    const getContents = (data) => data.contents1 && typeof data.contents1 === "string" ? data.contents1 : "해당 공연의 정보가 없습니다.";
+    const formatDate = (date) => `${date.substring(0, 4)}.${date.substring(4, 6)}.${date.substring(6, 8)}`;
 
     return (
-<div id="main">
-    <header id="header">
-        <h1>EXHIBITION</h1>
-    </header>
-    <div id="addpading">
-        <div id='contain'>
-        <section id="mainContent">
-
-        <span onClick={back}>뒤로가기</span>
-            <h3 id="contentTitle">{data.title}</h3>
-            <div class="contentWrapper">
-                
-                <div id="contentImg">
-                    <img src={data.imgUrl} alt="이미지 없음" />
-                </div>
-                
-                <div id="contentDetail">
-                    <h4>상세정보</h4>
-                    <p><strong>기간 </strong>  {datDate(data.startDate)} ~ {datDate(data.endDate)}</p>
-                    <p><strong>장소 </strong>  {data.place}/{data.area}</p>
-                    <p><strong>주소 </strong>  {data.placeAddr}</p>
-                    <p><strong>관람료 </strong>  {data.price}</p>
-                    <p><strong>전화번호 </strong>  {data.phone}</p>
-                    <p><strong>사이트 </strong>  <a href={getUrl(data)} target="_blank">홈페이지 바로가기</a></p>
-                </div>
-            </div>
-        </section>
-
-        <div id="contentText">
-            <p>전시 정보</p>
-        </div>
-
-        <section id="contentInfo">
-            <div class="infoWrapper">
-                <div id="infoText">
-                    <h4>About</h4>
-                    <p>{getContents(data.contents1)}</p>
-                    { data.contents1 === "string" &&<button href={data.placeUrl} target="_blank">READ MORE →</button>}
-                </div>
-            </div>
-        </section>
-        </div>
-    </div>
-</div>
+        <Container className="py-0 d-flex flex-column justify-content-center align-items-center px-0 mx-auto">
+            <header style={{
+                backgroundImage:"url("+bener+")",
+                backgroundPosition:"center",
+                width: "100%", 
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+                height: "15vh",
+            }}
+             className="d-flex align-items-center justify-content-center text-black py-4" >
+                <h1>EXHIBITION</h1>
+            </header>
+            
+            <Button variant="secondary" className="my-3" onClick={() => navigate(-1)}>뒤로가기</Button>
+            
+            <Row className="justify-content-center">
+                <Col md={8}>
+                    <h3 className="text-center mb-4">{data.title}</h3>
+                    <Card className="mb-4">
+                        <Row className="g-0">
+                            <Col md={6} className="d-flex align-items-center justify-content-center">
+                                <Card.Img src={data.imgUrl} alt="이미지 없음" className="img-fluid p-3" />
+                            </Col>
+                            <Col md={6}>
+                                <Card.Body>
+                                    <Card.Title>상세정보</Card.Title>
+                                    <Card.Text><strong>기간 |</strong> {formatDate(data.startDate)} ~ {formatDate(data.endDate)}</Card.Text>
+                                    <Card.Text><strong>장소 |</strong> {data.place} / {data.area}</Card.Text>
+                                    <Card.Text><strong>주소 |</strong> {data.placeAddr}</Card.Text>
+                                    <Card.Text><strong>관람료 |</strong> {data.price}</Card.Text>
+                                    <Card.Text><strong>전화번호 |</strong> {data.phone}</Card.Text>
+                                    <Card.Text><strong>사이트 |</strong> <a href={getUrl(data)} target="_blank" rel="noopener noreferrer">홈페이지 바로가기</a></Card.Text>
+                                </Card.Body>
+                            </Col>
+                        </Row>
+                    </Card>
+                    
+                    <Card className="p-4 bg-light">
+                        <h4>About</h4>
+                        <p>{getContents(data)}</p>
+                    </Card>
+                </Col>
+            </Row>
+        </Container>
     );
 };
 
 export default DetailPage;
-
