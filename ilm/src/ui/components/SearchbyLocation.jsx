@@ -6,11 +6,13 @@ import CoordinatesArea from '../../services/CoordinatesArea'
 import { OpenApiRealm } from '../../services/OpenApiRealm'
 import { getDistanceFromPoint } from '../../services/getDistanceFromPoint'
 
-// 진짜 searchpage 에 컴포넌트로 삽입될 위치 기반 탐색 기능
+// 검색 컴포넌트 병합 시 api 필터를 반환하도록 수정
+// 검색 컴포넌트 병합 시 setSearchResult props 제거
 function SearchbyLocation({ apiFilter, setSearchResult }) {
-  // 위치 지정 방식
+  // 검색할 위치 지정 방식(현재 위치, 지정 위치)
   const [locationFilter, setLocationFilter] = useState('')
 
+  // 기본 위치 좌표(서울 중심부)
   const defaultLocation = {
     selectedCoordinates: { latitude: 37.5720865, longitude: 126.9854332 },
     selectedAddress: null,
@@ -18,6 +20,8 @@ function SearchbyLocation({ apiFilter, setSearchResult }) {
 
   // 검색할 위치
   const [searchLocation, setSearchLocation] = useState(defaultLocation)
+
+  // 검색할 반경 거리
   const radiusRef = useRef(null)
 
   const handleLocationFilterChange = (event) => {
@@ -32,7 +36,12 @@ function SearchbyLocation({ apiFilter, setSearchResult }) {
     })
   }
 
+  // 검색할 위치의 좌표를 통해 api 요청하는 함수
+  // 버튼 이벤트 핸들러
+  // 검색 컴포넌트와 병합 시 삭제 후 검색 컴포넌트에 역할 전이
   const handleSearchbyLocation = async () => {
+    // 반경을 통해 위경도 범위를 계산하는 함수
+    // 검색 컴포넌트 병합 시 결과를 api 필터와 함께 반환
     const coordinatesArea = CoordinatesArea({
       latitude: searchLocation.selectedCoordinates.latitude,
       longitude: searchLocation.selectedCoordinates.longitude,
@@ -44,6 +53,8 @@ function SearchbyLocation({ apiFilter, setSearchResult }) {
       ...coordinatesArea,
     }
 
+    // 검색된 컨텐츠의 위치가 반경 내인지 확인하는 코드
+    // 검색 컴포넌트 병합 시 검색 결과 출력 컴포넌트에 전이
     try {
       const searchResult = await OpenApiRealm(newApiFilter)
       const filteredResults = searchResult.filter((item) => {
