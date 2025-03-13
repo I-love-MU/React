@@ -19,6 +19,7 @@ function SearchPage() {
 
   return (
     <>
+      {/* 검색 컴포넌트와 병합 시 apiFilter props 제거 */}
       <SearchbyLocation apiFilter={apiFilter.current} setSearchResult={setSearchResult} />
 
       {/* 🔹 검색 결과 출력 */}
