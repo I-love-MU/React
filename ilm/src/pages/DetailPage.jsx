@@ -39,7 +39,7 @@ const DetailPage = () => {
     const formatDate = (date) => `${date.substring(0, 4)}.${date.substring(4, 6)}.${date.substring(6, 8)}`;
 
     return (
-        <Container className="py-0 d-flex flex-column justify-content-center align-items-center px-0 mx-auto">
+        <Container className="py-0 d-flex flex-column justify-content-center align-items-center px-0 mx-auto ">
             <header style={{
                 backgroundImage:"url("+bener+")",
                 backgroundPosition:"center",
@@ -51,14 +51,21 @@ const DetailPage = () => {
              className="d-flex align-items-center justify-content-center text-black py-4" >
                 <h1>EXHIBITION</h1>
             </header>
-            
-            <Button variant="secondary" className="my-3" onClick={() => navigate(-1)}>뒤로가기</Button>
-            
+            <Row className="align-items-center w-100 my-3">
+                <Col xs="auto" className="ps-3">
+                    <Button variant="secondary" onClick={() => navigate(-1)}>
+                        뒤로가기
+                    </Button>
+                </Col>
+                <Col className="text-center">
+                    <h3 className="mb-0">{data.title}</h3>
+                </Col>
+                <Col xs="auto"></Col>
+            </Row>
             <Row className="justify-content-center">
                 <Col md={8}>
-                    <h3 className="text-center mb-4">{data.title}</h3>
                     <Card className="mb-4">
-                        <Row className="g-0">
+                        <Row className="g-0"> 
                             <Col md={6} className="d-flex align-items-center justify-content-center">
                                 <Card.Img src={data.imgUrl} alt="이미지 없음" className="img-fluid p-3" />
                             </Col>
@@ -75,7 +82,6 @@ const DetailPage = () => {
                             </Col>
                         </Row>
                     </Card>
-                    
                     <Card className="p-4 bg-light">
                         <h4>About</h4>
                         <p>{getContents(data)}</p>
