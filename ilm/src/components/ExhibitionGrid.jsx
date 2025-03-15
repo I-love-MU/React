@@ -1,33 +1,45 @@
-// src/components/ExhibitionGrid.jsx
-import React from 'react';
+import React, { useEffect, useState } from "react";
+import { fetchExhibitionData } from "./Fetchdata"; // API 함수 import
 
 const ExhibitionGrid = () => {
-  const exhibitionItems = [
-    { title: '전시 제목 1', imageUrl: '/assets/images/exhibit1.jpg', date: '2024.11.12 ~ 2025.03.16' },
-    { title: '전시 제목 2', imageUrl: '/assets/images/exhibit2.jpg', date: '2024.11.12 ~ 2025.03.16' },
-    { title: '전시 제목 3', imageUrl: '/assets/images/exhibit3.jpg', date: '2024.11.12 ~ 2025.03.16' },
-    { title: '전시 제목 4', imageUrl: '/assets/images/exhibit4.jpg', date: '2024.11.12 ~ 2025.03.16' },
-    { title: '전시 제목 5', imageUrl: '/assets/images/exhibit5.jpg', date: '2024.11.12 ~ 2025.03.16' },
-    { title: '전시 제목 6', imageUrl: '/assets/images/exhibit6.jpg', date: '2024.11.12 ~ 2025.03.16' },
-    { title: '전시 제목 7', imageUrl: '/assets/images/exhibit7.jpg', date: '2024.11.12 ~ 2025.03.16' },
-    { title: '전시 제목 8', imageUrl: '/assets/images/exhibit8.jpg', date: '2024.11.12 ~ 2025.03.16' },
-    { title: '전시 제목 9', imageUrl: '/assets/images/exhibit9.jpg', date: '2024.11.12 ~ 2025.03.16' },
-    { title: '전시 제목 10', imageUrl: '/assets/images/exhibit10.jpg', date: '2024.11.12 ~ 2025.03.16' },
-    { title: '전시 제목 11', imageUrl: '/assets/images/exhibit11.jpg', date: '2024.11.12 ~ 2025.03.16' },
-    { title: '전시 제목 12', imageUrl: '/assets/images/exhibit12.jpg', date: '2024.11.12 ~ 2025.03.16' },
-  ];
+  const [exhibitionItems, setExhibitionItems] = useState([]); // 초기 상태는 빈 배열
+
+  useEffect(() => {
+    const fetchData = async () => {
+      // const data = await fetchExhibitionData(); // API 데이터 가져오기
+      // 공연정보 3가지 가져오기 
+      const theatre = await fetchExhibitionData("AAAA");
+      
+      const concert = await fetchExhibitionData("BBBC");
+    
+      const exhibition = await fetchExhibitionData("CCCC");
+    
+      //3가지 봉합 
+      setExhibitionItems([...theatre, ...concert, ...exhibition]);
+
+      // console.log("tata", data)
+      // setExhibitionItems(data); // 상태 업데이트
+    };
+
+    fetchData();
+  }, []); // ✅ 의존성 배열을 빈 값([])으로 두어 최초 1회만 실행
 
   return (
-    <section style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', padding: '20px' }}>
-      {exhibitionItems.map((item, index) => (
-        <div key={index} style={{ textAlign: 'center' }}>
-          <img src={item.imageUrl} alt={item.title} style={{ width: '100%', height: 'auto' }} />
-          <h3>{item.title}</h3>
-          <p>{item.date}</p>
-        </div>
-      ))}
+    <section style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "20px", padding: "20px" }}>
+      {exhibitionItems.length > 0 ? ( // 데이터가 있을 때만 렌더링
+        exhibitionItems.map((item, index) => (
+          
+          <div key={index} style={{ textAlign: "center" }}>
+            <img src={item.poster} alt={item.title} style={{ width: "100%", height: "auto" }} />
+            <h3>{item.title}</h3>
+            <p>{item.date}</p>
+          </div>
+        ))
+      ) : (
+        <p>데이터를 불러오는 중...</p> // 데이터 로딩 중 표시
+      )}
     </section>
   );
-}
+};
 
 export default ExhibitionGrid;
