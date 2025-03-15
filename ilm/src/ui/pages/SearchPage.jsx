@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from 'react'
 import { getFilteredData } from '../../services/ApiService'
 import SearchForm from '../components/SearchForm'
 import SearchResults from '../components/SearchResults'
-import DateFilter from '../components/DateFilter'
-import CategoryFilter from '../components/CategoryFilter'
+import DateFilter from '../components/filter/DateFilter'
+import CategoryFilter from '../components/filter/CategoryFilter'
 import { Card, Button, Container, Row, Col } from 'react-bootstrap'
 
 const SearchPage = () => {
@@ -24,7 +24,9 @@ const SearchPage = () => {
     numOfRow: '10',
     from: '',
     to: '',
-    realmCode: 'L000', // 기본값
+    keyword: '',
+    sortStdr: '',
+    realmCode: 'L000',
     serviceTp: 'A',
     searchTerm: ''
   })
