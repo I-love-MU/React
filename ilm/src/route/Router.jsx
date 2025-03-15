@@ -1,12 +1,22 @@
 import { createBrowserRouter } from 'react-router-dom'
-import App from '../App'
+import MainLayout from '../ui/layouts/MainLayout'
+import SearchPage from '../ui/pages/SearchPage'
 
-const router = createBrowserRouter([
+const routes = [
   {
     path: '/',
-    element: <App />,
-    children: [],
+    element: <MainLayout />,
+    loader: () => 'I love mu',
+    children: [
+      {
+        path: 'search',
+        element: <SearchPage />,
+        loader: () => 'SEARCH'
+      },
+    ]
   },
-])
+];
 
-export default router
+const router = createBrowserRouter(routes)
+
+export { router, routes }
