@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import { getFilteredData } from '../../services/ApiService'
+import React, { useState } from 'react'
 import SearchForm from '../components/SearchForm'
 import SearchResults from '../components/SearchResults'
 import CategoryFilter from '../components/CategoryFilter'
@@ -23,72 +22,45 @@ const SearchPage = () => {
     theatrical: 'A000',
     concerts: 'B000',
     exhibitions: 'D000',
-    default: 'D000'
+    default: 'L000'
   }
 
-  // API 데이터 호출
-  useEffect(() => {
-    if (selectedCategory && searchStatus.isPending) {
-      const apiKey = import.meta.env.VITE_API_KEY
-      const fetchData = async () => {
-        // 에러 상태 초기화
-        setError({ isError: false, message: '', type: '' })
-        
-        try {
-          const responseData = await getFilteredData(apiKey, 1, 10, selectedCategory, 'A')
-          
-          // 검색어가 있으면 검색어로 필터링, 없으면 전체 데이터 표시
-          if (searchTerm) {
-            const lowerCaseSearchTerm = searchTerm.toLowerCase()
-            const filteredResults = responseData.filter(
-              (data) => data.title && data.title.toLowerCase().includes(lowerCaseSearchTerm)
-            )
-            setDisplayData(filteredResults)
-          } else {
-            setDisplayData(responseData)
-          }
-          
-          // 검색 상태 업데이트
-          setSearchStatus({ isInitiated: true, isPending: false })
-        } catch (error) {
-          // 에러 처리
-          const errorState = {
-            isError: true,
-            type: 'unknown',
-            message: "오류가 발생했습니다"
-          }
-          
-          if (error.response) {
-            errorState.type = 'server'
-            errorState.message = `서버에서 오류가 발생했습니다 (${error.response.status})`
-          } else if (error.request) {
-            errorState.type = 'network'
-            errorState.message = "서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요."
-          } else {
-            errorState.type = 'request'
-            errorState.message = "요청 설정 중 오류가 발생했습니다"
-          }
-          
-          setError(errorState)
-          setSearchStatus(prev => ({ ...prev, isPending: false }))
-        }
-      }
-      
-      fetchData()
-    }
-  }, [selectedCategory, searchStatus.isPending, searchTerm])
-
-  // 검색 처리 함수
-  const handleSearch = (term) => {
+  // SearchForm에서 전달받은 검색 결과 처리
+  const handleSearch = (term, results, error = null) => {
     setSearchTerm(term)
     
-    // 카테고리가 선택되지 않았으면 기본값 설정
-    if (!selectedCategory) {
-      setSelectedCategory(realmCode.default)
+    if (error) {
+      // 에러 처리
+      const errorState = {
+        isError: true,
+        type: 'unknown',
+        message: "오류가 발생했습니다"
+      }
+      
+      if (error.response) {
+        errorState.type = 'server'
+        errorState.message = `서버에서 오류가 발생했습니다 (${error.response.status})`
+      } else if (error.request) {
+        errorState.type = 'network'
+        errorState.message = "서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요."
+      } else {
+        errorState.type = 'request'
+        errorState.message = "요청 설정 중 오류가 발생했습니다"
+      }
+      
+      setError(errorState)
+    } else {
+      // 에러 상태 초기화
+      setError({ isError: false, message: '', type: '' })
+      // 검색 결과 설정
+      setDisplayData(results)
     }
     
     // 검색 상태 업데이트
-    setSearchStatus({ isInitiated: true, isPending: true })
+    setSearchStatus({
+      isInitiated: true,
+      isPending: false
+    })
   }
 
   // 카테고리 변경 핸들러
@@ -96,7 +68,7 @@ const SearchPage = () => {
     // 체크박스 상태 업데이트
     setCheckedBox(isChecked ? name : null)
     setSelectedCategory(isChecked ? realmCode[name] : null)
-    
+      
     // 이미 검색이 시작된 상태면 결과 초기화
     if (searchStatus.isInitiated) {
       setDisplayData([])
@@ -132,7 +104,7 @@ const SearchPage = () => {
         onCategoryChange={handleCategoryChange} 
       />
       
-      <SearchForm onSearch={handleSearch} />
+      <SearchForm onSearch={handleSearch} selectedCategory={selectedCategory} />
       
       <div className='text-center'>
         {renderContent()}
@@ -142,3 +114,4 @@ const SearchPage = () => {
 }
 
 export default SearchPage
+
