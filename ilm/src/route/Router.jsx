@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom'
-import MainLayout from '../pages/MainLayouy'
+import MainLayout from '../pages/MainLayout'
 import DetailPage from '../pages/DetailPage'
 import TestPage from '../pages/TestPage'
 
