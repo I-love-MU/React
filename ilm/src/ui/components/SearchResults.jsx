@@ -1,22 +1,49 @@
 import React from 'react'
+import { Container, Row, Col, Card, Alert } from 'react-bootstrap'
+
 
 const SearchResults = ({ filteredData }) => {
+
+  if (! filteredData || filteredData.length == 0 ) {
+    return (
+      <Alert variant='light' className='mt-3'>
+        검색 결과가 없습니다.
+      </Alert>
+    )
+  }
+
   return (
-    <div>
-        {filteredData && filteredData.length > 0 ? (
-            filteredData.map((data, index) => (
-                <div key={index} className='mb-3'>
-                    <h3>{data.title}</h3>
-                    <p>장소: {data.place}</p>
-                    <p>기간: {data.startDate} ~ {data.endDate}</p>
-                    <p>분류이름: {data.realmName}</p>
-                    <p>분류목록: {data.serviceName}</p>
-                </div>
-            ))
-        ) : (
-          <p>검색 결과가 없습니다.</p>
-        )}
-    </div>
+    <Container className='mt-4'>
+      <Row xs={1} md={2} lg={4} className='g-4'>
+        {filteredData.map((data, index) => (
+          <Col key={index}>
+            <Card className='h-100 shadow-sm'>
+              <div style={{ height: '100%', overflow: 'hidden' }}>
+                {data.thumbnail && (
+                  <Card.Img
+                    variant='top'
+                    src={data.thumbnail}
+                    alt={data.title}
+                    style={{ width: '100%' , height: '100%', objectFit: 'cover'}}
+                    />
+                )}
+              </div>
+              <Card.Body>
+                <Card.Title className='text-truncate'>
+                  {data.title}
+                </Card.Title>
+                <Card.Text>
+                  <strong>장소:</strong> {data.place || '정보 없음'}<br />
+                  <strong>기간:</strong> {data.startDate || '정보 없음'} ~ {data.endDate || '정보 없음'}<br />
+                  <strong>분류이름:</strong> {data.realmName || '정보 없음'}<br />
+                  <strong>분류목록:</strong> {data.serviceName || '정보 없음'}
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
+      </Row>
+    </Container>
   )
 }
 

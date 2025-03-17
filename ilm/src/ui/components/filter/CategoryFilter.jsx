@@ -1,19 +1,17 @@
-import React from 'react';
-import Form from 'react-bootstrap/Form';
+import React from 'react'
+import Form from 'react-bootstrap/Form'
 
 const CategoryFilter = ({ checkedBox, onCategoryChange }) => {
   // 카테고리 변경 핸들러
   const handleCategoryFilter = (e) => {
-    const name = e.target.name;
-    const isChecked = e.target.checked;
-    onCategoryChange(name, isChecked);
+    const name = e.target.name
+    const isChecked = e.target.checked
+    onCategoryChange(name, isChecked)
   };
 
   return (
     <div className="filter-section text-center mt-5">
-      <h2>카테고리 적용 공연정보 검색</h2>
-      <hr />
-      <Form className="d-flex justify-content-center align-items-center">
+      <Form className="d-flex justify-content-center align-items-center mb-5">
         <Form.Check
           type="checkbox"
           id="theatrical"
@@ -43,7 +41,8 @@ const CategoryFilter = ({ checkedBox, onCategoryChange }) => {
         />
       </Form>
     </div>
-  );
-};
+  )
+}
 
-export default CategoryFilter;
+export default CategoryFilter
+
