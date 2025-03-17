@@ -12,11 +12,11 @@
   "dependencies": {
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
+    "fast-xml-parser": "^5.0.9",
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.4",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^6.26.0",
-    "xml-js": "^1.6.11"
+    "react-router-dom": "^6.26.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
