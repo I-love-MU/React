@@ -3,7 +3,8 @@ import SearchForm from '../components/SearchForm'
 import SearchResults from '../components/SearchResults'
 import DateFilter from '../components/filter/DateFilter'
 import CategoryFilter from '../components/filter/CategoryFilter'
-import { Card, Button, Container, Row, Col } from 'react-bootstrap'
+import { Card, Button, Container, Row, Col, Offcanvas, Toast, ToastContainer } from 'react-bootstrap'
+import { ArrowClockwise} from 'react-bootstrap-icons'
 
 const SearchPage = () => {
   // 검색 결과 데이터 상태
@@ -19,7 +20,7 @@ const SearchPage = () => {
   const apiFilter = useRef({
     serviceKey: import.meta.env.VITE_API_KEY,
     pageNum: '1',
-    numOfRow: '10',
+    numOfRow: '12',
     from: '',
     to: '',
     keyword: '',
@@ -40,6 +41,7 @@ const SearchPage = () => {
   
   // 필터 적용 상태
   const [filtersApplied, setFiltersApplied] = useState(false)
+  const [resetDates, setResetDates] = useState(false)
   
   // 에러처리 상태
   const errorRef = useRef({
@@ -55,6 +57,15 @@ const SearchPage = () => {
     exhibitions: 'D000',
     default: 'L000'
   }
+
+  // Offcanvas 상태
+  const [show, setShow] = useState(false)
+  const handleClose = () => setShow(false)
+  const handleShow = () => setShow(true)
+  
+  // Toast 알림 상태
+  const [showToast, setShowToast] = useState(false)
+  const [toastMessage, setToastMessage] = useState('')
   
   // 검색 처리 함수 - 검색 버튼 클릭 시 호출
   const handleSearch = (term) => {
@@ -135,18 +146,72 @@ const SearchPage = () => {
     apiFilter.current.from = uiFilters.startDate
     apiFilter.current.to = uiFilters.endDate
     apiFilter.current.realmCode = uiFilters.category || realmCode.default
+    
     setFiltersApplied(true)
     console.log('필터가 적용되었습니다. 검색 버튼을 눌러 결과를 확인하세요.')
+
+    // Toast 메시지 표시
+    setToastMessage('✔️ 필터가 적용되었습니다.')
+    setShowToast(true)
+
+    // 3초 후 Toast 자동 닫기
+    setTimeout(() => {
+    setShowToast(false)
+    }, 3000)
+    
+    console.log('✔️필터가 적용되었습니다. 검색 버튼을 눌러 결과를 확인하세요.')
+  }
+
+  // 필터 조건만 초기화하는 함수
+const resetFilters = () => {
+
+  // UI 필터 상태 초기화
+  setUiFilters({
+    startDate: '',
+    endDate: '',
+    category: null,
+    checkedBox: null,
+    searchTerm: uiFilters.searchTerm // 검색어는 유지
+  })
+  
+  // API 필터의 조건 부분만 초기화
+  apiFilter.current = {
+    ...apiFilter.current,
+    from: '',
+    to: '',
+    realmCode: 'L000',
+    // searchTerm은 변경하지 않음 (검색 결과 유지)
   }
   
+  // 날짜 초기화 트리거
+  setResetDates(prev => !prev)
+
+  // 필터 적용 상태 초기화
+  setFiltersApplied(false)
+  
+  // Toast 메시지 표시
+  setToastMessage('✔️ 필터 조건이 초기화되었습니다.')
+  setShowToast(true)
+  
+  // 3초 후 Toast 자동 닫기
+  setTimeout(() => {
+    setShowToast(false)
+  }, 3000)
+  
+  console.log('✔️ 필터 조건이 초기화되었습니다.')
+}
+  
   const renderContent = () => {
+
     // 에러가 있는 경우
     if (errorRef.current.isError) {
       return (
-        <div className="error-container">
-          <h3>오류 발생</h3>
-          <p>{errorRef.current.message}</p>
-        </div>
+        <Card className="text-center">
+          <Card.Body>
+            <Card.Title className="text-danger">오류 발생</Card.Title>
+            <Card.Text>{errorRef.current.message}</Card.Text>
+          </Card.Body>
+        </Card>
       )
     }
     
@@ -160,52 +225,81 @@ const SearchPage = () => {
   
   return (
     <Container className="mt-4">
-      <h2 className="text-center mb-4">공연 정보 검색</h2>
+      <h1 className="text-start mb-4"><strong>Search</strong></h1>
 
+      {/* SearchForm 가운데 배치 */}
       <Row className="justify-content-center mb-4">
-        <Col md={8} lg={6} className="text-center">
+        <Col className="text-center">
           <SearchForm 
           onSearch={handleSearch} 
           onSearchResults={handleSearchResults}
           apiFilter={apiFilter.current}
           searchStatus={searchStatus}
+          handleShow={handleShow}
           />
         </Col>
       </Row>
 
-      <Row className="mb-4">
-        <Col md={6}>
-          <Card className="mt-3 mb-3">
-            <Card.Body>
-              <Card.Title>날짜 필터</Card.Title>
-              <DateFilter onDateFilterApply={handleDateFilterChange} />
-            </Card.Body>
-          </Card>
-        </Col>
+      <Offcanvas show={show} onHide={handleClose} scroll={true} backdrop={true}>
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>필터링 검색</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          <Container>
+            <Row>
+              <Col className='text-start'>
+                <p>필터</p>
+              </Col>
+              <Col className='text-end'>
+                <ArrowClockwise className='hidden' size={24} color="gray" onClick={resetFilters}/>
+              </Col>
+            </Row>
+            <hr />
 
-        <Col md={6}>
-          <Card className="mt-3 mb-3">
-            <Card.Body>
-              <Card.Title>카테고리 필터</Card.Title>
+            {/* 날짜 필터 */}
+            <Row className='mb-2'> 
+              <Col>
+              <DateFilter onDateFilterApply={handleDateFilterChange} resetDates={resetDates} />
+              </Col>
+            </Row>
+            <hr />
+
+            {/* 카테코리 필터 */}
+            <Row className='mt-2'>
+              <Col>
               <CategoryFilter checkedBox={uiFilters.checkedBox} onCategoryChange={handleCategoryChange} />
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-      
-      <Row className="mb-4">
-        <Col className="text-center">
-          <Button 
-          variant="primary" 
-          onClick={applyFilters}
-          className="mb-4"
-          >
-          필터 적용하기
-          </Button>
-        </Col>
-      </Row>
+              </Col>
+            </Row>  
+            <hr />
+
+            {/* 필터 적용 버튼 */}
+            <Row className='mt-5'>
+              <Col className='text-center'>
+              <Button 
+                variant="primary" 
+                onClick={applyFilters}
+                className="mb-4"
+                >
+                필터 적용하기
+              </Button>
+              </Col>
+
+            {/* Toast 알림 */}
+            <ToastContainer className="mt-5">
+              <Toast show={showToast} onClose={() => setShowToast(false)}>
+                <Toast.Header closeButton={false}>
+                  <strong className="me-auto">알림</strong>
+                </Toast.Header>
+                <Toast.Body>{toastMessage}</Toast.Body>
+              </Toast>
+            </ToastContainer>
+            </Row>
+          </Container>
+        </Offcanvas.Body>
+      </Offcanvas>
+
     
-      <Row>
+      <Row className='text-center'>
         <Col>
           {renderContent()}
         </Col>
