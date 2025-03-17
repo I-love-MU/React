@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { getFilteredData } from '../../services/ApiService'
+import React, { useState, useRef } from 'react'
 import SearchForm from '../components/SearchForm'
 import SearchResults from '../components/SearchResults'
 import DateFilter from '../components/filter/DateFilter'
@@ -7,7 +6,6 @@ import CategoryFilter from '../components/filter/CategoryFilter'
 import { Card, Button, Container, Row, Col } from 'react-bootstrap'
 
 const SearchPage = () => {
-
   // 검색 결과 데이터 상태
   const [displayData, setDisplayData] = useState([])
   
@@ -57,68 +55,7 @@ const SearchPage = () => {
     exhibitions: 'D000',
     default: 'L000'
   }
-
-  // API 데이터 호출 - 검색 버튼 클릭 시에만 실행
-  useEffect(() => {
-    if (searchStatus.isPending) {
-      const fetchData = async () => {
-        // 에러 초기화
-        errorRef.current = { isError: false, message: '', type: '' }
-        
-        try {
-          const responseData = await getFilteredData(
-            apiFilter.current.serviceKey,
-            apiFilter.current.pageNum,
-            apiFilter.current.numOfRow,
-            apiFilter.current.realmCode,
-            apiFilter.current.serviceTp,
-            apiFilter.current.from,
-            apiFilter.current.to
-          )
-          
-          console.log('API 응답 데이터:', responseData)
-          
-          // 검색어가 있을 때만 결과 필터링 및 표시
-          if (apiFilter.current.searchTerm) {
-            const lowerCaseSearchTerm = apiFilter.current.searchTerm.toLowerCase()
-            const filteredResults = responseData.filter(
-              (data) => data.title && data.title.toLowerCase().includes(lowerCaseSearchTerm)
-            )
-            setDisplayData(filteredResults)
-          } else {
-            setDisplayData(responseData)
-          }
-          
-          // 검색 상태 업데이트
-          setSearchStatus({
-            isInitiated: true,
-            isPending: false
-          })
-        } catch (error) {
-          // 에러 처리
-          if (error.response) {
-            errorRef.current.isError = true
-            errorRef.current.type = 'server'
-            errorRef.current.message = `서버에서 오류가 발생했습니다 (${error.response.status})`
-          } else if (error.request) {
-            errorRef.current.isError = true
-            errorRef.current.type = 'network'
-            errorRef.current.message = "서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요."
-          } else {
-            errorRef.current.isError = true
-            errorRef.current.type = 'request'
-            errorRef.current.message = "요청 설정 중 오류가 발생했습니다"
-          }
-          
-          // 검색 상태만 업데이트
-          setSearchStatus(prev => ({ ...prev, isPending: false }))
-        }
-      }
-      
-      fetchData()
-    }
-  }, [searchStatus.isPending])
-
+  
   // 검색 처리 함수 - 검색 버튼 클릭 시 호출
   const handleSearch = (term) => {
     // 현재 UI 필터 상태를 API 필터에 적용
@@ -139,7 +76,41 @@ const SearchPage = () => {
       isPending: true
     })
   }
-
+  
+  // 검색 결과 처리 함수 - SearchForm에서 호출됨
+  const handleSearchResults = (results, error = null) => {
+    if (error) {
+      errorRef.current = {
+        isError: true,
+        message: error.message,
+        type: error.type
+      }
+    } else {
+      errorRef.current = {
+        isError: false,
+        message: '',
+        type: ''
+      }
+      
+      // 검색어가 있을 때만 결과 필터링 및 표시
+      if (apiFilter.current.searchTerm) {
+        const lowerCaseSearchTerm = apiFilter.current.searchTerm.toLowerCase()
+        const filteredResults = results.filter(
+          (data) => data.title && data.title.toLowerCase().includes(lowerCaseSearchTerm)
+        )
+        setDisplayData(filteredResults)
+      } else {
+        setDisplayData(results)
+      }
+    }
+    
+    // 검색 상태 업데이트
+    setSearchStatus({
+      isInitiated: true,
+      isPending: false
+    })
+  }
+  
   // 날짜 필터 임시 저장 핸들러
   const handleDateFilterChange = (startDate, endDate) => {
     setUiFilters(prev => ({
@@ -148,7 +119,7 @@ const SearchPage = () => {
       endDate
     }))
   }
-
+  
   // 카테고리 변경 임시 저장 핸들러
   const handleCategoryChange = (name, isChecked) => {
     setUiFilters(prev => ({
@@ -157,69 +128,66 @@ const SearchPage = () => {
       category: isChecked ? realmCode[name] : null
     }))
   }
-
+  
   // 필터 적용 버튼 핸들러 - API 호출 없이 필터 상태만 업데이트
   const applyFilters = () => {
-
     // UI 필터 상태를 API 필터에 적용
     apiFilter.current.from = uiFilters.startDate
     apiFilter.current.to = uiFilters.endDate
     apiFilter.current.realmCode = uiFilters.category || realmCode.default
-    
     setFiltersApplied(true)
     console.log('필터가 적용되었습니다. 검색 버튼을 눌러 결과를 확인하세요.')
   }
-
+  
   const renderContent = () => {
-
     // 에러가 있는 경우
     if (errorRef.current.isError) {
       return (
-        <Card className="text-center">
-          <Card.Body>
-            <Card.Title className="text-danger">오류 발생</Card.Title>
-            <Card.Text>{errorRef.current.message}</Card.Text>
-          </Card.Body>
-        </Card>
+        <div className="error-container">
+          <h3>오류 발생</h3>
+          <p>{errorRef.current.message}</p>
+        </div>
       )
     }
-
+    
     // 검색 결과가 있는 경우
     if (searchStatus.isInitiated) {
       return <SearchResults filteredData={displayData} />
     }
-
+    
+    return null
   }
-
+  
   return (
     <Container className="mt-4">
       <h2 className="text-center mb-4">공연 정보 검색</h2>
-      
-      {/* 검색창 UI를 화면 가운데로 배치 */}
+
       <Row className="justify-content-center mb-4">
         <Col md={8} lg={6} className="text-center">
-          <SearchForm onSearch={handleSearch} />
+          <SearchForm 
+          onSearch={handleSearch} 
+          onSearchResults={handleSearchResults}
+          apiFilter={apiFilter.current}
+          searchStatus={searchStatus}
+          />
         </Col>
       </Row>
-      
+
       <Row className="mb-4">
         <Col md={6}>
-          <Card>
-            <Card.Header>날짜 필터</Card.Header>
+          <Card className="mt-3 mb-3">
             <Card.Body>
+              <Card.Title>날짜 필터</Card.Title>
               <DateFilter onDateFilterApply={handleDateFilterChange} />
             </Card.Body>
           </Card>
         </Col>
-        
+
         <Col md={6}>
-          <Card>
-            <Card.Header>카테고리 필터</Card.Header>
+          <Card className="mt-3 mb-3">
             <Card.Body>
-              <CategoryFilter 
-                checkedBox={uiFilters.checkedBox}
-                onCategoryChange={handleCategoryChange} 
-              />
+              <Card.Title>카테고리 필터</Card.Title>
+              <CategoryFilter checkedBox={uiFilters.checkedBox} onCategoryChange={handleCategoryChange} />
             </Card.Body>
           </Card>
         </Col>
@@ -228,15 +196,15 @@ const SearchPage = () => {
       <Row className="mb-4">
         <Col className="text-center">
           <Button 
-            variant="primary" 
-            onClick={applyFilters}
-            className="px-4"
+          variant="primary" 
+          onClick={applyFilters}
+          className="mb-4"
           >
-            필터 적용하기
+          필터 적용하기
           </Button>
         </Col>
       </Row>
-      
+    
       <Row>
         <Col>
           {renderContent()}

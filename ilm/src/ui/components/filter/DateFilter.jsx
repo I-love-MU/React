@@ -7,20 +7,6 @@ const DateFilter = ({onDateFilterApply}) => {
   const [startDate, setStartDate] = useState(new Date())
   const [endDate, setEndDate] = useState(null)
 
-  // 종료일이 시작일보다 이전이 되지 않도록 처리
-  const handleStartDateChange = (date) => {
-    setStartDate(date)
-    if (endDate && date > endDate) {
-      setEndDate(null)
-    } 
-    updateParent(date, endDate)
-  }
-
-  const handleEndDateChange = (date) => {
-    setEndDate(date)
-    updateParent(startDate, date)
-  }
-
   // 날짜를 'YYYYMMDD' 형식으로 변환하는 함수
   const formatDateForApi = (date) => {
     if (!date) return ''
@@ -37,41 +23,55 @@ const DateFilter = ({onDateFilterApply}) => {
     onDateFilterApply(formattedStartDate, formattedEndDate)
   }
 
+  // 종료일이 시작일보다 이전이 되지 않도록 처리
+  const handleStartDateChange = (date) => {
+    setStartDate(date)
+    if (endDate && date > endDate) {
+      setEndDate(null)
+      updateParent(date, null)
+    } else {
+      updateParent(date, endDate)
+    }
+  }
+
+  const handleEndDateChange = (date) => {
+    setEndDate(date)
+    updateParent(startDate, date)
+  }
+
   return (
     <Container>
-      <Form>
-        <Row className="text-center mb-3">
-          <Col>
-            <Form.Group>
-              <Form.Label>시작일</Form.Label>
-              <DatePicker
-                selected={startDate}
-                onChange={handleStartDateChange}
-                selectsStart
-                startDate={startDate}
-                endDate={endDate}
-                className="form-control"
-                dateFormat="yyyy-MM-dd"
-              />
-            </Form.Group>
-          </Col>
-          <Col>
-            <Form.Group>
-              <Form.Label>종료일</Form.Label>
-              <DatePicker
-                selected={endDate}
-                onChange={handleEndDateChange}
-                selectsEnd
-                startDate={startDate}
-                endDate={endDate}
-                minDate={startDate}
-                className="form-control"
-                dateFormat="yyyy-MM-dd"
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-      </Form>
+      <Row>
+        <Col>
+          <Form.Group>
+            <Form.Label>시작일</Form.Label>
+            <DatePicker
+              selected={startDate}
+              onChange={handleStartDateChange}
+              selectsStart
+              startDate={startDate}
+              endDate={endDate}
+              dateFormat="yyyy-MM-dd"
+              className="form-control"
+            />
+          </Form.Group>
+        </Col>
+        <Col>
+          <Form.Group>
+            <Form.Label>종료일</Form.Label>
+            <DatePicker
+              selected={endDate}
+              onChange={handleEndDateChange}
+              selectsEnd
+              startDate={startDate}
+              endDate={endDate}
+              minDate={startDate}
+              dateFormat="yyyy-MM-dd"
+              className="form-control"
+            />
+          </Form.Group>
+        </Col>
+      </Row>
     </Container>
   )
 }
