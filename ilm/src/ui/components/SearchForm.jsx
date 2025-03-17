@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Form, Button } from 'react-bootstrap'
 import { getFilteredData } from '../../services/ApiService'
 
-const SearchForm = ({ onSearch, onSearchResults, apiFilter, searchStatus }) => {
+const SearchForm = ({ onSearch, onSearchResults, apiFilter, searchStatus, handleShow }) => {
   const [searchTerm, setSearchTerm] = useState('')
   
   const handleSubmit = async (e) => {
@@ -67,6 +67,9 @@ const SearchForm = ({ onSearch, onSearchResults, apiFilter, searchStatus }) => {
         disabled={searchStatus.isPending}
       >
         검색
+      </Button>
+      <Button variant='primary' onClick={handleShow}>
+        필터
       </Button>
     </Form>
   )
