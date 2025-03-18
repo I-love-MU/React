@@ -8,30 +8,30 @@ const API_KEY = import.meta.env.VITE_OPENAPI_API_KEY
 export const OpenApiDetail = async (contentNum) => {
   try {
     const response = await axios.get(
-      `${BASE_URL}/detail?serviceKey=${API_KEY}&seq=${contentNum}`, 
-      {
-        responseType: 'text'
-      }
+      `${BASE_URL}/detail?serviceKey=${API_KEY}&seq=${contentNum}`
     )
 
     // XML 데이터를 JSON으로 변환
-    const parser = new XMLParser({ 
+    const parser = new XMLParser({
       ignoreAttributes: false,
       parseAttributeValue: true
     })
     
     const result = parser.parse(response.data)
-
-    const jsonData = result?.response?.body?.items?.item
-
-    if (!jsonData) {
-      throw new Error('API 응답에서 데이터를 찾을 수 없습니다.')
+    
+    // 조건문으로 API 검증
+    if (!result || !result.response || !result.response.body || !result.response.body.items) {
+      console.error('API 응답 구조가 예상과 다릅니다:', result)
+      throw new Error('API 응답 구조가 예상과 다릅니다')
     }
-
-    // JSON 객체로 변환하여 반환
-    return JSON.parse(JSON.stringify(jsonData))
+    
+    // 객체, 배열 처리
+    const contents = result.response.body.items.item
+    
+    // 결과가 배열인지 확인
+    return Array.isArray(contents) ? contents : contents ? [contents] : []
   } catch (error) {
-    console.error('API 호출 중 오류 발생:', error)
+    console.error('API 호출 오류 발생:', error)
     throw error
   }
 }
