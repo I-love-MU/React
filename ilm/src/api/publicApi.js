@@ -4,8 +4,8 @@ import axios from "axios";
 import { parseStringPromise } from "xml2js"; // ✅ XML → JSON 변환 라이브러리
 
 // 한국문화정보원 API 기본 설정
-const API_BASE_URL = "http://apis.data.go.kr/B553457/nopenapi/rest/publicperformancedisplays";
-const API_KEY = "pioNaBQBJ%2FABwVXqTllZFvr7FUBvhyIvfwaaH%2F0hZSC%2B8LDRLjenEw0ed5uWdL0bptwm5vBBFZyei0p4dieK%2BQ%3D%3D"; // Encoding된 키
+const API_URL = import.meta.env.VITE_API_BASE_URL;
+const API_KEY = import.meta.env.VITE_API_KEY;
 
 // 공연 데이터 가져오는 함수
 export const fetchPerformanceData = async (numOfRows = 10) => {

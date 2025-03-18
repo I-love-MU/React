@@ -1,11 +1,10 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import { RouterProvider } from "react-router-dom";
-import { router } from "./route/Router";
-import "bootstrap/dist/css/bootstrap.min.css"; // ✅ Bootstrap 스타일 추가
+// ✅ src/main.jsx
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import AppRouter from './route/Router' // ✅ `export default`로 가져옴
 
-ReactDOM.createRoot(document.getElementById("root")).render(
+ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router}/>
-  </React.StrictMode>
-);
+    <AppRouter /> {/* ✅ 라우터 추가 */}
+  </React.StrictMode>,
+)
