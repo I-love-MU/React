@@ -7,37 +7,37 @@ const CategoryFilter = ({ checkedBox, onCategoryChange }) => {
     const name = e.target.name
     const isChecked = e.target.checked
     onCategoryChange(name, isChecked)
-  };
+  }
 
   return (
-    <div className="filter-section text-center mt-5">
-      <Form className="d-flex justify-content-center align-items-center mb-5">
+    <div className='filter-section text-center'>
+      <Form className='d-flex justify-content-center align-items-center'>
         <Form.Check
-          type="checkbox"
-          id="theatrical"
-          name="theatrical"
-          label="연극"
+          type='checkbox'
+          id='theatrical'
+          name='theatrical'
+          label='연극'
           onChange={handleCategoryFilter}
           checked={checkedBox === 'theatrical'}
-          className="mx-2"
+          className='mx-2'
         />
         <Form.Check
-          type="checkbox"
-          id="concerts"
-          name="concerts"
-          label="음악/콘서트"
+          type='checkbox'
+          id='concerts'
+          name='concerts'
+          label='음악/콘서트'
           onChange={handleCategoryFilter}
           checked={checkedBox === 'concerts'}
-          className="mx-2"
+          className='mx-2'
         />
         <Form.Check
-          type="checkbox"
-          id="exhibitions"
-          name="exhibitions"
-          label="전시"
+          type='checkbox'
+          id='exhibitions'
+          name='exhibitions'
+          label='전시'
           onChange={handleCategoryFilter}
           checked={checkedBox === 'exhibitions'}
-          className="mx-2"
+          className='mx-2'
         />
       </Form>
     </div>
@@ -45,4 +45,3 @@ const CategoryFilter = ({ checkedBox, onCategoryChange }) => {
 }
 
 export default CategoryFilter
-
