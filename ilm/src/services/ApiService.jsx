@@ -8,14 +8,16 @@ const parser = new XMLParser({
 })
 
 // 필터링된 데이터 가져오기 함수
-export const getFilteredData = async (serviceKey, pageNum, numOfRow, realmCodeValue, serviceTp, startDate, endDate) => {
+export const OpenApiRealm = async (apiFilter) => {
+  const baseUrl = 'https://apis.data.go.kr/B553457/nopenapi/rest/publicperformancedisplays/realm'
+
   try {
-    const response = await axios.get(`https://apis.data.go.kr/B553457/nopenapi/rest/publicperformancedisplays/realm?serviceKey=${serviceKey}&PageNo=${pageNum}&numOfrows=${numOfRow}&from=${startDate}&to=${endDate}&realmCode=${realmCodeValue}&serviceTp=${serviceTp}`);
-    
+    const response = await axios.get(baseUrl, { params: apiFilter })
+
     const xmlData = response.data
     const jsonData = parser.parse(xmlData)
     const items = jsonData.response.body.items.item
-    
+
     // 결과가 항상 배열인지 확인
     return Array.isArray(items) ? items : items ? [items] : []
   } catch (error) {
