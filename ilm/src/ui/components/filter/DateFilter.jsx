@@ -1,9 +1,9 @@
-import React, {useState, useEffect} from 'react'
-import { Form, Row, Col, Container} from 'react-bootstrap'
+import React, { useState, useEffect } from 'react'
+import { Form, Row, Col, Container } from 'react-bootstrap'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
-const DateFilter = ({onDateFilterApply, resetDates}) => {
+const DateFilter = ({ onDateFilterApply, resetDates }) => {
   const [startDate, setStartDate] = useState(new Date())
   const [endDate, setEndDate] = useState(null)
 
@@ -59,8 +59,8 @@ const DateFilter = ({onDateFilterApply, resetDates}) => {
               selectsStart
               startDate={startDate}
               endDate={endDate}
-              dateFormat="yyyy-MM-dd"
-              className="form-control"
+              dateFormat='yyyy-MM-dd'
+              className='form-control'
             />
           </Form.Group>
         </Col>
@@ -74,8 +74,8 @@ const DateFilter = ({onDateFilterApply, resetDates}) => {
               startDate={startDate}
               endDate={endDate}
               minDate={startDate}
-              dateFormat="yyyy-MM-dd"
-              className="form-control"
+              dateFormat='yyyy-MM-dd'
+              className='form-control'
             />
           </Form.Group>
         </Col>
