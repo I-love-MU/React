@@ -1,10 +1,8 @@
 import React from 'react'
 import { Container, Row, Col, Card, Alert } from 'react-bootstrap'
 
-
 const SearchResults = ({ filteredData }) => {
-
-  if (! filteredData || filteredData.length == 0 ) {
+  if (!filteredData || filteredData.length == 0) {
     return (
       <Alert variant='light' className='mt-3'>
         검색 결과가 없습니다.
@@ -24,18 +22,19 @@ const SearchResults = ({ filteredData }) => {
                     variant='top'
                     src={data.thumbnail}
                     alt={data.title}
-                    style={{ width: '100%' , height: '100%', objectFit: 'cover'}}
-                    />
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
                 )}
               </div>
               <Card.Body>
-                <Card.Title className='text-truncate'>
-                  {data.title}
-                </Card.Title>
+                <Card.Title className='text-truncate'>{data.title}</Card.Title>
                 <Card.Text>
-                  <strong>장소:</strong> {data.place || '정보 없음'}<br />
-                  <strong>기간:</strong> {data.startDate || '정보 없음'} ~ {data.endDate || '정보 없음'}<br />
-                  <strong>분류이름:</strong> {data.realmName || '정보 없음'}<br />
+                  <strong>장소:</strong> {data.place || '정보 없음'}
+                  <br />
+                  <strong>기간:</strong> {data.startDate || '정보 없음'} ~ {data.endDate || '정보 없음'}
+                  <br />
+                  <strong>분류이름:</strong> {data.realmName || '정보 없음'}
+                  <br />
                   <strong>분류목록:</strong> {data.serviceName || '정보 없음'}
                 </Card.Text>
               </Card.Body>
