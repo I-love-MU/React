@@ -11,11 +11,11 @@ const routes = [
       {
         path: 'search',
         element: <SearchPage />,
-        loader: () => 'SEARCH'
+        loader: () => 'SEARCH',
       },
-    ]
+    ],
   },
-];
+]
 
 const router = createBrowserRouter(routes)
 

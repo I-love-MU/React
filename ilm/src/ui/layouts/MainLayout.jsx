@@ -2,12 +2,11 @@ import React from 'react'
 import { Outlet } from 'react-router-dom'
 import NavigationBar from '../components/common/NavigationBar'
 
-
 const MainLayout = () => {
   return (
     <div className='vh-100 d-flex flex-column'>
-        <NavigationBar/>
-        <Outlet />
+      <NavigationBar />
+      <Outlet />
     </div>
   )
 }
