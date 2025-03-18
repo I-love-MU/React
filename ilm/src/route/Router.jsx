@@ -14,11 +14,6 @@ const router = createBrowserRouter([
         element:<DetailPage />,
         loader:()=>'상세페이지',
       },
-      {
-        path:'t',
-        element:<TestPage/>,
-        loader:()=>'상세페이지',
-      },
     ],
   },
 ])
