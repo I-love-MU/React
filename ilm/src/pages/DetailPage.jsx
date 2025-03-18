@@ -44,12 +44,6 @@ function DetailPage() {
     return dayjs(date.toString()).format('YYYY.MM.DD')
   }
 
-  // URL 가져오기 함수
-  const is_Url = (urlsData) => urlsData.url && typeof urlsData.url === 'string' ? urlsData.url : urlsData.placeUrl
-
-  // 콘텐츠 가져오기 함수
-  const is_Contents = (contentData) => contentData.contents1 && typeof contentData.contents1 === 'string' ? contentData.contents1 : '해당 공연의 정보가 없습니다.'
-
   return (
     <Container className="detail-container py-0 d-flex flex-column justify-content-center align-items-center px-0 mx-auto">
       {/* Header */}
@@ -91,7 +85,7 @@ function DetailPage() {
                   <Card.Text><strong>관람료 |</strong> {content.price}</Card.Text>
                   <Card.Text><strong>전화번호 |</strong> {content.phone}</Card.Text>
                   <Card.Text><strong>사이트 | </strong>
-                    <a href={is_Url(content)} target="_blank" rel="noopener noreferrer">홈페이지 바로가기</a>
+                    <a href={content.url ? content.url : content.placeUrl} target="_blank" rel="noopener noreferrer">홈페이지 바로가기</a>
                   </Card.Text>
                 </Card.Body>
               </Col>
@@ -101,7 +95,7 @@ function DetailPage() {
           {/* About Section */}
           <Card className="p-4 bg-light">
             <h4>About</h4>
-            <p>{is_Contents(content)}</p>
+            <p>{content.contents1 ? content.contents1 : '해당 공연의 정보가 없습니다.'}</p>
           </Card>
         </Col>
       </Row>
