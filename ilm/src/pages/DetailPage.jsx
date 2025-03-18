@@ -12,14 +12,15 @@ function DetailPage() {
   const location = useLocation()
   const { contentNum } = location.state || {}
 
-  // API 호출 및 데이터 설정
+ // API 호출 및 데이터 설정
   useEffect(() => {
     const fetchContentDetail = async () => {
       try {
         const detailData = await OpenApiDetail(contentNum)
-        setContent(detailData)
+        console.log("API 응답 데이터:", detailData);
+        setContent(detailData[0])
       } catch (error) {
-        console.error('Error fetching content details:', error)
+        console.error('에러 발생:', error)
       }
     }
 
@@ -82,14 +83,14 @@ function DetailPage() {
 
               {/* Information Section */}
               <Col md={6}>
-                <Card.Body>
-                  <Card.Title>상세정보</Card.Title>
+                <Card.Body className="justify-content-center" >
+                  <Card.Title className="d-flex justify-content-center">상세정보</Card.Title>
                   <Card.Text><strong>기간 |</strong> {formatDate(content.startDate)} ~ {formatDate(content.endDate)}</Card.Text>
                   <Card.Text><strong>장소 |</strong> {content.place} / {content.area}</Card.Text>
                   <Card.Text><strong>주소 |</strong> {content.placeAddr}</Card.Text>
                   <Card.Text><strong>관람료 |</strong> {content.price}</Card.Text>
                   <Card.Text><strong>전화번호 |</strong> {content.phone}</Card.Text>
-                  <Card.Text><strong>사이트 |</strong>
+                  <Card.Text><strong>사이트 | </strong>
                     <a href={is_Url(content)} target="_blank" rel="noopener noreferrer">홈페이지 바로가기</a>
                   </Card.Text>
                 </Card.Body>
