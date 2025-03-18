@@ -10,6 +10,7 @@ const parseXML = (xmlString) => {
   const xml = parser.parseFromString(xmlString, "application/xml");
   const dbs = xml.getElementsByTagName("db");
 
+// ?. 옵셔널 체이닝 값이 없을 경우 우측 값 적용 
   let data = [];
   for (let db of dbs) {
     data.push({
@@ -17,7 +18,11 @@ const parseXML = (xmlString) => {
       id: db.getElementsByTagName("mt20id")[0]?.textContent || "N/A",
       poster: db.getElementsByTagName("poster")[0]?.textContent || "N/A",
       prfpdfrom: db.getElementsByTagName("prfpdfrom")[0]?.textContent || "N/A",
-
+      prfpdto: db.getElementsByTagName("prfpdto")[0]?.textContent || "N/A",
+      fcltynm: db.getElementsByTagName("fcltynm")[0]?.textContent || "N/A",
+      area: db.getElementsByTagName("area")[0]?.textContent || "N/A",
+ 
+      
     });
   }
   return data;
@@ -28,8 +33,8 @@ const parseXML = (xmlString) => {
     try {
         const params = {
             service: "080368b7702b47339979702578fcbd3e",
-            stdate: "20240101",
-            eddate: "20240131",
+            stdate: "20250201",
+            eddate: "20251231",
             rows: "4",   
             cpage: "1",
             shcate: shcate, // ✅ shcate 값을 동적으로 설정

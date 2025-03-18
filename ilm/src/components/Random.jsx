@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const API_URL = `/api/pblprfr?service=080368b7702b47339979702578fcbd3e&stdate=20240101&eddate=20240131&rows=10&cpage=1&shcate=AAAA`;
+const API_URL = `/api/pblprfr?service=080368b7702b47339979702578fcbd3e&stdate=20250101&eddate=20250431&rows=10&cpage=1&shcate=AAAA`;
 
-// ✅ XML을 JSON으로 변환하는 함수 (DOMParser 사용)
+// XML을 JSON으로 변환하는 함수 (DOMParser 사용)
 const parseXML = (xmlString) => {
   const parser = new DOMParser();
   const xml = parser.parseFromString(xmlString, "application/xml");
@@ -19,7 +19,7 @@ const parseXML = (xmlString) => {
   return data;
 };
 
-// ✅ API 데이터를 가져오는 함수
+//  API 데이터를 가져오는 함수
 const Random = () => {
   const [data, setData] = useState([]);
 

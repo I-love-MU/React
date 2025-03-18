@@ -17,7 +17,7 @@ const ExhibitionGrid = () => {
       //3가지 봉합 
       setExhibitionItems([...theatre, ...concert, ...exhibition]);
 
-      // console.log("tata", data)
+      
       // setExhibitionItems(data); // 상태 업데이트
     };
 
@@ -32,7 +32,9 @@ const ExhibitionGrid = () => {
           <div key={index} style={{ textAlign: "center" }}>
             <img src={item.poster} alt={item.title} style={{ width: "100%", height: "auto" }} />
             <h3>{item.title}</h3>
+            <h4>{item.fcltynm}/{item.area}</h4>
             <p>{item.date}</p>
+            <p>{item.prfpdfrom} - {item.prfpdto}</p>
           </div>
         ))
       ) : (
