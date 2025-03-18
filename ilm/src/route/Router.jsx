@@ -1,12 +1,17 @@
-import { createBrowserRouter } from 'react-router-dom'
-import App from '../App'
+// 📌 src/route/Router.jsx
+import { createBrowserRouter } from "react-router-dom";
+import App from "../App";
+import PerformanceCarousel from "../components/PerformanceCarousel";
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <App />,
-    children: [],
+    title: "router",
+    children: [
+      { path: "carousel", element: <PerformanceCarousel /> },
+    ],
   },
-])
+]);
 
-export default router
+export { router };
