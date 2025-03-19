@@ -48,6 +48,7 @@ function SearchbyLocation({ apiFilter, setSearchResult }) {
       radius: radiusRef.current.value,
     })
 
+    // 병합 시 위경도 범위를 반환하는 것으로 컴포넌트의 역할 축소
     const newApiFilter = {
       ...apiFilter,
       ...coordinatesArea,

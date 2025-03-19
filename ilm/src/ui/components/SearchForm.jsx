@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import SearchbyLocation from '../components/SearchbyLocation'
+import SearchbyLocation from './SearchbyLocation'
 
 // 진짜 searchpage 에 컴포넌트로 삽입될 위치 기반 탐색 기능
 function SearchPage() {
@@ -21,14 +21,6 @@ function SearchPage() {
     <>
       {/* 검색 컴포넌트와 병합 시 apiFilter props 제거 */}
       <SearchbyLocation apiFilter={apiFilter.current} setSearchResult={setSearchResult} />
-
-      {/* 🔹 검색 결과 출력 */}
-      {searchResult && (
-        <div className='mt-4'>
-          <h3>검색 결과:</h3>
-          <pre>{JSON.stringify(searchResult, null, 2)}</pre>
-        </div>
-      )}
     </>
   )
 }
