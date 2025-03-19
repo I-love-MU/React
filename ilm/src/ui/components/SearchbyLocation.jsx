@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { Form, Card, InputGroup, Button } from 'react-bootstrap'
-import SpecificLocation from './locationFilter/pointLocation/SpecificLocation'
-import CurrentLocationInfo from './locationFilter/currentLocation/CurrentLocationInfo'
+import SpecificLocation from './filter/pointLocation/SpecificLocation'
+import CurrentLocationInfo from './filter/currentLocation/CurrentLocationInfo'
 import CoordinatesArea from '../../services/CoordinatesArea'
 import { OpenApiRealm } from '../../services/OpenApiRealm'
 import { getDistanceFromPoint } from '../../services/getDistanceFromPoint'
@@ -99,7 +99,7 @@ function SearchbyLocation({ apiFilter, setSearchResult }) {
         </InputGroup>
       </Form>
 
-      {locationFilter === 'current' && <CurrentLocationInfo onLocationUpdate={handleLocationSelect} />}
+      {locationFilter === 'current' && <CurrentLocationInfo onSelect={handleLocationSelect} />}
       {locationFilter === 'address' && <SpecificLocation onSelect={handleLocationSelect} />}
 
       {searchLocation.selectedAddress && (
