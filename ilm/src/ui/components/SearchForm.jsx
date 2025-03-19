@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react'
-import SearchbyLocation from './SearchbyLocation'
+import SearchbyLocation from './LocationFilterSet'
 
-// 진짜 searchpage 에 컴포넌트로 삽입될 위치 기반 탐색 기능
-function SearchPage() {
+// searchpage 에 컴포넌트로 삽입될 위치 기반 탐색 기능
+function SearchForm() {
   const apiFilter = useRef({
     serviceKey: import.meta.env.VITE_OPENAPI_API_KEY,
     pageNum: '1',
@@ -17,12 +17,19 @@ function SearchPage() {
 
   const [searchResult, setSearchResult] = useState(null)
 
+  const updateApiFilter = (filter) => {
+    apiFilter.current = {
+      ...apiFilter.current,
+      ...filter,
+    }
+  }
+
   return (
     <>
       {/* 검색 컴포넌트와 병합 시 apiFilter props 제거 */}
-      <SearchbyLocation apiFilter={apiFilter.current} setSearchResult={setSearchResult} />
+      <SearchbyLocation updateApiFilter={updateApiFilter} />
     </>
   )
 }
 
-export default SearchPage
+export default SearchForm

@@ -1,22 +1,20 @@
 import { useRef, useState } from 'react'
 import { Form, Card, InputGroup, Button } from 'react-bootstrap'
-import SpecificLocation from './filter/pointLocation/SpecificLocation'
-import CurrentLocationInfo from './filter/currentLocation/CurrentLocationInfo'
+import SpecificLocation from './filter/SpecificLocation'
+import CurrentLocationInfo from './filter/CurrentLocationInfo'
 import CoordinatesArea from '../../services/CoordinatesArea'
 import { OpenApiRealm } from '../../services/OpenApiRealm'
-import { getDistanceFromPoint } from '../../services/getDistanceFromPoint'
+// import { getDistanceFromPoint } from '../../services/getDistanceFromPoint'
 
-// 검색 컴포넌트 병합 시 api 필터를 반환하도록 수정
-// 검색 컴포넌트 병합 시 setSearchResult props 제거
-function SearchbyLocation({ apiFilter, setSearchResult }) {
+// 기본 위치 좌표(서울 중심부)
+const defaultLocation = {
+  selectedCoordinates: { latitude: 37.5720865, longitude: 126.9854332 },
+  selectedAddress: '서울',
+}
+
+function LocationFilterSet({ updateApiFilter }) {
   // 검색할 위치 지정 방식(현재 위치, 지정 위치)
   const [locationFilter, setLocationFilter] = useState('')
-
-  // 기본 위치 좌표(서울 중심부)
-  const defaultLocation = {
-    selectedCoordinates: { latitude: 37.5720865, longitude: 126.9854332 },
-    selectedAddress: null,
-  }
 
   // 검색할 위치
   const [searchLocation, setSearchLocation] = useState(defaultLocation)
@@ -36,42 +34,35 @@ function SearchbyLocation({ apiFilter, setSearchResult }) {
     })
   }
 
-  // 검색할 위치의 좌표를 통해 api 요청하는 함수
   // 버튼 이벤트 핸들러
-  // 검색 컴포넌트와 병합 시 삭제 후 검색 컴포넌트에 역할 전이
   const handleSearchbyLocation = async () => {
     // 반경을 통해 위경도 범위를 계산하는 함수
-    // 검색 컴포넌트 병합 시 결과를 api 필터와 함께 반환
     const coordinatesArea = CoordinatesArea({
       latitude: searchLocation.selectedCoordinates.latitude,
       longitude: searchLocation.selectedCoordinates.longitude,
       radius: radiusRef.current.value,
     })
 
-    // 병합 시 위경도 범위를 반환하는 것으로 컴포넌트의 역할 축소
-    const newApiFilter = {
-      ...apiFilter,
-      ...coordinatesArea,
-    }
+    updateApiFilter(coordinatesArea)
 
     // 검색된 컨텐츠의 위치가 반경 내인지 확인하는 코드
     // 검색 컴포넌트 병합 시 검색 결과 출력 컴포넌트에 전이
-    try {
-      const searchResult = await OpenApiRealm(newApiFilter)
-      const filteredResults = searchResult.filter((item) => {
-        const distance = getDistanceFromPoint(
-          searchLocation.selectedCoordinates.latitude,
-          searchLocation.selectedCoordinates.longitude,
-          item.gpsY,
-          item.gpsX,
-        )
-        return distance <= radiusRef.current.value
-      })
-      setSearchResult(filteredResults)
-    } catch (error) {
-      console.error('API 요청 실패:', error)
-      setSearchResult(null)
-    }
+    // try {
+    //   const searchResult = await OpenApiRealm(newApiFilter)
+    //   const filteredResults = searchResult.filter((item) => {
+    //     const distance = getDistanceFromPoint(
+    //       searchLocation.selectedCoordinates.latitude,
+    //       searchLocation.selectedCoordinates.longitude,
+    //       item.gpsY,
+    //       item.gpsX,
+    //     )
+    //     return distance <= radiusRef.current.value
+    //   })
+    //   setSearchResult(filteredResults)
+    // } catch (error) {
+    //   console.error('API 요청 실패:', error)
+    //   setSearchResult(null)
+    // }
   }
 
   return (
@@ -115,11 +106,11 @@ function SearchbyLocation({ apiFilter, setSearchResult }) {
         <Form.Control type='number' aria-label='radius' className='text-end' ref={radiusRef} />
         <InputGroup.Text>km</InputGroup.Text>
         <Button variant='outline-secondary' id='button-addon2' onClick={handleSearchbyLocation}>
-          탐색
+          위치 설정
         </Button>
       </InputGroup>
     </>
   )
 }
 
-export default SearchbyLocation
+export default LocationFilterSet

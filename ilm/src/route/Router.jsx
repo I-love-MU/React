@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom'
 import App from '../App'
-import SearchPage from '../ui/pages/SearchPage'
+import SearchForm from '../ui/components/SearchForm'
 
 const router = createBrowserRouter([
   {
@@ -10,7 +10,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: 'search',
-        element: <SearchPage />,
+        element: <SearchForm />,
       },
     ],
   },
