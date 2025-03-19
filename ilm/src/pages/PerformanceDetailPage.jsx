@@ -1,34 +1,42 @@
 import React, { useEffect, useState } from 'react'
-import { fetchPerformancesByRealm } from '../api/publicApi'
+import { useParams } from 'react-router-dom'
+import { fetchPerformanceData } from '../api/publicApi'
 
-const PerformanceListPage = () => {
-  const [performances, setPerformances] = useState([])
+const PerformanceDetailPage = () => {
+  const { id } = useParams()
+  const [performance, setPerformance] = useState(null)
 
   useEffect(() => {
     const fetchData = async () => {
-      const today = new Date()
-      const formattedDate = today.toISOString().split('T')[0].replace(/-/g, '') // YYYYMMDD 변환
-      const data = await fetchPerformancesByRealm('B000', formattedDate, formattedDate, 10)
-      setPerformances(data)
+      const data = await fetchPerformanceData(id)
+      setPerformance(data)
     }
 
     fetchData()
-  }, [])
+  }, [id])
+
+  if (!performance) {
+    return <p>공연 정보를 불러오는 중...</p>
+  }
 
   return (
-    <div>
-      <h2>공연 목록</h2>
-      {performances.length > 0 ? (
-        <ul>
-          {performances.map((performance) => (
-            <li key={performance.seq}>{performance.title}</li>
-          ))}
-        </ul>
-      ) : (
-        <p>공연 정보를 불러오는 중...</p>
-      )}
+    <div className='container mt-5'>
+      <h2>{performance.title}</h2>
+      <img
+        src={performance.thumbnail}
+        alt={performance.title}
+        className='img-fluid rounded'
+        style={{ width: '100%', maxHeight: '500px', objectFit: 'cover' }}
+      />
+      <p>{performance.description}</p>
+      <p>
+        <strong>장소:</strong> {performance.place}
+      </p>
+      <p>
+        <strong>날짜:</strong> {performance.startDate} ~ {performance.endDate}
+      </p>
     </div>
   )
 }
 
-export default PerformanceListPage
+export default PerformanceDetailPage
