@@ -5,12 +5,12 @@ import LoginPage from '../pages/LoginPage'
 import MyPage from '../pages/MyPage'
 import PerformanceDetailPage from '../pages/PerformanceDetailPage'
 import PerformanceListPage from '../pages/PerformanceListPage'
-import NavigationBar from '../components/NavigationBar' // 네비게이션 바 추가
+import NavigationBar from '../components/NavigationBar'
 
 const AppRouter = () => {
   return (
     <Router>
-      <NavigationBar /> {/* 네비게이션 바 추가 */}
+      <NavigationBar />
       <Routes>
         <Route path='/' element={<HomePage />} />
         <Route path='/login' element={<LoginPage />} />
@@ -22,4 +22,4 @@ const AppRouter = () => {
   )
 }
 
-export default AppRouter // ✅ `export default`로 내보내기
+export default AppRouter // `export default`로 내보내기
