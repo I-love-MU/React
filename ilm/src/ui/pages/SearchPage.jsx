@@ -3,7 +3,7 @@ import SearchForm from '../components/SearchForm'
 import SearchResults from '../components/SearchResults'
 import DateFilter from '../components/filter/DateFilter'
 import CategoryFilter from '../components/filter/CategoryFilter'
-import { Card, Button, Container, Row, Col, Offcanvas, Toast, ToastContainer } from 'react-bootstrap'
+import { Card, Button, Container, Row, Col, Offcanvas, Toast, ToastContainer, Spinner } from 'react-bootstrap'
 import { ArrowClockwise } from 'react-bootstrap-icons'
 
 const SearchPage = () => {
@@ -70,7 +70,7 @@ const SearchPage = () => {
   // 검색 처리 함수 - 검색 버튼 클릭 시 호출
   const handleSearch = (term) => {
     // 현재 UI 필터 상태를 API 필터에 적용
-    apiFilter.current.searchTerm = term
+    apiFilter.current.keyword = term // 검색어를 keyword 파라미터에 설정(수정)
     apiFilter.current.from = uiFilters.startDate
     apiFilter.current.to = uiFilters.endDate
     apiFilter.current.realmCode = uiFilters.category || realmCode.default
@@ -103,16 +103,8 @@ const SearchPage = () => {
         type: '',
       }
 
-      // 검색어가 있을 때만 결과 필터링 및 표시
-      if (apiFilter.current.searchTerm) {
-        const lowerCaseSearchTerm = apiFilter.current.searchTerm.toLowerCase()
-        const filteredResults = results.filter(
-          (data) => data.title && data.title.toLowerCase().includes(lowerCaseSearchTerm),
-        )
-        setDisplayData(filteredResults)
-      } else {
-        setDisplayData(results)
-      }
+      // API에서 이미 필터링된 결과를 받아오므로 추가 필터링 없이 결과 표시
+      setDisplayData(results)
     }
 
     // 검색 상태 업데이트
@@ -148,7 +140,6 @@ const SearchPage = () => {
     apiFilter.current.realmCode = uiFilters.category || realmCode.default
 
     setFiltersApplied(true)
-    console.log('필터가 적용되었습니다. 검색 버튼을 눌러 결과를 확인하세요.')
 
     // Toast 메시지 표시
     setToastMessage('✔️ 필터가 적용되었습니다.')
@@ -158,8 +149,6 @@ const SearchPage = () => {
     setTimeout(() => {
       setShowToast(false)
     }, 3000)
-
-    console.log('✔️필터가 적용되었습니다. 검색 버튼을 눌러 결과를 확인하세요.')
   }
 
   // 필터 조건만 초기화하는 함수
@@ -170,7 +159,7 @@ const SearchPage = () => {
       endDate: '',
       category: null,
       checkedBox: null,
-      searchTerm: uiFilters.searchTerm, // 검색어는 유지
+      searchTerm: uiFilters.searchTerm,
     })
 
     // API 필터의 조건 부분만 초기화
@@ -179,7 +168,6 @@ const SearchPage = () => {
       from: '',
       to: '',
       realmCode: 'L000',
-      // searchTerm은 변경하지 않음 (검색 결과 유지)
     }
 
     // 날짜 초기화 트리거
@@ -213,6 +201,15 @@ const SearchPage = () => {
       )
     }
 
+    // 검색 중인 경우 Spinner 표시
+    if (searchStatus.isPending) {
+      return (
+        <Spinner animation='border' role='status' variant='dark'>
+          <span className='visually-hidden'>검색 중...</span>
+        </Spinner>
+      )
+    }
+
     // 검색 결과가 있는 경우
     if (searchStatus.isInitiated) {
       return <SearchResults filteredData={displayData} />
@@ -240,6 +237,7 @@ const SearchPage = () => {
         </Col>
       </Row>
 
+      {/* 필터 섹션 */}
       <Offcanvas show={show} onHide={handleClose} scroll={true} backdrop={true}>
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>필터링 검색</Offcanvas.Title>
@@ -294,6 +292,7 @@ const SearchPage = () => {
         </Offcanvas.Body>
       </Offcanvas>
 
+      {/* 검색 결과 출력 */}
       <Row className='text-center'>
         <Col>{renderContent()}</Col>
       </Row>
@@ -302,4 +301,3 @@ const SearchPage = () => {
 }
 
 export default SearchPage
-

@@ -17,13 +17,17 @@ const SearchResults = ({ filteredData }) => {
           <Col key={index}>
             <Card className='h-100 shadow-sm'>
               <div style={{ height: '100%', overflow: 'hidden' }}>
-                {data.thumbnail && (
+                {data.thumbnail ? (
                   <Card.Img
                     variant='top'
                     src={data.thumbnail}
                     alt={data.title}
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />
+                ) : (
+                  <div className='text-center py-5 bg-light'>
+                    <p className='mb-0'>이미지 없음</p>
+                  </div>
                 )}
               </div>
               <Card.Body>

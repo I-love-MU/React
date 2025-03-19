@@ -6,7 +6,8 @@ const SearchForm = ({ onSearch, onSearchResults, apiFilter, searchStatus, handle
   const [searchTerm, setSearchTerm] = useState('')
 
   const handleSubmit = async (e) => {
-    e.preventDefault() // Form 태그 페이지 새로고침 방지
+    // Form 태그 페이지 새로고침 방지
+    e.preventDefault()
 
     // 부모 컴포넌트의 검색 함수 호출
     onSearch(searchTerm)
@@ -17,8 +18,6 @@ const SearchForm = ({ onSearch, onSearchResults, apiFilter, searchStatus, handle
 
       // API 호출
       const responseData = await OpenApiRealm(apiParams)
-
-      console.log('API 응답 데이터:', responseData)
 
       // 검색 결과를 부모 컴포넌트로 전달
       onSearchResults(responseData)
