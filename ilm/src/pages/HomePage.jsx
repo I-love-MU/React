@@ -1,11 +1,11 @@
 import React from 'react'
-import PerformanceCarousel from '../components/PerformanceCarousel'
 import NavigationBar from '../components/NavigationBar'
+import HomeCarousel from '../components/HomeCarousel'
 
 const HomePage = () => {
   return (
     <>
-      <PerformanceCarousel />
+      <HomeCarousel /> {/* 홈 캐러셀 표시 */}
     </>
   )
 }

@@ -10,6 +10,11 @@ const decodeHTMLEntities = (text) => {
 const BASE_URL = import.meta.env.VITE_API_BASE_URL
 const API_KEY = import.meta.env.VITE_API_KEY
 
+const formatDate = (dateString) => {
+  if (!dateString || dateString.length !== 8) return '날짜 정보 없음'
+  return `${dateString.slice(0, 4)}.${dateString.slice(4, 6)}.${dateString.slice(6, 8)}`
+}
+
 // XML 파서 설정 (HTML 엔터티 디코딩 활성화)
 const parser = new XMLParser({
   ignoreAttributes: false,
