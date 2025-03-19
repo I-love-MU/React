@@ -3,7 +3,7 @@ import SearchForm from '../components/SearchForm'
 import SearchResults from '../components/SearchResults'
 import DateFilter from '../components/filter/DateFilter'
 import CategoryFilter from '../components/filter/CategoryFilter'
-import { Card, Button, Container, Row, Col, Offcanvas, Toast, ToastContainer } from 'react-bootstrap'
+import { Card, Button, Container, Row, Col, Offcanvas, Toast, ToastContainer, Spinner } from 'react-bootstrap'
 import { ArrowClockwise } from 'react-bootstrap-icons'
 
 const SearchPage = () => {
@@ -198,6 +198,15 @@ const SearchPage = () => {
             <Card.Text>{errorRef.current.message}</Card.Text>
           </Card.Body>
         </Card>
+      )
+    }
+
+    // 검색 중인 경우 Spinner 표시
+    if (searchStatus.isPending) {
+      return (
+        <Spinner animation='border' role='status' variant='dark'>
+          <span className='visually-hidden'>검색 중...</span>
+        </Spinner>
       )
     }
 
