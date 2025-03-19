@@ -1,34 +1,34 @@
-// src/pages/PerformanceDetailPage.jsx
-
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { fetchPerformanceData } from '../api/publicApi'
-import { Container } from 'react-bootstrap'
+import { fetchPerformancesByRealm } from '../api/publicApi'
 
-const PerformanceDetailPage = () => {
-  const { id } = useParams()
-  const [performance, setPerformance] = useState(null)
+const PerformanceListPage = () => {
+  const [performances, setPerformances] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchPerformanceData(id)
-      setPerformance(data)
+      const today = new Date()
+      const formattedDate = today.toISOString().split('T')[0].replace(/-/g, '') // YYYYMMDD 변환
+      const data = await fetchPerformancesByRealm('B000', formattedDate, formattedDate, 10)
+      setPerformances(data)
     }
 
     fetchData()
-  }, [id])
-
-  if (!performance) return <p className='text-center'>🎭 공연 정보를 찾을 수 없습니다.</p>
+  }, [])
 
   return (
-    <Container className='mt-4'>
-      <h1>{performance.prfnm}</h1>
-      <p>
-        공연 기간: {performance.prfpdfrom} ~ {performance.prfpdto}
-      </p>
-      <img src={performance.poster} alt={performance.prfnm} style={{ maxWidth: '100%', borderRadius: '10px' }} />
-    </Container>
+    <div>
+      <h2>공연 목록</h2>
+      {performances.length > 0 ? (
+        <ul>
+          {performances.map((performance) => (
+            <li key={performance.seq}>{performance.title}</li>
+          ))}
+        </ul>
+      ) : (
+        <p>공연 정보를 불러오는 중...</p>
+      )}
+    </div>
   )
 }
 
-export default PerformanceDetailPage
+export default PerformanceListPage

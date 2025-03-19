@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { fetchPerformancesByRealm } from '../api/publicApi' // ✅ 올바르게 import
+import { fetchPerformancesByRealm } from '../api/publicApi'
 
 const PerformanceListPage = () => {
   const [performances, setPerformances] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchPerformancesByRealm('B000') // 콘서트 데이터 예시
+      const today = new Date()
+      const formattedDate = today.toISOString().split('T')[0].replace(/-/g, '') // YYYYMMDD 변환
+      const data = await fetchPerformancesByRealm('B000', formattedDate, formattedDate, 10)
       setPerformances(data)
     }
 

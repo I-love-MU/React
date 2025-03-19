@@ -3,8 +3,13 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/',
   server: {
-    port: 5173, // 기본 포트
+    proxy: {
+      '/api': {
+        target: 'https://apis.data.go.kr/',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
   },
 })
