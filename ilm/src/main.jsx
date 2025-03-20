@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import AppRouter from './route/Router' // `export default`로 가져옴
