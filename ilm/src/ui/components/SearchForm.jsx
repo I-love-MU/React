@@ -1,9 +1,140 @@
-import React, { useState } from 'react'
-import { Form, Button } from 'react-bootstrap'
+import React, { useState, useRef } from 'react'
 import { OpenApiRealm } from '../../services/ApiService'
+import DateFilter from '../components/filter/DateFilter'
+import CategoryFilter from '../components/filter/CategoryFilter'
+import { Form, Button, Container, Row, Col, Offcanvas, Toast, ToastContainer } from 'react-bootstrap'
+import { ArrowClockwise } from 'react-bootstrap-icons'
 
-const SearchForm = ({ onSearch, onSearchResults, apiFilter, searchStatus, handleShow }) => {
+const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
   const [searchTerm, setSearchTerm] = useState('')
+
+  // 필터 적용 상태
+  const [filtersApplied, setFiltersApplied] = useState(false)
+  const [resetDates, setResetDates] = useState(false)
+  const [checkedCategory, setCheckedCategory] = useState('')
+
+  // Offcanvas 상태
+  const [show, setShow] = useState(false)
+  const handleClose = () => setShow(false)
+  const handleShow = () => setShow(true)
+
+  // Toast 알림 상태
+  const [showToast, setShowToast] = useState(false)
+  const [toastMessage, setToastMessage] = useState('')
+
+  // apiFilter를 useRef로 관리
+  const apiFilter = useRef({
+    serviceKey: import.meta.env.VITE_API_KEY,
+    PageNo: '1',
+    numOfrows: '12',
+    from: '',
+    to: '',
+    keyword: '',
+    sortStdr: '',
+    realmCode: 'L000',
+    serviceTp: 'A',
+  })
+
+  // 디바운싱을 위한 타이머 ref
+  const searchTimer = useRef(null)
+
+  // apiFilter 업데이트 함수
+  const updateApiFilter = (filter) => {
+    apiFilter.current = {
+      ...apiFilter.current,
+      ...filter,
+    }
+
+    // apiFilter가 기본값과 다른지 확인하여 filtersApplied 상태 업데이트
+    const isFilterApplied =
+      apiFilter.current.from !== '' ||
+      apiFilter.current.to !== '' ||
+      apiFilter.current.realmCode !== 'L000' ||
+      apiFilter.current.keyword !== ''
+
+    setFiltersApplied(isFilterApplied)
+  }
+
+  // 필터 조건만 초기화하는 함수
+  const resetFilters = () => {
+    // API 필터의 조건 부분만 초기화
+    apiFilter.current = {
+      ...apiFilter.current,
+      from: '',
+      to: '',
+      realmCode: 'L000',
+    }
+
+    // 날짜 초기화 트리거
+    setResetDates((prev) => !prev)
+    setCheckedCategory('')
+
+    // 필터 적용 상태 초기화
+    setFiltersApplied(false)
+
+    // Toast 메시지 표시
+    setToastMessage('✔️ 필터 조건이 초기화되었습니다.')
+    setShowToast(true)
+
+    // 3초 후 Toast 자동 닫기
+    setTimeout(() => {
+      setShowToast(false)
+    }, 3000)
+  }
+
+  // 필터 적용 버튼 핸들러 - API 호출 없이 필터 상태만 업데이트
+  const applyFilters = () => {
+    // Toast 메시지 표시
+    setToastMessage('✔️ 필터가 적용되었습니다.')
+    setShowToast(true)
+
+    // 3초 후 Toast 자동 닫기
+    setTimeout(() => {
+      setShowToast(false)
+    }, 3000)
+  }
+
+  // 검색어 변경 시 apiFilter 업데이트 (디바운싱 적용)
+  const handleSearchTermChange = (e) => {
+    const newSearchTerm = e.target.value
+    setSearchTerm(newSearchTerm)
+
+    // 이전 타이머 취소
+    if (searchTimer.current) {
+      clearTimeout(searchTimer.current)
+    }
+
+    // 새 타이머 설정 (500ms 후 실행)
+    searchTimer.current = setTimeout(() => {
+      updateApiFilter({ keyword: newSearchTerm })
+    }, 500)
+  }
+
+  // 날짜 필터 적용 함수
+  const handleDateFilterApply = (startDate, endDate) => {
+    updateApiFilter({ from: startDate, to: endDate })
+  }
+
+  // 카테고리 필터 변경 함수
+  const handleCategoryChange = (name, isChecked) => {
+    // 카테고리 코드 매핑
+    const realmCode = {
+      theatrical: 'A000',
+      concerts: 'B000',
+      exhibitions: 'D000',
+      default: 'L000',
+    }
+
+    if (isChecked) {
+      setCheckedCategory(name)
+      if (name === 'theatrical' || name === 'concerts' || name === 'exhibitions') {
+        updateApiFilter({ realmCode: realmCode[name] })
+      }
+    } else {
+      setCheckedCategory('')
+      updateApiFilter({ realmCode: realmCode.default })
+    }
+  }
 
   const handleSubmit = async (e) => {
     // Form 태그 페이지 새로고침 방지
@@ -13,11 +144,8 @@ const SearchForm = ({ onSearch, onSearchResults, apiFilter, searchStatus, handle
     onSearch(searchTerm)
 
     try {
-      // apiFilter.current에서 searchTerm을 제외한 새 객체 생성
-      const { searchTerm: _, ...apiParams } = apiFilter
-
       // API 호출
-      const responseData = await OpenApiRealm(apiParams)
+      const responseData = await OpenApiRealm(apiFilter.current)
 
       // 검색 결과를 부모 컴포넌트로 전달
       onSearchResults(responseData)
@@ -45,22 +173,79 @@ const SearchForm = ({ onSearch, onSearchResults, apiFilter, searchStatus, handle
   }
 
   return (
-    <Form onSubmit={handleSubmit} className='d-flex justify-content-center mb-5 gap-3'>
-      <Form.Control
-        type='text'
-        placeholder='공연 이름을 입력하세요'
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className='me-2'
-        style={{ width: '300px', marginRight: '10px' }}
-      />
-      <Button variant='primary' type='submit' disabled={searchStatus.isPending}>
-        검색
-      </Button>
-      <Button variant='primary' onClick={handleShow}>
-        필터
-      </Button>
-    </Form>
+    <Container>
+      <Form onSubmit={handleSubmit} className='d-flex justify-content-center mb-5 gap-3'>
+        <Form.Control
+          type='text'
+          placeholder='공연 이름을 입력하세요'
+          value={searchTerm}
+          onChange={handleSearchTermChange}
+          className='me-2'
+          style={{ width: '300px', marginRight: '10px' }}
+        />
+        <Button variant='primary' type='submit' disabled={searchStatus === 'loading'}>
+          검색
+        </Button>
+        <Button variant='primary' onClick={handleShow}>
+          필터
+        </Button>
+      </Form>
+
+      {/* 필터 섹션 */}
+      <Offcanvas show={show} onHide={handleClose} scroll={true} backdrop={true}>
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>필터링 검색</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          <Container>
+            <Row>
+              <Col className='text-start'>
+                <p>필터</p>
+              </Col>
+              <Col className='text-end'>
+                <ArrowClockwise className='hidden' size={24} color='gray' onClick={resetFilters} />
+              </Col>
+            </Row>
+            <hr />
+
+            {/* 날짜 필터 */}
+            <Row className='mb-2'>
+              <Col>
+                <DateFilter onDateFilterApply={handleDateFilterApply} resetDates={resetDates} />
+              </Col>
+            </Row>
+            <hr />
+
+            {/* 카테코리 필터 */}
+            <Row className='mt-2'>
+              <Col>
+                <CategoryFilter checkedBox={checkedCategory} onCategoryChange={handleCategoryChange} />
+              </Col>
+            </Row>
+            <hr />
+
+            {/* 필터 적용 버튼 */}
+            <Row className='mt-5'>
+              <Col className='text-center'>
+                <Button variant='primary' onClick={applyFilters} className='mb-4'>
+                  필터 적용하기
+                </Button>
+              </Col>
+
+              {/* Toast 알림 */}
+              <ToastContainer className='mt-5'>
+                <Toast show={showToast} onClose={() => setShowToast(false)}>
+                  <Toast.Header closeButton={false}>
+                    <strong className='me-auto'>알림</strong>
+                  </Toast.Header>
+                  <Toast.Body>{toastMessage}</Toast.Body>
+                </Toast>
+              </ToastContainer>
+            </Row>
+          </Container>
+        </Offcanvas.Body>
+      </Offcanvas>
+    </Container>
   )
 }
 
