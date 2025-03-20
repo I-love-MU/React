@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import SearchbyLocation from './LocationFilterSet'
+import LocationFilterSet from './LocationFilterSet'
 
 // searchpage 에 컴포넌트로 삽입될 위치 기반 탐색 기능
 function SearchForm() {
@@ -27,7 +27,7 @@ function SearchForm() {
   return (
     <>
       {/* 검색 컴포넌트와 병합 시 apiFilter props 제거 */}
-      <SearchbyLocation updateApiFilter={updateApiFilter} />
+      <LocationFilterSet updateApiFilter={updateApiFilter} />
     </>
   )
 }
