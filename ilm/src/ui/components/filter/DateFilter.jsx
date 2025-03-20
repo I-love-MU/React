@@ -3,17 +3,18 @@ import { Form, Row, Col, Container } from 'react-bootstrap'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
-const DateFilter = ({ updateApiFilter, resetDates }) => {
+const DateFilter = ({ updateApiFilter, apiFilter }) => {
   const [startDate, setStartDate] = useState(new Date())
   const [endDate, setEndDate] = useState(null)
 
-  // resetDates prop이 변경될 때 날짜 초기화
+  // apiFilter의 from, to 값이 변경될 때 날짜 상태 업데이트
   useEffect(() => {
-    if (resetDates) {
+    // apiFilter의 from, to가 비어있으면 날짜 초기화
+    if (apiFilter.from === '' && apiFilter.to === '') {
       setStartDate(null)
       setEndDate(null)
     }
-  }, [resetDates])
+  }, [apiFilter.from, apiFilter.to])
 
   // 날짜를 'YYYYMMDD' 형식으로 변환하는 함수
   const formatDateForApi = (date) => {
