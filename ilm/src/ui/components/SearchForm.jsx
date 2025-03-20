@@ -6,12 +6,22 @@ import KeywordFilter from '../components/filter/KeywordFilter'
 import { Form, Button, Container, Row, Col, Offcanvas, Toast, ToastContainer } from 'react-bootstrap'
 import { ArrowClockwise } from 'react-bootstrap-icons'
 
-const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
-  const [searchTerm, setSearchTerm] = useState('')
+// API 필터 기본값 상수로 선언
+const defaultAPI = {
+  serviceKey: import.meta.env.VITE_API_KEY,
+  PageNo: '1',
+  numOfrows: '12',
+  from: '',
+  to: '',
+  keyword: '',
+  sortStdr: '',
+  realmCode: 'L000',
+  serviceTp: 'A',
+}
 
+const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
   // 필터 적용 상태
   const [filtersApplied, setFiltersApplied] = useState(false)
-  const [resetDates, setResetDates] = useState(false)
 
   // Offcanvas 상태
   const [show, setShow] = useState(false)
@@ -23,17 +33,7 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
   const [toastMessage, setToastMessage] = useState('')
 
   // apiFilter를 useRef로 관리
-  const apiFilter = useRef({
-    serviceKey: import.meta.env.VITE_API_KEY,
-    PageNo: '1',
-    numOfrows: '12',
-    from: '',
-    to: '',
-    keyword: '',
-    sortStdr: '',
-    realmCode: 'L000',
-    serviceTp: 'A',
-  })
+  const apiFilter = useRef({ ...defaultAPI })
 
   // apiFilter 업데이트 함수
   const updateApiFilter = (filter) => {
@@ -42,13 +42,12 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
       ...filter,
     }
 
-    // 필터 함수
-    // apiFilter가 기본값과 다른지 확인하여 filtersApplied 상태 업데이트
+    // 필터 초기화 기능의 활성화/비활성화 상태를 결정
     const isFilterApplied =
-      apiFilter.current.from !== '' ||
-      apiFilter.current.to !== '' ||
-      apiFilter.current.realmCode !== 'L000' ||
-      apiFilter.current.keyword !== ''
+      apiFilter.current.from !== defaultAPI.from ||
+      apiFilter.current.to !== defaultAPI.to ||
+      apiFilter.current.realmCode !== defaultAPI.realmCode ||
+      apiFilter.current.keyword !== defaultAPI.keyword
     setFiltersApplied(isFilterApplied)
   }
 
@@ -57,13 +56,10 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
     // API 필터의 조건 부분만 초기화
     apiFilter.current = {
       ...apiFilter.current,
-      from: '',
-      to: '',
-      realmCode: 'L000',
+      from: defaultAPI.from,
+      to: defaultAPI.to,
+      realmCode: defaultAPI.realmCode,
     }
-
-    // 날짜 초기화 트리거
-    setResetDates((prev) => !prev)
 
     // 필터 적용 상태 초기화
     setFiltersApplied(false)
@@ -95,7 +91,7 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
     e.preventDefault()
 
     // 부모 컴포넌트의 검색 함수 호출
-    onSearch(searchTerm)
+    onSearch(apiFilter.current.keyword)
 
     try {
       // API 호출
@@ -165,7 +161,7 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
             {/* 날짜 필터 */}
             <Row className='mb-2'>
               <Col>
-                <DateFilter updateApiFilter={updateApiFilter} resetDates={resetDates} />
+                <DateFilter updateApiFilter={updateApiFilter} apiFilter={apiFilter.current} />
               </Col>
             </Row>
             <hr />
