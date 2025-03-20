@@ -32,3 +32,5 @@ dist
 node_modules/
 venv/
 package-lock.json
+package-lock.json
+package.json
