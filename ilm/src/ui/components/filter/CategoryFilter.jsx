@@ -1,7 +1,20 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Form from 'react-bootstrap/Form'
 
 const CategoryFilter = ({ updateApiFilter, apiFilter }) => {
+  // 현재 선택된 카테고리를 즉시 반영하기 위한 상태
+  const [selectedCategory, setSelectedCategory] = useState('')
+
+  // apiFilter가 변경될 때 동기화
+  useEffect(() => {
+    const realmCodeMap = {
+      A000: 'theatrical',
+      B000: 'concerts',
+      D000: 'exhibitions',
+    }
+    setSelectedCategory(realmCodeMap[apiFilter.realmCode] || '')
+  }, [apiFilter.realmCode])
+
   // 카테고리 변경 핸들러
   const handleCategoryFilter = (e) => {
     const name = e.target.name
@@ -17,20 +30,12 @@ const CategoryFilter = ({ updateApiFilter, apiFilter }) => {
 
     // 체크박스 상태 업데이트
     if (isChecked) {
+      setSelectedCategory(name)
       updateApiFilter({ realmCode: realmCode[name] })
     } else {
+      setSelectedCategory('')
       updateApiFilter({ realmCode: realmCode.default })
     }
-  }
-
-  // 현재 선택된 realmCode에 따라 체크 상태 결정
-  const isChecked = (categoryCode) => {
-    const realmCodeMap = {
-      A000: 'theatrical',
-      B000: 'concerts',
-      D000: 'exhibitions',
-    }
-    return realmCodeMap[apiFilter.realmCode] === categoryCode
   }
 
   return (
@@ -42,7 +47,7 @@ const CategoryFilter = ({ updateApiFilter, apiFilter }) => {
           name='theatrical'
           label='연극'
           onChange={handleCategoryFilter}
-          checked={isChecked('theatrical')}
+          checked={selectedCategory === 'theatrical'}
           className='mx-2'
         />
         <Form.Check
@@ -51,7 +56,7 @@ const CategoryFilter = ({ updateApiFilter, apiFilter }) => {
           name='concerts'
           label='음악/콘서트'
           onChange={handleCategoryFilter}
-          checked={isChecked('concerts')}
+          checked={selectedCategory === 'concerts'}
           className='mx-2'
         />
         <Form.Check
@@ -60,7 +65,7 @@ const CategoryFilter = ({ updateApiFilter, apiFilter }) => {
           name='exhibitions'
           label='전시'
           onChange={handleCategoryFilter}
-          checked={isChecked('exhibitions')}
+          checked={selectedCategory === 'exhibitions'}
           className='mx-2'
         />
       </Form>
