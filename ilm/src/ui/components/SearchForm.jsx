@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react'
 import { OpenApiRealm } from '../../services/ApiService'
 import DateFilter from '../components/filter/DateFilter'
 import CategoryFilter from '../components/filter/CategoryFilter'
+import KeywordFilter from '../components/filter/KeywordFilter'
 import { Form, Button, Container, Row, Col, Offcanvas, Toast, ToastContainer } from 'react-bootstrap'
 import { ArrowClockwise } from 'react-bootstrap-icons'
 
@@ -11,7 +12,6 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
   // 필터 적용 상태
   const [filtersApplied, setFiltersApplied] = useState(false)
   const [resetDates, setResetDates] = useState(false)
-  const [checkedCategory, setCheckedCategory] = useState('')
 
   // Offcanvas 상태
   const [show, setShow] = useState(false)
@@ -35,9 +35,6 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
     serviceTp: 'A',
   })
 
-  // 디바운싱을 위한 타이머 ref
-  const searchTimer = useRef(null)
-
   // apiFilter 업데이트 함수
   const updateApiFilter = (filter) => {
     apiFilter.current = {
@@ -45,13 +42,13 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
       ...filter,
     }
 
+    // 필터 함수
     // apiFilter가 기본값과 다른지 확인하여 filtersApplied 상태 업데이트
     const isFilterApplied =
       apiFilter.current.from !== '' ||
       apiFilter.current.to !== '' ||
       apiFilter.current.realmCode !== 'L000' ||
       apiFilter.current.keyword !== ''
-
     setFiltersApplied(isFilterApplied)
   }
 
@@ -67,7 +64,6 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
 
     // 날짜 초기화 트리거
     setResetDates((prev) => !prev)
-    setCheckedCategory('')
 
     // 필터 적용 상태 초기화
     setFiltersApplied(false)
@@ -92,48 +88,6 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
     setTimeout(() => {
       setShowToast(false)
     }, 3000)
-  }
-
-  // 검색어 변경 시 apiFilter 업데이트 (디바운싱 적용)
-  const handleSearchTermChange = (e) => {
-    const newSearchTerm = e.target.value
-    setSearchTerm(newSearchTerm)
-
-    // 이전 타이머 취소
-    if (searchTimer.current) {
-      clearTimeout(searchTimer.current)
-    }
-
-    // 새 타이머 설정 (500ms 후 실행)
-    searchTimer.current = setTimeout(() => {
-      updateApiFilter({ keyword: newSearchTerm })
-    }, 500)
-  }
-
-  // 날짜 필터 적용 함수
-  const handleDateFilterApply = (startDate, endDate) => {
-    updateApiFilter({ from: startDate, to: endDate })
-  }
-
-  // 카테고리 필터 변경 함수
-  const handleCategoryChange = (name, isChecked) => {
-    // 카테고리 코드 매핑
-    const realmCode = {
-      theatrical: 'A000',
-      concerts: 'B000',
-      exhibitions: 'D000',
-      default: 'L000',
-    }
-
-    if (isChecked) {
-      setCheckedCategory(name)
-      if (name === 'theatrical' || name === 'concerts' || name === 'exhibitions') {
-        updateApiFilter({ realmCode: realmCode[name] })
-      }
-    } else {
-      setCheckedCategory('')
-      updateApiFilter({ realmCode: realmCode.default })
-    }
   }
 
   const handleSubmit = async (e) => {
@@ -175,14 +129,7 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
   return (
     <Container>
       <Form onSubmit={handleSubmit} className='d-flex justify-content-center mb-5 gap-3'>
-        <Form.Control
-          type='text'
-          placeholder='공연 이름을 입력하세요'
-          value={searchTerm}
-          onChange={handleSearchTermChange}
-          className='me-2'
-          style={{ width: '300px', marginRight: '10px' }}
-        />
+        <KeywordFilter updateApiFilter={updateApiFilter} />
         <Button variant='primary' type='submit' disabled={searchStatus === 'loading'}>
           검색
         </Button>
@@ -203,7 +150,14 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
                 <p>필터</p>
               </Col>
               <Col className='text-end'>
-                <ArrowClockwise className='hidden' size={24} color='gray' onClick={resetFilters} />
+                <ArrowClockwise
+                  className='hidden'
+                  size={24}
+                  color='gray'
+                  onClick={resetFilters}
+                  disabled={!filtersApplied}
+                />{' '}
+                초기화
               </Col>
             </Row>
             <hr />
@@ -211,7 +165,7 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
             {/* 날짜 필터 */}
             <Row className='mb-2'>
               <Col>
-                <DateFilter onDateFilterApply={handleDateFilterApply} resetDates={resetDates} />
+                <DateFilter updateApiFilter={updateApiFilter} resetDates={resetDates} />
               </Col>
             </Row>
             <hr />
@@ -219,7 +173,7 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
             {/* 카테코리 필터 */}
             <Row className='mt-2'>
               <Col>
-                <CategoryFilter checkedBox={checkedCategory} onCategoryChange={handleCategoryChange} />
+                <CategoryFilter updateApiFilter={updateApiFilter} apiFilter={apiFilter.current} />
               </Col>
             </Row>
             <hr />
