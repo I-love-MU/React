@@ -1,12 +1,36 @@
 import React from 'react'
 import Form from 'react-bootstrap/Form'
 
-const CategoryFilter = ({ checkedBox, onCategoryChange }) => {
+const CategoryFilter = ({ updateApiFilter, apiFilter }) => {
   // 카테고리 변경 핸들러
   const handleCategoryFilter = (e) => {
     const name = e.target.name
     const isChecked = e.target.checked
-    onCategoryChange(name, isChecked)
+
+    // 카테고리 코드 매핑
+    const realmCode = {
+      theatrical: 'A000',
+      concerts: 'B000',
+      exhibitions: 'D000',
+      default: 'L000',
+    }
+
+    // 체크박스 상태 업데이트
+    if (isChecked) {
+      updateApiFilter({ realmCode: realmCode[name] })
+    } else {
+      updateApiFilter({ realmCode: realmCode.default })
+    }
+  }
+
+  // 현재 선택된 realmCode에 따라 체크 상태 결정
+  const isChecked = (categoryCode) => {
+    const realmCodeMap = {
+      A000: 'theatrical',
+      B000: 'concerts',
+      D000: 'exhibitions',
+    }
+    return realmCodeMap[apiFilter.realmCode] === categoryCode
   }
 
   return (
@@ -18,7 +42,7 @@ const CategoryFilter = ({ checkedBox, onCategoryChange }) => {
           name='theatrical'
           label='연극'
           onChange={handleCategoryFilter}
-          checked={checkedBox === 'theatrical'}
+          checked={isChecked('theatrical')}
           className='mx-2'
         />
         <Form.Check
@@ -27,7 +51,7 @@ const CategoryFilter = ({ checkedBox, onCategoryChange }) => {
           name='concerts'
           label='음악/콘서트'
           onChange={handleCategoryFilter}
-          checked={checkedBox === 'concerts'}
+          checked={isChecked('concerts')}
           className='mx-2'
         />
         <Form.Check
@@ -36,7 +60,7 @@ const CategoryFilter = ({ checkedBox, onCategoryChange }) => {
           name='exhibitions'
           label='전시'
           onChange={handleCategoryFilter}
-          checked={checkedBox === 'exhibitions'}
+          checked={isChecked('exhibitions')}
           className='mx-2'
         />
       </Form>
