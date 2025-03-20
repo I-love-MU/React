@@ -3,7 +3,7 @@ import { Form, Row, Col, Container } from 'react-bootstrap'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
-const DateFilter = ({ onDateFilterApply, resetDates }) => {
+const DateFilter = ({ updateApiFilter, resetDates }) => {
   const [startDate, setStartDate] = useState(new Date())
   const [endDate, setEndDate] = useState(null)
 
@@ -24,27 +24,29 @@ const DateFilter = ({ onDateFilterApply, resetDates }) => {
     return `${year}${month}${day}`
   }
 
-  // 부모 컴포넌트에 날짜 정보 전달
-  const updateParent = (start, end) => {
-    const formattedStartDate = formatDateForApi(start)
-    const formattedEndDate = formatDateForApi(end) || ''
-    onDateFilterApply(formattedStartDate, formattedEndDate)
-  }
-
   // 종료일이 시작일보다 이전이 되지 않도록 처리
   const handleStartDateChange = (date) => {
     setStartDate(date)
     if (endDate && date > endDate) {
       setEndDate(null)
-      updateParent(date, null)
+      updateApiFilter({
+        from: formatDateForApi(date),
+        to: '',
+      })
     } else {
-      updateParent(date, endDate)
+      updateApiFilter({
+        from: formatDateForApi(date),
+        to: formatDateForApi(endDate),
+      })
     }
   }
 
   const handleEndDateChange = (date) => {
     setEndDate(date)
-    updateParent(startDate, date)
+    updateApiFilter({
+      from: formatDateForApi(startDate),
+      to: formatDateForApi(date),
+    })
   }
 
   return (
