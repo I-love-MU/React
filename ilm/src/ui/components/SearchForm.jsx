@@ -44,6 +44,15 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
       ...apiFilter.current,
       ...filter,
     }
+
+    // apiFilter가 기본값과 다른지 확인하여 filtersApplied 상태 업데이트
+    const isFilterApplied =
+      apiFilter.current.from !== '' ||
+      apiFilter.current.to !== '' ||
+      apiFilter.current.realmCode !== 'L000' ||
+      apiFilter.current.keyword !== ''
+
+    setFiltersApplied(isFilterApplied)
   }
 
   // 필터 조건만 초기화하는 함수
@@ -75,8 +84,6 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
 
   // 필터 적용 버튼 핸들러 - API 호출 없이 필터 상태만 업데이트
   const applyFilters = () => {
-    setFiltersApplied(true)
-
     // Toast 메시지 표시
     setToastMessage('✔️ 필터가 적용되었습니다.')
     setShowToast(true)
