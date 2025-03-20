@@ -2,16 +2,26 @@ import React, { useState, useRef } from 'react'
 import { OpenApiRealm } from '../../services/ApiService'
 import DateFilter from '../components/filter/DateFilter'
 import CategoryFilter from '../components/filter/CategoryFilter'
+import KeywordFilter from '../components/filter/KeywordFilter'
 import { Form, Button, Container, Row, Col, Offcanvas, Toast, ToastContainer } from 'react-bootstrap'
 import { ArrowClockwise } from 'react-bootstrap-icons'
 
-const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
-  const [searchTerm, setSearchTerm] = useState('')
+// API 필터 기본값 상수로 선언
+const defaultAPI = {
+  serviceKey: import.meta.env.VITE_API_KEY,
+  PageNo: '1',
+  numOfrows: '12',
+  from: '',
+  to: '',
+  keyword: '',
+  sortStdr: '',
+  realmCode: 'L000',
+  serviceTp: 'A',
+}
 
+const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
   // 필터 적용 상태
   const [filtersApplied, setFiltersApplied] = useState(false)
-  const [resetDates, setResetDates] = useState(false)
-  const [checkedCategory, setCheckedCategory] = useState('')
 
   // Offcanvas 상태
   const [show, setShow] = useState(false)
@@ -23,20 +33,7 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
   const [toastMessage, setToastMessage] = useState('')
 
   // apiFilter를 useRef로 관리
-  const apiFilter = useRef({
-    serviceKey: import.meta.env.VITE_API_KEY,
-    PageNo: '1',
-    numOfrows: '12',
-    from: '',
-    to: '',
-    keyword: '',
-    sortStdr: '',
-    realmCode: 'L000',
-    serviceTp: 'A',
-  })
-
-  // 디바운싱을 위한 타이머 ref
-  const searchTimer = useRef(null)
+  const apiFilter = useRef({ ...defaultAPI })
 
   // apiFilter 업데이트 함수
   const updateApiFilter = (filter) => {
@@ -45,13 +42,12 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
       ...filter,
     }
 
-    // apiFilter가 기본값과 다른지 확인하여 filtersApplied 상태 업데이트
+    // 필터 초기화 기능의 활성화/비활성화 상태를 결정
     const isFilterApplied =
-      apiFilter.current.from !== '' ||
-      apiFilter.current.to !== '' ||
-      apiFilter.current.realmCode !== 'L000' ||
-      apiFilter.current.keyword !== ''
-
+      apiFilter.current.from !== defaultAPI.from ||
+      apiFilter.current.to !== defaultAPI.to ||
+      apiFilter.current.realmCode !== defaultAPI.realmCode ||
+      apiFilter.current.keyword !== defaultAPI.keyword
     setFiltersApplied(isFilterApplied)
   }
 
@@ -60,14 +56,10 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
     // API 필터의 조건 부분만 초기화
     apiFilter.current = {
       ...apiFilter.current,
-      from: '',
-      to: '',
-      realmCode: 'L000',
+      from: defaultAPI.from,
+      to: defaultAPI.to,
+      realmCode: defaultAPI.realmCode,
     }
-
-    // 날짜 초기화 트리거
-    setResetDates((prev) => !prev)
-    setCheckedCategory('')
 
     // 필터 적용 상태 초기화
     setFiltersApplied(false)
@@ -94,54 +86,12 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
     }, 3000)
   }
 
-  // 검색어 변경 시 apiFilter 업데이트 (디바운싱 적용)
-  const handleSearchTermChange = (e) => {
-    const newSearchTerm = e.target.value
-    setSearchTerm(newSearchTerm)
-
-    // 이전 타이머 취소
-    if (searchTimer.current) {
-      clearTimeout(searchTimer.current)
-    }
-
-    // 새 타이머 설정 (500ms 후 실행)
-    searchTimer.current = setTimeout(() => {
-      updateApiFilter({ keyword: newSearchTerm })
-    }, 500)
-  }
-
-  // 날짜 필터 적용 함수
-  const handleDateFilterApply = (startDate, endDate) => {
-    updateApiFilter({ from: startDate, to: endDate })
-  }
-
-  // 카테고리 필터 변경 함수
-  const handleCategoryChange = (name, isChecked) => {
-    // 카테고리 코드 매핑
-    const realmCode = {
-      theatrical: 'A000',
-      concerts: 'B000',
-      exhibitions: 'D000',
-      default: 'L000',
-    }
-
-    if (isChecked) {
-      setCheckedCategory(name)
-      if (name === 'theatrical' || name === 'concerts' || name === 'exhibitions') {
-        updateApiFilter({ realmCode: realmCode[name] })
-      }
-    } else {
-      setCheckedCategory('')
-      updateApiFilter({ realmCode: realmCode.default })
-    }
-  }
-
   const handleSubmit = async (e) => {
     // Form 태그 페이지 새로고침 방지
     e.preventDefault()
 
     // 부모 컴포넌트의 검색 함수 호출
-    onSearch(searchTerm)
+    onSearch(apiFilter.current.keyword)
 
     try {
       // API 호출
@@ -175,14 +125,7 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
   return (
     <Container>
       <Form onSubmit={handleSubmit} className='d-flex justify-content-center mb-5 gap-3'>
-        <Form.Control
-          type='text'
-          placeholder='공연 이름을 입력하세요'
-          value={searchTerm}
-          onChange={handleSearchTermChange}
-          className='me-2'
-          style={{ width: '300px', marginRight: '10px' }}
-        />
+        <KeywordFilter updateApiFilter={updateApiFilter} />
         <Button variant='primary' type='submit' disabled={searchStatus === 'loading'}>
           검색
         </Button>
@@ -203,7 +146,14 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
                 <p>필터</p>
               </Col>
               <Col className='text-end'>
-                <ArrowClockwise className='hidden' size={24} color='gray' onClick={resetFilters} />
+                <ArrowClockwise
+                  className='hidden'
+                  size={24}
+                  color='gray'
+                  onClick={resetFilters}
+                  disabled={!filtersApplied}
+                />{' '}
+                초기화
               </Col>
             </Row>
             <hr />
@@ -211,7 +161,7 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
             {/* 날짜 필터 */}
             <Row className='mb-2'>
               <Col>
-                <DateFilter onDateFilterApply={handleDateFilterApply} resetDates={resetDates} />
+                <DateFilter updateApiFilter={updateApiFilter} apiFilter={apiFilter.current} />
               </Col>
             </Row>
             <hr />
@@ -219,7 +169,7 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
             {/* 카테코리 필터 */}
             <Row className='mt-2'>
               <Col>
-                <CategoryFilter checkedBox={checkedCategory} onCategoryChange={handleCategoryChange} />
+                <CategoryFilter updateApiFilter={updateApiFilter} apiFilter={apiFilter.current} />
               </Col>
             </Row>
             <hr />
