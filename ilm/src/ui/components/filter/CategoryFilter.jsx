@@ -10,7 +10,7 @@ const CategoryFilter = ({ checkedBox, onCategoryChange }) => {
   }
 
   return (
-    <div className='filter-section text-center'>
+    <Container className='filter-section text-center'>
       <Form className='d-flex justify-content-center align-items-center'>
         <Form.Check
           type='checkbox'
@@ -40,7 +40,7 @@ const CategoryFilter = ({ checkedBox, onCategoryChange }) => {
           className='mx-2'
         />
       </Form>
-    </div>
+    </Container>
   )
 }
 
