@@ -4,7 +4,7 @@ import { Container, Row, Col, Card, Alert } from 'react-bootstrap'
 const SearchResults = ({ filteredData }) => {
   if (!filteredData || filteredData.length == 0) {
     return (
-      <Alert variant='light' className='mt-3'>
+      <Alert variant='light' className='text-center'>
         검색 결과가 없습니다.
       </Alert>
     )
