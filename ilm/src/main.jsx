@@ -8,9 +8,3 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <AppRouter /> {/* 라우터 추가 */}
   </React.StrictMode>,
 )
-=======
-import { createRoot } from 'react-dom/client'
-import router from './route/Router'
-
-createRoot(document.getElementById('root')).render(<RouterProvider router={router} />)
->>>>>>> f862af07 (router initializing)
