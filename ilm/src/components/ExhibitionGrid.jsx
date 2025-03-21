@@ -3,6 +3,7 @@ import { fetchExhibitionData } from "./Fetchdata"; // API 함수 import
 
 
 
+
 // ✅ 전시회 데이터를 그리드 형태로 보여주는 컴포넌트
 const ExhibitionGrid = () => {
   const [exhibitionItems, setExhibitionItems] = useState([]); // 초기 상태는 빈 배열
@@ -42,6 +43,7 @@ const ExhibitionGrid = () => {
               {item.place || "공연장 정보 없음"} / {item.area || "지역 정보 없음"}
             </h4>
             <p>{item.startDate || "날짜 정보 없음"} - {item.endDate}</p>
+            
           </div>
         ))
       ) : (
