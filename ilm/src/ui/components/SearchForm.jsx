@@ -5,6 +5,7 @@ import CategoryFilter from '../components/filter/CategoryFilter'
 import KeywordFilter from '../components/filter/KeywordFilter'
 import { Form, Button, Container, Row, Col, Offcanvas, Toast, ToastContainer } from 'react-bootstrap'
 import { ArrowClockwise } from 'react-bootstrap-icons'
+import LocationFilterSet from './LocationFilterSet'
 
 // API 필터 기본값 상수로 선언
 const defaultAPI = {
@@ -36,6 +37,7 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
   const apiFilter = useRef({ ...defaultAPI })
 
   // apiFilter 업데이트 함수
+
   const updateApiFilter = (filter) => {
     apiFilter.current = {
       ...apiFilter.current,
@@ -170,6 +172,13 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
             <Row className='mt-2'>
               <Col>
                 <CategoryFilter updateApiFilter={updateApiFilter} apiFilter={apiFilter.current} />
+              </Col>
+            </Row>
+            <hr />
+
+            <Row className='mt-2'>
+              <Col>
+                <LocationFilterSet updateApiFilter={{ updateApiFilter }} />
               </Col>
             </Row>
             <hr />
