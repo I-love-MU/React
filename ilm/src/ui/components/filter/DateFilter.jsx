@@ -3,18 +3,25 @@ import { Form, Row, Col, Container } from 'react-bootstrap'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
-const DateFilter = ({ updateApiFilter, apiFilter }) => {
-  const [startDate, setStartDate] = useState(new Date())
-  const [endDate, setEndDate] = useState(null)
+const DateFilter = ({ updateApiFilter }) => {
+  const [dateFilter, setDateFilter] = useState({
+    startDate: '',
+    endDate: '',
+  })
 
-  // apiFilter의 from, to 값이 변경될 때 날짜 상태 업데이트
+  const handleDateChange = (date, type) => {
+    setDateFilter((prev) => ({
+      ...prev,
+      [type]: date,
+    }))
+  }
+
   useEffect(() => {
-    // apiFilter의 from, to가 비어있으면 날짜 초기화
-    if (apiFilter.from === '' && apiFilter.to === '') {
-      setStartDate(null)
-      setEndDate(null)
-    }
-  }, [apiFilter.from, apiFilter.to])
+    updateApiFilter({
+      from: formatDateForApi(dateFilter.startDate),
+      to: formatDateForApi(dateFilter.endDate),
+    })
+  }, [dateFilter])
 
   // 날짜를 'YYYYMMDD' 형식으로 변환하는 함수
   const formatDateForApi = (date) => {
@@ -25,31 +32,6 @@ const DateFilter = ({ updateApiFilter, apiFilter }) => {
     return `${year}${month}${day}`
   }
 
-  // 종료일이 시작일보다 이전이 되지 않도록 처리
-  const handleStartDateChange = (date) => {
-    setStartDate(date)
-    if (endDate && date > endDate) {
-      setEndDate(null)
-      updateApiFilter({
-        from: formatDateForApi(date),
-        to: '',
-      })
-    } else {
-      updateApiFilter({
-        from: formatDateForApi(date),
-        to: formatDateForApi(endDate),
-      })
-    }
-  }
-
-  const handleEndDateChange = (date) => {
-    setEndDate(date)
-    updateApiFilter({
-      from: formatDateForApi(startDate),
-      to: formatDateForApi(date),
-    })
-  }
-
   return (
     <Container>
       <Row>
@@ -57,11 +39,11 @@ const DateFilter = ({ updateApiFilter, apiFilter }) => {
           <Form.Group>
             <Form.Label>시작일</Form.Label>
             <DatePicker
-              selected={startDate}
-              onChange={handleStartDateChange}
+              selected={dateFilter.startDate}
+              onChange={(date) => handleDateChange(date, 'startDate')}
               selectsStart
-              startDate={startDate}
-              endDate={endDate}
+              startDate={dateFilter.startDate}
+              endDate={dateFilter.endDate}
               dateFormat='yyyy-MM-dd'
               className='form-control'
             />
@@ -71,12 +53,12 @@ const DateFilter = ({ updateApiFilter, apiFilter }) => {
           <Form.Group>
             <Form.Label>종료일</Form.Label>
             <DatePicker
-              selected={endDate}
-              onChange={handleEndDateChange}
+              selected={dateFilter.endDate}
+              onChange={(date) => handleDateChange(date, 'endDate')}
               selectsEnd
-              startDate={startDate}
-              endDate={endDate}
-              minDate={startDate}
+              startDate={dateFilter.startDate}
+              endDate={dateFilter.endDate}
+              minDate={dateFilter.startDate}
               dateFormat='yyyy-MM-dd'
               className='form-control'
             />

@@ -172,7 +172,7 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
             {/* 날짜 필터 */}
             <Row className='mb-2'>
               <Col>
-                <DateFilter updateApiFilter={updateApiFilter} apiFilter={apiFilter.current} />
+                <DateFilter updateApiFilter={updateApiFilter} />
               </Col>
             </Row>
             <hr />
