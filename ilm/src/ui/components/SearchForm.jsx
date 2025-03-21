@@ -60,6 +60,15 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
       apiFilter.current.gpsyto !== defaultAPI.gpsyto
 
     setFiltersApplied(isFilterApplied)
+
+    // Toast 메시지 표시 (LocationFilterSet에서 전달된 경우)
+    if (filter.showToast) {
+      setToastMessage(filter.toastMessage)
+      setShowToast(true)
+      setTimeout(() => {
+        setShowToast(false)
+      }, 3000)
+    }
   }
 
   // 필터 조건만 초기화하는 함수
@@ -202,8 +211,15 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
               </Col>
 
               {/* Toast 알림 */}
-              <ToastContainer className='mt-5'>
-                <Toast show={showToast} onClose={() => setShowToast(false)}>
+              <ToastContainer
+                className='mt-5'
+                position='top-center'
+                style={{
+                  transform: 'translateX(-50%)', // 중앙 정렬 완성
+                  width: 'auto', // 너비 자동 조정
+                }}
+              >
+                <Toast show={showToast} onClose={() => setShowToast(false)} style={{ opacity: 0.8 }}>
                   <Toast.Header closeButton={false}>
                     <strong className='me-auto'>알림</strong>
                   </Toast.Header>
