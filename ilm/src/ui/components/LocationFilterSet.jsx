@@ -43,6 +43,13 @@ function LocationFilterSet({ updateApiFilter }) {
       radius: radiusRef.current.value,
     })
 
+    // Toast 메시지를 위한 추가 정보를 포함하여 updateApiFilter 호출
+    updateApiFilter({
+      ...coordinatesArea,
+      showToast: true,
+      toastMessage: '✔️ 위치가 설정되었습니다',
+    })
+
     updateApiFilter(coordinatesArea)
 
     // 검색된 컨텐츠의 위치가 반경 내인지 확인하는 코드
@@ -76,8 +83,11 @@ function LocationFilterSet({ updateApiFilter }) {
             id='current'
             checked={locationFilter === 'current'}
             onChange={handleLocationFilterChange}
+            className='me-2'
           />
-          <Form.Label htmlFor='current'>현재 위치로 탐색</Form.Label>
+          <Form.Label htmlFor='current' className='me-4'>
+            현재 위치로 탐색
+          </Form.Label>
 
           <Form.Check
             type='radio'
@@ -86,8 +96,11 @@ function LocationFilterSet({ updateApiFilter }) {
             id='address'
             checked={locationFilter === 'address'}
             onChange={handleLocationFilterChange}
+            className='ms-5'
           />
-          <Form.Label htmlFor='address'>주소로 탐색</Form.Label>
+          <Form.Label htmlFor='address' className='ms-2'>
+            주소로 탐색
+          </Form.Label>
         </InputGroup>
       </Form>
 
