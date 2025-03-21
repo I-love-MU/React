@@ -18,7 +18,6 @@ const defaultAPI = {
   sortStdr: '',
   realmCode: 'L000',
   serviceTp: 'A',
-  // GPS 좌표 관련 파라미터 추가
   gpsxfrom: '',
   gpsyfrom: '',
   gpsxto: '',
@@ -71,10 +70,6 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
       from: defaultAPI.from,
       to: defaultAPI.to,
       realmCode: defaultAPI.realmCode,
-      gpsxfrom: defaultAPI.gpsxfrom,
-      gpsyfrom: defaultAPI.gpsyfrom,
-      gpsxto: defaultAPI.gpsxto,
-      gpsyto: defaultAPI.gpsyto,
     }
 
     // 필터 적용 상태 초기화

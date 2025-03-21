@@ -43,15 +43,7 @@ function LocationFilterSet({ updateApiFilter }) {
       radius: radiusRef.current.value,
     })
 
-    // 좌표 영역 값을 API 파라미터에 맞게 매핑
-    const locationFilter = {
-      gpsxfrom: coordinatesArea.minLng,
-      gpsyfrom: coordinatesArea.minLat,
-      gpsxto: coordinatesArea.maxLng,
-      gpsyto: coordinatesArea.maxLat,
-    }
-
-    updateApiFilter(locationFilter)
+    updateApiFilter(coordinatesArea)
 
     // 검색된 컨텐츠의 위치가 반경 내인지 확인하는 코드
     // 검색 컴포넌트 병합 시 검색 결과 출력 컴포넌트에 전이
