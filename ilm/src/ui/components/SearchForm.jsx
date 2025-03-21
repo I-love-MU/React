@@ -178,7 +178,7 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
 
             <Row className='mt-2'>
               <Col>
-                <LocationFilterSet updateApiFilter={{ updateApiFilter }} />
+                <LocationFilterSet updateApiFilter={updateApiFilter} />
               </Col>
             </Row>
             <hr />
