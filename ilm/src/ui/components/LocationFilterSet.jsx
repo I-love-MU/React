@@ -50,8 +50,6 @@ function LocationFilterSet({ updateApiFilter }) {
       toastMessage: '✔️ 위치가 설정되었습니다',
     })
 
-    updateApiFilter(coordinatesArea)
-
     // 검색된 컨텐츠의 위치가 반경 내인지 확인하는 코드
     // 검색 컴포넌트 병합 시 검색 결과 출력 컴포넌트에 전이
     // try {
