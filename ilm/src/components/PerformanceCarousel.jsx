@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { fetchOngoingEvents } from '../api/publicApi'
 import { useNavigate } from 'react-router-dom'
-import { Carousel, Container, Row, Col } from 'react-bootstrap'
-import { formatDate } from '../utils' // ✅ 날짜 변환 함수 가져오기
+import { Carousel, Container, Row, Col, Button } from 'react-bootstrap' // Button 추가
+import { formatDate } from '../utils'
 
 const PerformanceCarousel = ({ title, serviceTp }) => {
   const [slides, setSlides] = useState([])
@@ -15,7 +15,7 @@ const PerformanceCarousel = ({ title, serviceTp }) => {
         from: '20250101',
         to: '20251231',
         serviceTp: serviceTp,
-        numOfRows: 12, // 12개 가져오기
+        numOfRows: 12,
       })
 
       if (data.length > 0) {
@@ -36,12 +36,20 @@ const PerformanceCarousel = ({ title, serviceTp }) => {
 
   return (
     <Container className='performance-section mt-5'>
-      <h2 className='mb-4'>{title}</h2>
+      <div className='d-flex justify-content-between align-items-center mb-3'>
+        <h2 className='mb-0'>{title}</h2>
+        <Button
+          variant='outline-primary'
+          size='sm'
+          onClick={() => navigate(`/performances/list?category=${serviceTp}`)}
+        >
+          더보기 →
+        </Button>
+      </div>
+
       <Carousel activeIndex={index} onSelect={handleSelect} interval={5000}>
         {slides.map((group, idx) => (
           <Carousel.Item key={idx}>
-            {' '}
-            {/* ✅ 캐러셀 아이템에 고유 key 추가 */}
             <Row className='justify-content-center'>
               {group.map((performance) => (
                 <Col key={performance.seq || Math.random()} md={4} className='d-flex justify-content-center'>
