@@ -8,10 +8,10 @@ const CoordinatesArea = ({ latitude, longitude, radius }) => {
   const maxLon = longitude + lonOffset
 
   return {
-    minLat: minLat.toString(),
-    minLon: minLon.toString(),
-    maxLat: maxLat.toString(),
-    maxLon: maxLon.toString(),
+    gpsyfrom: minLat.toString(),
+    gpsxfrom: minLon.toString(),
+    gpsyto: maxLat.toString(),
+    gpsxto: maxLon.toString(),
   }
 }
 
