@@ -1,24 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { fetchExhibitionData } from "./Fetchdata"; // API 함수 import
 
+
+
+// ✅ 전시회 데이터를 그리드 형태로 보여주는 컴포넌트
 const ExhibitionGrid = () => {
   const [exhibitionItems, setExhibitionItems] = useState([]); // 초기 상태는 빈 배열
 // useEffect를 사용하여 컴포넌트가 마운트될 때 API 호출
   
   useEffect(() => {
     const fetchData = async () => {
-      const theatre = await fetchExhibitionData("AAAA");
-      const concert = await fetchExhibitionData("BBBC");
-      const exhibition = await fetchExhibitionData("CCCC");
+      const theatre = await fetchExhibitionData("A000");
+      const concert = await fetchExhibitionData("B000");
+      const exhibition = await fetchExhibitionData("D000");
 
       const combinedData = [...theatre, ...concert, ...exhibition];
-      console.log("Fetched Data:", combinedData); // 데이터 확인
+     
       setExhibitionItems(combinedData);
     };
 
     fetchData();
   }, []);
-  
+   
   return (
     <section style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "20px", padding: "20px" }}>
       {exhibitionItems.length > 0 ? (
@@ -36,7 +39,7 @@ const ExhibitionGrid = () => {
             />
             <h3>{item.title || "제목 없음"}</h3>
             <h4>
-              {item.fcltynm || "공연장 정보 없음"} / {item.area || "지역 정보 없음"}
+              {item.hall || "공연장 정보 없음"} / {item.area || "지역 정보 없음"}
             </h4>
             <p>{item.date || "날짜 정보 없음"}</p>
           </div>
