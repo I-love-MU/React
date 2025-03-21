@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Form } from 'react-bootstrap'
 
 const KeywordFilter = ({ updateApiFilter }) => {
@@ -7,8 +7,11 @@ const KeywordFilter = ({ updateApiFilter }) => {
   const handleSearchTermChange = (e) => {
     const newSearchTerm = e.target.value
     setSearchTerm(newSearchTerm)
-    updateApiFilter({ keyword: newSearchTerm })
   }
+
+  useEffect(() => {
+    updateApiFilter({ keyword: searchTerm })
+  }, [searchTerm])
 
   return (
     <Form.Control
