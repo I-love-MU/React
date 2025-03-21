@@ -217,9 +217,10 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
                 style={{
                   transform: 'translateX(-50%)', // 중앙 정렬 완성
                   width: 'auto', // 너비 자동 조정
+                  opacity: 0.9,
                 }}
               >
-                <Toast show={showToast} onClose={() => setShowToast(false)} style={{ opacity: 0.8 }}>
+                <Toast show={showToast} onClose={() => setShowToast(false)}>
                   <Toast.Header closeButton={false}>
                     <strong className='me-auto'>알림</strong>
                   </Toast.Header>
