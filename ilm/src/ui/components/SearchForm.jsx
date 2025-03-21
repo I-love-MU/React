@@ -1,11 +1,11 @@
 import React, { useState, useRef } from 'react'
-import { OpenApiRealm } from '../../services/ApiService'
+import { OpenApiRealm } from '../../services/OpenApiRealm'
 import DateFilter from '../components/filter/DateFilter'
 import CategoryFilter from '../components/filter/CategoryFilter'
 import KeywordFilter from '../components/filter/KeywordFilter'
+import LocationFilterSet from './LocationFilterSet'
 import { Form, Button, Container, Row, Col, Offcanvas, Toast, ToastContainer } from 'react-bootstrap'
 import { ArrowClockwise } from 'react-bootstrap-icons'
-import LocationFilterSet from './LocationFilterSet'
 
 // API 필터 기본값 상수로 선언
 const defaultAPI = {
@@ -18,6 +18,11 @@ const defaultAPI = {
   sortStdr: '',
   realmCode: 'L000',
   serviceTp: 'A',
+  // GPS 좌표 관련 파라미터 추가
+  gpsxfrom: '',
+  gpsyfrom: '',
+  gpsxto: '',
+  gpsyto: '',
 }
 
 const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
@@ -49,7 +54,12 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
       apiFilter.current.from !== defaultAPI.from ||
       apiFilter.current.to !== defaultAPI.to ||
       apiFilter.current.realmCode !== defaultAPI.realmCode ||
-      apiFilter.current.keyword !== defaultAPI.keyword
+      apiFilter.current.keyword !== defaultAPI.keyword ||
+      apiFilter.current.gpsxfrom !== defaultAPI.gpsxfrom ||
+      apiFilter.current.gpsyfrom !== defaultAPI.gpsyfrom ||
+      apiFilter.current.gpsxto !== defaultAPI.gpsxto ||
+      apiFilter.current.gpsyto !== defaultAPI.gpsyto
+
     setFiltersApplied(isFilterApplied)
   }
 
@@ -61,6 +71,10 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
       from: defaultAPI.from,
       to: defaultAPI.to,
       realmCode: defaultAPI.realmCode,
+      gpsxfrom: defaultAPI.gpsxfrom,
+      gpsyfrom: defaultAPI.gpsyfrom,
+      gpsxto: defaultAPI.gpsxto,
+      gpsyto: defaultAPI.gpsyto,
     }
 
     // 필터 적용 상태 초기화
@@ -176,6 +190,7 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
             </Row>
             <hr />
 
+            {/* 위치 필터 */}
             <Row className='mt-2'>
               <Col>
                 <LocationFilterSet updateApiFilter={updateApiFilter} />
