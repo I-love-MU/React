@@ -4,7 +4,7 @@ import { fetchPerformanceData } from '../api/publicApi'
 import { Container } from 'react-bootstrap'
 
 const PerformanceDetailPage = () => {
-  const { id } = useParams() // ✅ URL에서 공연 ID(seq) 가져오기
+  const { id } = useParams() // URL에서 공연 ID(seq) 가져오기
   const [performance, setPerformance] = useState(null)
 
   useEffect(() => {

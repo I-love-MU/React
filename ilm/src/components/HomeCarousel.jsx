@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { fetchOngoingEvents } from '../api/publicApi'
 import { useNavigate } from 'react-router-dom'
 import { Carousel, Container } from 'react-bootstrap'
-import { formatDate } from '../utils' // ✅ 날짜 변환 함수 가져오기
+import { formatDate } from '../utils' // 날짜 변환 함수 가져오기
 
 const HomeCarousel = () => {
   const [performances, setPerformances] = useState([])
