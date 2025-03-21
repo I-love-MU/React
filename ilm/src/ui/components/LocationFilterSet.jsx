@@ -3,7 +3,7 @@ import { Form, Card, InputGroup, Button } from 'react-bootstrap'
 import SpecificLocation from './filter/SpecificLocation'
 import CurrentLocationInfo from './filter/CurrentLocationInfo'
 import CoordinatesArea from '../../services/CoordinatesArea'
-import { OpenApiRealm } from '../../services/OpenApiRealm'
+import { OpenApiRealm } from '../../services/OpenApi'
 // import { getDistanceFromPoint } from '../../services/getDistanceFromPoint'
 
 // 기본 위치 좌표(서울 중심부)

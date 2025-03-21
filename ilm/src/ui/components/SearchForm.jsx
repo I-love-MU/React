@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { OpenApiRealm } from '../../services/OpenApiRealm'
+import { OpenApiRealm } from '../../services/OpenApi'
 import DateFilter from '../components/filter/DateFilter'
 import CategoryFilter from '../components/filter/CategoryFilter'
 import KeywordFilter from '../components/filter/KeywordFilter'
