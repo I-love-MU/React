@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { XMLParser } from 'fast-xml-parser'
-import { ExhibitionDTO } from '../dto/ExhibitionDTO'
+
 
 const BASE_URL = 'https://apis.data.go.kr/B553457/nopenapi/rest/publicperformancedisplays'
 
@@ -32,12 +32,10 @@ export const OpenApiRealm = async (params) => {
     // 객체, 배열 처리
     const contents = result.response.body.items.item
 
-    // DTO를 사용하여 데이터를 변환
-    const data = Array.isArray(contents) ? contents.map(item => new ExhibitionDTO(item)) : [new ExhibitionDTO(contents)];
-    return data
-
+    // 결과가 배열인지 확인하고 그대로 반환
+    return Array.isArray(contents) ? contents : contents ? [contents] : [];
   } catch (error) {
-    console.error('API 호출 오류 발생:', error)
-    throw error
+    console.error('API 호출 오류 발생:', error);
+    throw error;
   }
-}
+};

@@ -28,7 +28,7 @@ const ExhibitionGrid = () => {
         exhibitionItems.map((item, index) => (
           <div key={index} style={{ textAlign: "center" }}>
             <img
-              src={item.poster || "https://via.placeholder.com/150"} // 기본 이미지 설정
+              src={item.thumbnail || "https://via.placeholder.com/150"} // 기본 이미지 설정
               alt={item.title || "제목 없음"}
               style={{
                 width: "150px", // 고정된 너비
@@ -39,9 +39,9 @@ const ExhibitionGrid = () => {
             />
             <h3>{item.title || "제목 없음"}</h3>
             <h4>
-              {item.hall || "공연장 정보 없음"} / {item.area || "지역 정보 없음"}
+              {item.place || "공연장 정보 없음"} / {item.area || "지역 정보 없음"}
             </h4>
-            <p>{item.date || "날짜 정보 없음"}</p>
+            <p>{item.startDate || "날짜 정보 없음"} - {item.endDate}</p>
           </div>
         ))
       ) : (
