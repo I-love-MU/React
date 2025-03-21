@@ -33,13 +33,9 @@ const SearchResults = ({ filteredData }) => {
               <Card.Body>
                 <Card.Title className='text-truncate'>{data.title}</Card.Title>
                 <Card.Text>
-                  <strong>장소:</strong> {data.place || '정보 없음'}
+                  {data.place || '정보 없음'}
                   <br />
-                  <strong>기간:</strong> {data.startDate || '정보 없음'} ~ {data.endDate || '정보 없음'}
-                  <br />
-                  <strong>분류이름:</strong> {data.realmName || '정보 없음'}
-                  <br />
-                  <strong>분류목록:</strong> {data.serviceName || '정보 없음'}
+                  {data.startDate || '정보 없음'} ~ {data.endDate || '정보 없음'}
                 </Card.Text>
               </Card.Body>
             </Card>
