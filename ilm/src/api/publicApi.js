@@ -31,7 +31,7 @@ const fetchFromApi = async (path, queryParams = {}) => {
   }
 }
 
-// ✅ 올바르게 export 하기
+// 올바르게 export 하기
 export const fetchPerformancesByRealm = async ({ realmCode, from, to, numOfRows = 10 }) => {
   return fetchFromApi('realm', { realmCode, from, to, numOfRows })
 }
