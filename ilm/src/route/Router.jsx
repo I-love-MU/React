@@ -18,6 +18,7 @@ const router = createBrowserRouter([
           </>
         ), // ExhibitionBanner와 ExhibitionGrid를 동시에 렌더링
       },
+      
     ],
   },
 ]);
