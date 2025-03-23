@@ -1,12 +1,13 @@
+// src/pages/MainPage.jsx
 import React from 'react'
 import SimplifiedCarousel from '../components/SimplifiedCarousel'
 
-const PerformancePage = () => {
+const MainPage = () => {
   return (
-    <div>
+    <div className='container'>
       <SimplifiedCarousel />
     </div>
   )
 }
 
-export default PerformancePage
+export default MainPage
