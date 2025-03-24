@@ -76,6 +76,10 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
     // API 필터의 조건 부분만 초기화
     apiFilter.current = {
       ...apiFilter.current,
+      gpsxfrom: defaultAPI.gpsxfrom,
+      gpsyfrom: defaultAPI.gpsyfrom,
+      gpsxto: defaultAPI.gpsxto,
+      gpsyto: defaultAPI.gpsyto,
       from: defaultAPI.from,
       to: defaultAPI.to,
       realmCode: defaultAPI.realmCode,
@@ -189,7 +193,7 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
             {/* 카테코리 필터 */}
             <Row className='mt-2'>
               <Col>
-                <CategoryFilter updateApiFilter={updateApiFilter} apiFilter={apiFilter.current} />
+                <CategoryFilter updateApiFilter={updateApiFilter} />
               </Col>
             </Row>
             <hr />
