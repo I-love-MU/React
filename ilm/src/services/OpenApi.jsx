@@ -20,7 +20,7 @@ const API_ENDPOINTS = {
 }
 
 // 통합 API 요청 함수
-export const fetchOpenApi = async (endpointType, apiFilter) => {
+const fetchOpenApi = async (endpointType, apiFilter) => {
   const url = `${BASE_URL}/${endpointType}`
 
   try {
