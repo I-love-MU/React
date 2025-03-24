@@ -74,15 +74,11 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
   // 필터 조건만 초기화하는 함수
   const resetFilters = () => {
     // API 필터의 조건 부분만 초기화
+    let currentKeyword = apiFilter.current.keyword
+
     apiFilter.current = {
-      ...apiFilter.current,
-      gpsxfrom: defaultAPI.gpsxfrom,
-      gpsyfrom: defaultAPI.gpsyfrom,
-      gpsxto: defaultAPI.gpsxto,
-      gpsyto: defaultAPI.gpsyto,
-      from: defaultAPI.from,
-      to: defaultAPI.to,
-      realmCode: defaultAPI.realmCode,
+      ...defaultAPI,
+      keyword: currentKeyword,
     }
 
     // 필터 적용 상태 초기화
