@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom'
 import MainLayout from '../pages/MainLayout'
 import DetailPage from '../pages/DetailPage'
+import MainPage from '../pages/MainPage'
 
 const router = createBrowserRouter([
   {
@@ -8,6 +9,12 @@ const router = createBrowserRouter([
     element: <MainLayout />,
     loader: () =>'메인',
     children:  [
+
+      {
+        path:'',
+        element:<MainPage />,
+        loader:()=>'메인',
+      },
       {
         path:'detail',
         element:<DetailPage />,
@@ -16,5 +23,4 @@ const router = createBrowserRouter([
     ],
   },
 ])
-
 export default router

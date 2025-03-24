@@ -1,10 +1,13 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Container, Row, Col, Card, Button } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { OpenApiDetail } from '../services/DetailService'
+import { OpenApiDetail } from '../services/ApiService'
+import { decodetext } from '../utils'
 import dayjs from 'dayjs'
 import '../style/Detailcss.css' // 별도의 CSS 파일 추가
+
 
 function DetailPage() {
   const [content, setContent] = useState(null) // 변수명 변경 (data -> content)
@@ -12,11 +15,18 @@ function DetailPage() {
   const location = useLocation()
   const { contentNum } = location.state || {}
 
+  const key = import.meta.env.VITE_API_DECODE_KEY
+
+  const apifilter = {
+    serviceKey:key,
+    seq:contentNum,
+  }
+
  // API 호출 및 데이터 설정
   useEffect(() => {
     const fetchContentDetail = async () => {
       try {
-        const detailData = await OpenApiDetail(contentNum)
+        const detailData = await OpenApiDetail(apifilter)
         console.log("API 응답 데이터:", detailData);
         setContent(detailData[0])
       } catch (error) {
@@ -59,7 +69,7 @@ function DetailPage() {
           </Button>
         </Col>
         <Col className="text-center">
-          <h3 className="mb-0">{content.title}</h3>
+          <h3 className="mb-0">{decodetext(content.title)}</h3>
         </Col>
         <Col xs="auto"></Col>
       </Row>
