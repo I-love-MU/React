@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { OpenApiRealm } from '../services/ApiService'
 import { Link } from 'react-router-dom'
 import { Carousel, Container, Card } from 'react-bootstrap'
-import { formatDate,decodetext } from '../utils'
+import { formatDate, decodetext } from '../utils'
 
-// 공연 장르 목록과 해당하는 realmCode (API 기준)
 const GENRES = [
   { name: '연극', realmCode: 'A000' },
   { name: '콘서트', realmCode: 'B000' },
@@ -13,7 +12,6 @@ const GENRES = [
 
 const SimplifiedCarousel = () => {
   const [performances, setPerformances] = useState({})
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,8 +28,8 @@ const SimplifiedCarousel = () => {
               const result = await OpenApiRealm({
                 serviceKey: key,
                 realmCode,
-                from :'20250101',
-                to :'20251231',
+                from: '20250101',
+                to: '20251231',
                 numOfRows: 10,
               })
 
@@ -40,18 +38,14 @@ const SimplifiedCarousel = () => {
                 return null
               }
 
-              const selectedPerformances = result
-                .sort(() => 0.5 - Math.random())
-                .slice(0, 3)
+              const selectedPerformances = result.sort(() => 0.5 - Math.random()).slice(0, 3)
 
               return { genre: name, data: selectedPerformances }
             } catch (error) {
               console.error(`${name} 데이터 가져오기 실패`, error)
-              console.log(results)
-              console.log(selectedPerformances)
               return null
             }
-          })
+          }),
         )
 
         const performanceMap = results.reduce((acc, item) => {
@@ -62,15 +56,47 @@ const SimplifiedCarousel = () => {
         setPerformances(performanceMap)
       } catch (error) {
         console.error('데이터 가져오기 실패:', error)
-      } 
+      }
     }
 
     fetchData()
   }, [])
 
-
   return (
     <Container className='mt-5'>
+      {/* 왼쪽/오른쪽 화살표 및 인디케이터 색상 회색 처리 */}
+      <style>
+        {`
+          .carousel-control-prev-icon,
+          .carousel-control-next-icon {
+            background-image: none;
+          }
+
+          .carousel-control-prev-icon::after,
+          .carousel-control-next-icon::after {
+            content: '';
+            display: inline-block;
+            width: 0.6rem;
+            height: 0.6rem;
+            border: solid #6c757d;
+            border-width: 0 0.3rem 0.3rem 0;
+            padding: 10px;
+          }
+
+          .carousel-control-prev-icon::after {
+            transform: rotate(135deg);
+          }
+
+          .carousel-control-next-icon::after {
+            transform: rotate(-45deg);
+          }
+
+          .carousel-indicators [data-bs-target] {
+            background-color: #6c757d;
+          }
+        `}
+      </style>
+
       {GENRES.map(({ name }) => (
         <div key={name} className='mb-5'>
           <h2 className='fw-bold text-center mb-3'>{`지금 인기 있는 ${name}`}</h2>
