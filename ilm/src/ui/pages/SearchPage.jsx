@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
-import SearchForm from '../components/SearchForm'
-import SearchResults from '../components/SearchResults'
+import SearchForm from '../components/search/SearchForm'
+import SearchResults from '../components/search/SearchResults'
 import { Card, Container, Row, Col, Spinner } from 'react-bootstrap'
 
 const SearchPage = () => {
