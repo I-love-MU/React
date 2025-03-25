@@ -3,10 +3,10 @@ import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Container, Row, Col, Card, Button } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { OpenApiDetail } from '../../services/ApiService'
-import { decodetext } from '../../utils'
+import { OpenApiDetail } from '../../services/OpenApi'
+import { decodetext,formatDate } from '../../utils'
 import '../style/Detailcss.css' // 별도의 CSS 파일 추가
-import { formatDate } from '../../utils'
+
 
 
 function DetailPage() {
