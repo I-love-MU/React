@@ -28,9 +28,7 @@ dist
 *.njsproj
 *.sln
 *.sw?
+
+# environment variables
 .env
-node_modules/
 venv/
-package-lock.json
-package-lock.json
-package.json

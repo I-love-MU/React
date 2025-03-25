@@ -23,6 +23,8 @@ jobs:
               run: |
                   EVENT_TYPE="${{ github.event_name }}"
                   REPO_NAME="${{ github.repository }}"
+                  BRANCH_NAME="${{ github.ref }}"
+                  BRANCH_NAME="${BRANCH_NAME#refs/heads/}"
                   ACTOR="${{ github.actor }}"
 
                   # 기본 메시지
@@ -30,6 +32,7 @@ jobs:
                   📢 **GitHub 이벤트 발생**
                   🔔 이벤트 타입: ${EVENT_TYPE}
                   📌 레포지토리: ${REPO_NAME}
+                  🌿 브랜치: ${BRANCH_NAME}
                   👤 실행자: ${ACTOR}
                   EOF
                   )
