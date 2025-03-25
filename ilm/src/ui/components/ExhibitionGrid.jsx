@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react"
 import { fetchExhibitionData } from "./Fetchdata" // API 함수 import
 import { Link } from "react-router-dom"
 import { Carousel, Container, Card } from 'react-bootstrap'
-import { formatDate, decodetext } from '../utils'
+import { formatDate, decodetext } from '../../utils'
 
 
 

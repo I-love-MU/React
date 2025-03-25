@@ -1,4 +1,4 @@
-import { OpenApiRealm } from '../services/ApiService';
+import { OpenApiRealm } from '../../services/ApiService';
 // ✅ API 데이터를 가져오는 함수
 const key = import.meta.env.VITE_API_DECODE_KEY
 

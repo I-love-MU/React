@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { OpenApiRealm } from '../services/ApiService'
+import { OpenApiRealm } from '../../services/ApiService'
 import { Link } from 'react-router-dom'
 import { Carousel, Container, Card } from 'react-bootstrap'
-import { formatDate, decodetext } from '../utils'
+import { formatDate, decodetext } from '../../utils'
 
 const GENRES = [
   { name: '연극', realmCode: 'A000' },
