@@ -1,5 +1,6 @@
 import React from 'react'
 import { Container, Row, Col, Card, Alert } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 
 const SearchResults = ({ filteredData }) => {
   if (!filteredData || filteredData.length == 0) {
@@ -15,6 +16,7 @@ const SearchResults = ({ filteredData }) => {
       <Row xs={1} md={2} lg={4} className='g-4'>
         {filteredData.map((data, index) => (
           <Col key={index}>
+            <Link to={`/detail`} className='text-decoration-none text-dark' state={{ contentNum: data.seq }}>
             <Card className='h-100 shadow-sm'>
               <div style={{ height: '100%', overflow: 'hidden' }}>
                 {data.thumbnail ? (
@@ -39,6 +41,7 @@ const SearchResults = ({ filteredData }) => {
                 </Card.Text>
               </Card.Body>
             </Card>
+            </Link>
           </Col>
         ))}
       </Row>
