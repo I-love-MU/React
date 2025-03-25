@@ -5,8 +5,8 @@ import { Container, Row, Col, Card, Button } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { OpenApiDetail } from '../services/ApiService'
 import { decodetext } from '../utils'
-import dayjs from 'dayjs'
 import '../style/Detailcss.css' // 별도의 CSS 파일 추가
+import { formatDate } from '../utils'
 
 
 function DetailPage() {
@@ -48,11 +48,6 @@ function DetailPage() {
     )
   }
 
-  // 날짜 포맷팅 (dayjs 활용)
-  const formatDate = (date) => {
-    if (!date) return '-'
-    return dayjs(date.toString()).format('YYYY.MM.DD')
-  }
 
   return (
     <Container className="detail-container py-0 d-flex flex-column justify-content-center align-items-center px-0 mx-auto">

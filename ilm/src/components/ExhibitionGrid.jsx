@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react"
 import { fetchExhibitionData } from "./Fetchdata" // API 함수 import
 import { Link } from "react-router-dom"
 import { Carousel, Container, Card } from 'react-bootstrap'
-import { decodetext } from '../utils'
+import { formatDate, decodetext } from '../utils'
+
 
 
 // ✅ 전시회 데이터를 그리드 형태로 보여주는 컴포넌트
@@ -28,6 +29,7 @@ const ExhibitionGrid = () => {
 
     fetchData();
   }, []);
+
 
 
   return (
@@ -61,7 +63,7 @@ const ExhibitionGrid = () => {
                     <Card.Body>
                       <Card.Title className='mt-3'>{decodetext(item.title) || "제목 없음"}</Card.Title>
                       <Card.Text className='text-muted'>
-                        {item.startDate || "날짜 정보 없음"} - {item.endDate}
+                        {formatDate(item.startDate)} - {formatDate(item.endDate)}
                       </Card.Text>
                     </Card.Body>
                   </Card>

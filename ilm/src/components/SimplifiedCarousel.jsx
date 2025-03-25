@@ -71,6 +71,39 @@ const SimplifiedCarousel = () => {
 
   return (
     <Container className='mt-5'>
+      {/* 왼쪽/오른쪽 화살표 및 인디케이터 색상 회색 처리 */}
+      <style>
+        {`
+          .carousel-control-prev-icon,
+          .carousel-control-next-icon {
+            background-image: none;
+          }
+
+          .carousel-control-prev-icon::after,
+          .carousel-control-next-icon::after {
+            content: '';
+            display: inline-block;
+            width: 0.6rem;
+            height: 0.6rem;
+            border: solid #6c757d;
+            border-width: 0 0.3rem 0.3rem 0;
+            padding: 10px;
+          }
+
+          .carousel-control-prev-icon::after {
+            transform: rotate(135deg);
+          }
+
+          .carousel-control-next-icon::after {
+            transform: rotate(-45deg);
+          }
+
+          .carousel-indicators [data-bs-target] {
+            background-color: #6c757d;
+          }
+        `}
+      </style>
+
       {GENRES.map(({ name }) => (
         <div key={name} className='mb-5'>
           <h2 className='fw-bold text-center mb-3'>{`지금 인기 있는 ${name}`}</h2>
@@ -90,7 +123,7 @@ const SimplifiedCarousel = () => {
                       <Card.Title className='mt-3'>{decodetext(performance.title)}</Card.Title>
                       <Card.Text className='text-muted'>
                         {performance.place} <br />
-                        {formatDate(String(performance.startDate))} ~ {formatDate(String(performance.endDate))}
+                        {formatDate(performance.startDate)} ~ {formatDate(performance.endDate)}
                       </Card.Text>
                     </Card.Body>
                   </Card>
@@ -103,5 +136,6 @@ const SimplifiedCarousel = () => {
     </Container>
   )
 }
+
 
 export default SimplifiedCarousel

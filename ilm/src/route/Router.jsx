@@ -13,7 +13,7 @@ const router = createBrowserRouter([
       {
         path:'',
         element:<MainPage />,
-        loader:()=>'메인',
+        loader:()=>'기본페이지',
       },
       {
         path:'detail',
