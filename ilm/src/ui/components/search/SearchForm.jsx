@@ -9,7 +9,7 @@ import { ArrowClockwise } from 'react-bootstrap-icons'
 
 // API 필터 기본값 상수로 선언
 const defaultAPI = {
-  serviceKey: import.meta.env.VITE_API_KEY,
+  serviceKey: import.meta.env.VITE_API_DECODE_KEY,
   PageNo: '1',
   numOfrows: '12',
   from: '',
