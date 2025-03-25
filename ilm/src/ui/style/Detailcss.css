@@ -1,0 +1,39 @@
+
+/* Header 스타일 */
+.detail-header {
+    background-image: url('../imgs/banner.jpg'); /* 배너 이미지 경로 */
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 15vh;
+  }
+  
+  /* Loading 컨테이너 */
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+  }
+  
+  /* Detail 컨테이너 */
+  .detail-container {
+    margin-top: 2rem;
+  }
+  
+  .detail-card {
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .detail-card img {
+    max-height: 300px;
+  }
+  
+  .detail-card h3 {
+    font-size: 1.8rem;
+  }
+  
+  .detail-card p {
+    line-height: 1.6;
+  }
