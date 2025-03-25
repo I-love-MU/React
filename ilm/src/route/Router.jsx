@@ -11,19 +11,19 @@ const routes = [
     loader: () => 'I love mu',
     children: [
       {
-        path:'',
-        element:<MainPage />,
-        loader:()=>'기본페이지',
+        path: '',
+        element: <MainPage />,
+        loader: () => '기본페이지',
+      },
+      {
+        path: 'detail',
+        element: <DetailPage />,
+        loader: () => '상세페이지',
       },
       {
         path: 'search',
         element: <SearchPage />,
         loader: () => 'SEARCH',
-      },
-      {
-        path:'detail',
-        element:<DetailPage />,
-        loader:()=>'상세페이지',
       },
     ],
   },
