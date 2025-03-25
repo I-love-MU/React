@@ -22,6 +22,17 @@ const CategoryFilter = ({ updateApiFilter }) => {
     }
   }, [selectedCategory])
 
+  // 초기화 이벤트 리스너 추가
+  useEffect(() => {
+    const handleReset = () => {
+      setSelectedCategory('')
+    }
+    window.addEventListener('resetFilters', handleReset)
+    return () => {
+      window.removeEventListener('resetFilters', handleReset)
+    }
+  }, [])
+
   return (
     <div className='filter-section text-center'>
       <Form className='d-flex justify-content-center align-items-center'>

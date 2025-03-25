@@ -23,6 +23,20 @@ const DateFilter = ({ updateApiFilter }) => {
     })
   }, [dateFilter])
 
+  // 초기화 이벤트 리스너 추가
+  useEffect(() => {
+    const handleReset = () => {
+      setDateFilter({
+        startDate: '',
+        endDate: '',
+      })
+    }
+    window.addEventListener('resetFilters', handleReset)
+    return () => {
+      window.removeEventListener('resetFilters', handleReset)
+    }
+  }, [])
+
   // 날짜를 'YYYYMMDD' 형식으로 변환하는 함수
   const formatDateForApi = (date) => {
     if (!date) return ''

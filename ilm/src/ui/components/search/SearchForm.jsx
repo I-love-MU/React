@@ -81,6 +81,11 @@ const SearchForm = ({ onSearch, onSearchResults, searchStatus }) => {
       keyword: currentKeyword,
     }
 
+    // 각 필터 컴포넌트의 상태 초기화를 위한 이벤트 발생
+    // 이벤트를 통해 자식 컴포넌트들에게 초기화 신호 전달
+    const resetEvent = new CustomEvent('resetFilters')
+    window.dispatchEvent(resetEvent)
+
     // 필터 적용 상태 초기화
     setFiltersApplied(false)
 

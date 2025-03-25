@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { Form, Card, InputGroup, Button } from 'react-bootstrap'
 import SpecificLocation from '../filter/SpecificLocation'
 import CurrentLocationInfo from '../filter/CurrentLocationInfo'
@@ -33,6 +33,21 @@ function LocationFilterSet({ updateApiFilter }) {
       selectedAddress: address,
     })
   }
+
+  // 초기화 이벤트 리스너 추가
+  useEffect(() => {
+    const handleReset = () => {
+      setLocationFilter('')
+      setSearchLocation(defaultLocation)
+      if (radiusRef.current) {
+        radiusRef.current.value = ''
+      }
+    }
+    window.addEventListener('resetFilters', handleReset)
+    return () => {
+      window.removeEventListener('resetFilters', handleReset)
+    }
+  }, [])
 
   // 버튼 이벤트 핸들러
   const handleSearchbyLocation = async () => {
