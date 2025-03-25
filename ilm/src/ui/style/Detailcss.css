@@ -1,7 +1,7 @@
 
 /* Header 스타일 */
 .detail-header {
-    background-image: url('../imgs/banner.jpg'); /* 배너 이미지 경로 */
+    background-image: url('src/imgs/banner.jpg'); /* 배너 이미지 경로 */
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
