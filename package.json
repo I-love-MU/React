@@ -1,5 +1,0 @@
-{
-  "dependencies": {
-    "@rollup/rollup-win32-x64-msvc": "^4.37.0"
-  }
-}
